@@ -2,7 +2,7 @@
 server:
   port: 8190
   servlet:
-    context-path: /zajavka
+    context-path: / 
 
 spring:
   datasource:

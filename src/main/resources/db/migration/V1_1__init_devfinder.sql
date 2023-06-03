@@ -1,21 +1,26 @@
-DROP TABLE IF EXIST candidate CASCADE;
 
-DROP TABLE IF EXIST follow_employer CASCADE;
-DROP TABLE IF EXIST follow_candidate CASCADE;
-DROP TABLE IF EXIST follow_offer CASCADE;
-DROP TABLE IF EXIST invitation CASCADE;
-DROP TABLE IF EXIST application CASCADE;
-DROP TABLE IF EXIST offer CASCADE;
-DROP TABLE IF EXIST message_employer CASCADE;
-DROP TABLE IF EXIST message_candidate CASCADE;
-DROP TABLE IF EXIST alert CASCADE;
-DROP TABLE IF EXIST offer_skill CASCADE;
-DROP TABLE IF EXIST candidate_skill CASCADE;
-DROP TABLE IF EXIST candidate CASCADE;
-DROP TABLE IF EXIST employer CASCADE;
-DROP TABLE IF EXIST skill CASCADE;
-DROP TABLE IF EXIST city CASCADE;
-DROP TABLE IF EXIST admin CASCADE;
+DROP TABLE IF EXISTS follow_employer CASCADE;
+DROP TABLE IF EXISTS follow_candidate CASCADE;
+DROP TABLE IF EXISTS follow_offer CASCADE;
+DROP TABLE IF EXISTS message_employer CASCADE;
+DROP TABLE IF EXISTS message_candidate CASCADE;
+DROP TABLE IF EXISTS alert CASCADE;
+DROP TABLE IF EXISTS employee CASCADE;
+DROP TABLE IF EXISTS application CASCADE;
+DROP TABLE IF EXISTS invitation CASCADE;
+DROP TABLE IF EXISTS offer_skill CASCADE;
+DROP TABLE IF EXISTS candidate_skill CASCADE;
+DROP TABLE IF EXISTS candidate CASCADE;
+DROP TABLE IF EXISTS offer CASCADE;
+DROP TABLE IF EXISTS employer CASCADE;
+DROP TABLE IF EXISTS skill CASCADE;
+DROP TABLE IF EXISTS city CASCADE;
+DROP TABLE IF EXISTS admin CASCADE;
+
+DROP TABLE IF EXISTS car_dealership_user_role CASCADE;
+DROP TABLE IF EXISTS car_dealership_user CASCADE;
+DROP TABLE IF EXISTS car_dealership_role CASCADE;
+DROP TABLE IF EXISTS flyway_schema_history CASCADE;
 
 DROP TYPE IF EXISTS my_enum_type CASCADE;
 DROP TYPE IF EXISTS alert_type CASCADE;
@@ -32,16 +37,16 @@ CREATE TYPE alert_type AS ENUM ('application_sent', 'candidate_status_changed', 
     'new_message', 'new_job_posted', 'offer_expired', 'job_invitation_received', 'hired',
     'application_rejected', 'application_accepted');
 
-CREATE TABLE admin
-(
-    admin_id   SERIAL       NOT NULL,
-    first_name VARCHAR(255) NOT NULL,
-    last_name  VARCHAR(255) NOT NULL,
-    email      VARCHAR(255) NOT NULL,
-    password   VARCHAR(255) NOT NULL,
-    UNIQUE (email),
-    PRIMARY KEY (admin_id)
-);
+-- CREATE TABLE admin
+-- (
+--     admin_id   SERIAL       NOT NULL,
+--     first_name VARCHAR(255) NOT NULL,
+--     last_name  VARCHAR(255) NOT NULL,
+--     email      VARCHAR(255) NOT NULL,
+--     password   VARCHAR(255) NOT NULL,
+--     UNIQUE (email),
+--     PRIMARY KEY (admin_id)
+-- );
 
 
 CREATE TABLE city
@@ -80,6 +85,32 @@ CREATE TABLE employer
         FOREIGN KEY (city_id) REFERENCES city (city_id)
 );
 
+CREATE TABLE offer
+(
+    offer_id            SERIAL         NOT NULL,
+    title               VARCHAR(255)   NOT NULL,
+    employer_id         INTEGER        NOT NULL,
+    description         TEXT           NOT NULL,
+    project_description TEXT           NOT NULL,
+    requirements        TEXT,
+    city_id             INTEGER        NOT NULL,
+    remote_work         INTEGER CHECK (remote_work BETWEEN 0 AND 100),
+    experience          experience     NOT NULL,
+    years_of_experience INTEGER,
+    salary_min          NUMERIC(10, 2) NOT NULL,
+    salary_max          NUMERIC(10, 2) NOT NULL,
+    publication_date    TIMESTAMP      NOT NULL,
+    expiration_date     TIMESTAMP      NOT NULL,
+    benefits            TEXT,
+    promoted            BOOLEAN                 DEFAULT FALSE,
+    status              offer_state    NOT NULL DEFAULT 'open',
+    PRIMARY KEY (offer_id),
+    CONSTRAINT fk_offer_city
+        FOREIGN KEY (city_id) REFERENCES city (city_id),
+    CONSTRAINT fk_offer_employer
+        FOREIGN KEY (employer_id) REFERENCES employer (employer_id)
+);
+
 CREATE TABLE candidate
 (
     candidate_id        SERIAL          NOT NULL,
@@ -112,7 +143,7 @@ CREATE TABLE candidate
     CONSTRAINT fk_candidate_desired_job_city
         FOREIGN KEY (desired_job_city_id) REFERENCES city (city_id),
     CONSTRAINT fk_candidate_employer
-        FOREIGN KEY (employer_id) REFERENCES employer (employer_id),
+        FOREIGN KEY (employer_id) REFERENCES employer (employer_id)
 );
 
 CREATE TABLE candidate_skill
@@ -137,108 +168,6 @@ CREATE TABLE offer_skill
         FOREIGN KEY (skill_id) REFERENCES skill (skill_id)
 );
 
-CREATE TABLE alert
-(
-    alert_id       SERIAL     NOT NULL,
-    alert_type     alert_type NOT NULL,
-    message        TEXT       NOT NULL,
-    created_at     TIMESTAMP  NOT NULL,
-    is_read        BOOLEAN    NOT NULL DEFAULT FALSE,
-    employer_id    INTEGER    NOT NULL,
-    candidate_id   INTEGER    NOT NULL,
-    application_id INTEGER,
-    invitation_id  INTEGER,
-    offer_id       INTEGER,
-    PRIMARY KEY (alert_id),
-    CONSTRAINT fk_alert_offer
-        FOREIGN KEY (offer_id) REFERENCES offer (offer_id),
-    CONSTRAINT fk_alert_invitation
-        FOREIGN KEY (invitation_id) REFERENCES invitation (invitation_id),
-    CONSTRAINT fk_alert_employer
-        FOREIGN KEY (employer_id) REFERENCES employer (employer_id),
-    CONSTRAINT fk_alert_candidate
-        FOREIGN KEY (candidate_id) REFERENCES candidate (candidate_id),
-    CONSTRAINT fk_alert_application
-        FOREIGN KEY (application_id) REFERENCES application (application_id)
-);
-
-CREATE TABLE message_candidate
-(
-    message_id           SERIAL PRIMARY KEY,
-    candidate_id         INTEGER   NOT NULL,
-    employer_id          INTEGER   NOT NULL,
-    content              TEXT      NOT NULL,
-    send_at              TIMESTAMP NOT NULL,
-    is_read_candidate    BOOLEAN   NOT NULL,
-    is_read_employer     BOOLEAN   NOT NULL,
-    is_deleted_candidate BOOLEAN   NOT NULL,
-    id_deleted_employer  BOOLEAN   NOT NULL,
-    PRIMARY KEY (message_id),
-    CONSTRAINT fk_message_candidate_employer
-        FOREIGN KEY (employer_id) REFERENCES employer (employer_id),
-    CONSTRAINT fk_message_candidate_candidate
-        FOREIGN KEY (candidate_id) REFERENCES candidate (candidate_id),
-);
-
-CREATE TABLE message_employer
-(
-    message_id           SERIAL PRIMARY KEY,
-    employer_id          INTEGER   NOT NULL,
-    candidate_id         INTEGER   NOT NULL,
-    content              TEXT      NOT NULL,
-    send_at              TIMESTAMP NOT NULL,
-    is_read_candidate    BOOLEAN   NOT NULL,
-    is_read_employer     BOOLEAN   NOT NULL,
-    is_deleted_candidate BOOLEAN   NOT NULL,
-    id_deleted_employer  BOOLEAN   NOT NULL,
-    PRIMARY KEY (message_id),
-    CONSTRAINT fk_message_employer_employer
-        FOREIGN KEY (employer_id) REFERENCES employer (employer_id),
-    CONSTRAINT fk_message_employer_candidate
-        FOREIGN KEY (candidate_id) REFERENCES candidate (candidate_id),
-);
-
-CREATE TABLE offer
-(
-    offer_id            SERIAL         NOT NULL,
-    title               VARCHAR(255)   NOT NULL,
-    employer_id         INTEGER        NOT NULL,
-    description         TEXT           NOT NULL,
-    project_description TEXT           NOT NULL,
-    requirements        TEXT,
-    city_id             INTEGER        NOT NULL,
-    remote_work         INTEGER CHECK (remote_work BETWEEN 0 AND 100),
-    experience          experience     NOT NULL,
-    years_of_experience INTEGER,
-    salary_min          NUMERIC(10, 2) NOT NULL,
-    salary_max          NUMERIC(10, 2) NOT NULL,
-    publication_date    TIMESTAMP      NOT NULL,
-    expiration_date     TIMESTAMP      NOT NULL,
-    benefits            TEXT,
-    promoted            BOOLEAN                 DEFAULT FALSE,
-    status              offer_state    NOT NULL DEFAULT 'open',
-    PRIMARY KEY (offer_id),
-    CONSTRAINT fk_offer_city
-        FOREIGN KEY (city_id) REFERENCES city (city_id),
-    CONSTRAINT fk_offer_employer
-        FOREIGN KEY (employer_id) REFERENCES employer (employer_id),
-);
-
-CREATE TABLE application
-(
-    application_id   SERIAL         NOT NULL,
-    candidate_id     INTEGER        NOT NULL,
-    offer_id         INTEGER        NOT NULL,
-    application_date TIMESTAMP      NOT NULL,
-    status           response_state NOT NULL DEFAULT 'pending',
-    UNIQUE (candidate_id, offer_id),
-    PRIMARY KEY (application_id),
-    CONSTRAINT fk_application_candidate
-        FOREIGN KEY (candidate_id) REFERENCES candidate (candidate_id),
-    CONSTRAINT fk_application_offer
-        FOREIGN KEY (offer_id) REFERENCES offer (offer_id)
-);
-
 CREATE TABLE invitation
 (
     invitation_id   SERIAL         NOT NULL,
@@ -257,47 +186,143 @@ CREATE TABLE invitation
         FOREIGN KEY (offer_id) REFERENCES offer (offer_id)
 );
 
-CREATE TABLE follow_offer
+CREATE TABLE application
 (
-    follow_id       SERIAL    NOT NULL,
-    candidate_id    INTEGER   NOT NULL,
-    offer_id        INTEGER   NOT NULL,
-    date_time_added TIMESTAMP NOT NULL,
+    application_id   SERIAL         NOT NULL,
+    candidate_id     INTEGER        NOT NULL,
+    offer_id         INTEGER        NOT NULL,
+    application_date TIMESTAMP      NOT NULL,
+    status           response_state NOT NULL DEFAULT 'pending',
     UNIQUE (candidate_id, offer_id),
-    PRIMARY KEY (follow_id),
-    CONSTRAINT fk_follow_candidate
+    PRIMARY KEY (application_id),
+    CONSTRAINT fk_application_candidate
         FOREIGN KEY (candidate_id) REFERENCES candidate (candidate_id),
-    CONSTRAINT fk_follow_offer
+    CONSTRAINT fk_application_offer
         FOREIGN KEY (offer_id) REFERENCES offer (offer_id)
 );
 
-CREATE TABLE follow_candidate
+CREATE TABLE employee
 (
-    follow_candidate_id SERIAL          NOT NULL,
-    candidate_id        INTEGER         NOT NULL,
-    last_status         candidate_state NOT NULL,
-    date_time_added     TIMESTAMP       NOT NULL,
-    UNIQUE (candidate_id),
-    PRIMARY KEY (follow_candidate_id),
-    CONSTRAINT fk_follow_candidate
+    employee_id    SERIAL    NOT NULL,
+    candidate_id   INTEGER   NOT NULL,
+    offer_id       INTEGER   NOT NULL,
+    application_id INTEGER,
+    employer_id    INTEGER   NOT NULL,
+    begin_date     TIMESTAMP NOT NULL,
+    finish_date    TIMESTAMP NOT NULL,
+    approved BOOLEAN NOT NULL DEFAULT 'false',
+
+    PRIMARY KEY (employee_id),
+    CONSTRAINT fk_employee_candidate
         FOREIGN KEY (candidate_id) REFERENCES candidate (candidate_id),
-    CONSTRAINT fk_invitation_employer
-        FOREIGN KEY (employer_id) REFERENCES employer (employer_id),
+    CONSTRAINT fk_employee_offer
+        FOREIGN KEY (offer_id) REFERENCES offer (offer_id),
+    CONSTRAINT fk_employee_application
+        FOREIGN KEY (application_id) REFERENCES application (application_id),
+    CONSTRAINT fk_employee_employer
+        FOREIGN KEY (employer_id) REFERENCES employer (employer_id)
 );
 
-CREATE TABLE follow_employer
-(
-    follow_employer_id SERIAL    NOT NULL,
-    candidate_id       INTEGER   NOT NULL,
-    employer_id        INTEGER   NOT NULL,
-    date_time_added    TIMESTAMP NOT NULL,
-    UNIQUE (candidate_id, employer_id),
-    PRIMARY KEY (follow_employer_id),
-    CONSTRAINT fk_follow_candidate
-        FOREIGN KEY (candidate_id) REFERENCES candidate (candidate_id),
-    CONSTRAINT fk_follow_employer_employer
-        FOREIGN KEY (employer_id) REFERENCES employer (employer_id),
-);
+-- CREATE TABLE alert
+-- (
+--     alert_id       SERIAL     NOT NULL,
+--     alert_type     alert_type NOT NULL,
+--     message        TEXT       NOT NULL,
+--     created_at     TIMESTAMP  NOT NULL,
+--     is_read        BOOLEAN    NOT NULL DEFAULT FALSE,
+--     employer_id    INTEGER    NOT NULL,
+--     candidate_id   INTEGER    NOT NULL,
+--     application_id INTEGER,
+--     invitation_id  INTEGER,
+--     offer_id       INTEGER,
+--     PRIMARY KEY (alert_id),
+--     CONSTRAINT fk_alert_offer
+--         FOREIGN KEY (offer_id) REFERENCES offer (offer_id),
+--     CONSTRAINT fk_alert_invitation
+--         FOREIGN KEY (invitation_id) REFERENCES invitation (invitation_id),
+--     CONSTRAINT fk_alert_employer
+--         FOREIGN KEY (employer_id) REFERENCES employer (employer_id),
+--     CONSTRAINT fk_alert_candidate
+--         FOREIGN KEY (candidate_id) REFERENCES candidate (candidate_id),
+--     CONSTRAINT fk_alert_application
+--         FOREIGN KEY (application_id) REFERENCES application (application_id)
+-- );
+--
+-- CREATE TABLE message_candidate
+-- (
+--     message_id           SERIAL    NOT NULL,
+--     candidate_id         INTEGER   NOT NULL,
+--     employer_id          INTEGER   NOT NULL,
+--     content              TEXT      NOT NULL,
+--     send_at              TIMESTAMP NOT NULL,
+--     is_read_candidate    BOOLEAN   NOT NULL,
+--     is_read_employer     BOOLEAN   NOT NULL,
+--     is_deleted_candidate BOOLEAN   NOT NULL,
+--     id_deleted_employer  BOOLEAN   NOT NULL,
+--     PRIMARY KEY (message_id),
+--     CONSTRAINT fk_message_candidate_employer
+--         FOREIGN KEY (employer_id) REFERENCES employer (employer_id),
+--     CONSTRAINT fk_message_candidate_candidate
+--         FOREIGN KEY (candidate_id) REFERENCES candidate (candidate_id)
+-- );
+--
+-- CREATE TABLE message_employer
+-- (
+--     message_id           SERIAL    NOT NULL,
+--     employer_id          INTEGER   NOT NULL,
+--     candidate_id         INTEGER   NOT NULL,
+--     content              TEXT      NOT NULL,
+--     send_at              TIMESTAMP NOT NULL,
+--     is_read_candidate    BOOLEAN   NOT NULL,
+--     is_read_employer     BOOLEAN   NOT NULL,
+--     is_deleted_candidate BOOLEAN   NOT NULL,
+--     id_deleted_employer  BOOLEAN   NOT NULL,
+--     PRIMARY KEY (message_id),
+--     CONSTRAINT fk_message_employer_employer
+--         FOREIGN KEY (employer_id) REFERENCES employer (employer_id),
+--     CONSTRAINT fk_message_employer_candidate
+--         FOREIGN KEY (candidate_id) REFERENCES candidate (candidate_id)
+-- );
+--
+-- CREATE TABLE follow_offer
+-- (
+--     follow_id       SERIAL    NOT NULL,
+--     candidate_id    INTEGER   NOT NULL,
+--     offer_id        INTEGER   NOT NULL,
+--     date_time_added TIMESTAMP NOT NULL,
+--     UNIQUE (candidate_id, offer_id),
+--     PRIMARY KEY (follow_id),
+--     CONSTRAINT fk_follow_candidate
+--         FOREIGN KEY (candidate_id) REFERENCES candidate (candidate_id),
+--     CONSTRAINT fk_follow_offer
+--         FOREIGN KEY (offer_id) REFERENCES offer (offer_id)
+-- );
+--
+-- CREATE TABLE follow_candidate
+-- (
+--     follow_candidate_id SERIAL          NOT NULL,
+--     candidate_id        INTEGER         NOT NULL,
+--     last_status         candidate_state NOT NULL,
+--     date_time_added     TIMESTAMP       NOT NULL,
+--     UNIQUE (candidate_id),
+--     PRIMARY KEY (follow_candidate_id),
+--     CONSTRAINT fk_follow_candidate
+--         FOREIGN KEY (candidate_id) REFERENCES candidate (candidate_id)
+-- );
+--
+-- CREATE TABLE follow_employer
+-- (
+--     follow_employer_id SERIAL    NOT NULL,
+--     candidate_id       INTEGER   NOT NULL,
+--     employer_id        INTEGER   NOT NULL,
+--     date_time_added    TIMESTAMP NOT NULL,
+--     UNIQUE (candidate_id, employer_id),
+--     PRIMARY KEY (follow_employer_id),
+--     CONSTRAINT fk_follow_candidate
+--         FOREIGN KEY (candidate_id) REFERENCES candidate (candidate_id),
+--     CONSTRAINT fk_follow_employer_employer
+--         FOREIGN KEY (employer_id) REFERENCES employer (employer_id)
+-- );
 
 
 
@@ -570,287 +595,296 @@ VALUES ('Gradle');
 -- Kandydat 1
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Jan', 'Kowalski', 'jan.kowalski@example.com', 'haslo123', '123456789', 1, '2023-05-01', 'Mgr inż. Informatyki',
         'Gra na gitarze', 'Angielski', 'jan_kowalski_cv.pdf', 'https://github.com/jankowalski',
-        'https://linkedin.com/in/jankowalski', 'jan_kowalski_zdjecie.jpg', 2, 3, 5000.00, true, false, 3);
+        'https://linkedin.com/in/jankowalski', 'jan_kowalski_zdjecie.jpg', 'Junior', 3, 5000.00, true, false, 3);
 
 -- Kandydat 2
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Anna', 'Nowak', 'anna.nowak@example.com', 'haslo456', '987654321', 2, '2023-05-02', 'Inż. informatyki',
         'Fotografia', 'Francuski', 'anna_nowak_cv.pdf', 'https://github.com/annanowak',
-        'https://linkedin.com/in/annanowak', 'anna_nowak_zdjecie.jpg', 1, 2, 4000.00, false, true, 1);
+        'https://linkedin.com/in/annanowak', 'anna_nowak_zdjecie.jpg', 'Junior', 2, 4000.00, false, true, 1);
 
 -- Kandydat 3
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Michał', 'Wiśniewski', 'michal.wisniewski@example.com', 'haslo789', '555555555', 3, '2023-05-03',
         'Inż. informatyki', 'Podróże', 'Niemiecki', 'michal_wisniewski_cv.pdf', 'https://github.com/michalwisniewski',
-        'https://linkedin.com/in/michalwisniewski', 'michal_wisniewski_zdjecie.jpg', 3, 4, 6000.00, true, true, 2);
+        'https://linkedin.com/in/michalwisniewski', 'michal_wisniewski_zdjecie.jpg', 'Junior', 4, 6000.00, true, true,
+        2);
 
 -- Kandydat 5
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Daniel', 'Lewandowski', 'daniel.lewandowski@example.com', 'hasloabc', '222222222', 4, '2023-05-04',
         'Informatyka', 'Gotowanie', 'Włoski', 'daniel_lewandowski_cv.pdf', 'https://github.com/daniellewandowski',
-        'https://linkedin.com/in/daniellewandowski', 'daniel_lewandowski_zdjecie.jpg', 2, 3, 5000.00, false, false, 3);
+        'https://linkedin.com/in/daniellewandowski', 'daniel_lewandowski_zdjecie.jpg', 'Junior', 3, 5000.00, false,
+        false, 3);
 
 -- Kandydat 6
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Aleksandra', 'Kaczmarek', 'aleksandra.kaczmarek@example.com', 'haslodef', '444444444', 5, '2023-05-05',
         'Informatyka', 'Gry komputerowe', 'Chiński', 'aleksandra_kaczmarek_cv.pdf',
         'https://github.com/aleksandrakaczmarek', 'https://linkedin.com/in/aleksandrakaczmarek',
-        'aleksandra_kaczmarek_zdjecie.jpg', 1, 2, 4000.00, true, true, 1);
+        'aleksandra_kaczmarek_zdjecie.jpg', 'Junior', 2, 4000.00, true, true, 1);
 
 -- Kandydat 7
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Piotr', 'Jankowski', 'piotr.jankowski@example.com', 'hasloghi', '666666666', 6, '2023-05-06',
         'Inż. informatyki', 'Sport', 'Hiszpański', 'piotr_jankowski_cv.pdf', 'https://github.com/piotrjankowski',
-        'https://linkedin.com/in/piotrjankowski', 'piotr_jankowski_zdjecie.jpg', 3, 4, 6000.00, false, true, 2);
+        'https://linkedin.com/in/piotrjankowski', 'piotr_jankowski_zdjecie.jpg', 'Junior', 4, 6000.00, false, true, 2);
 
 -- Kandydat 8
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Katarzyna', 'Wójcik', 'katarzyna.wojcik@example.com', 'haslouvw', '777777777', 7, '2023-05-07',
         'Inż. informatyki', 'Podróże', 'Angielski', 'katarzyna_wojcik_cv.pdf', 'https://github.com/katarzynawojcik',
-        'https://linkedin.com/in/katarzynawojcik', 'katarzyna_wojcik_zdjecie.jpg', 2, 3, 5000.00, true, false, 3);
+        'https://linkedin.com/in/katarzynawojcik', 'katarzyna_wojcik_zdjecie.jpg', 'Junior', 3, 5000.00, true, false,
+        3);
 
 -- Kandydat 9
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Marcin', 'Kowalczyk', 'marcin.kowalczyk@example.com', 'hasloxzy', '888888888', 8, '2023-05-08',
         'Mgr inż. Informatyki', 'Gry planszowe', 'Niemiecki', 'marcin_kowalczyk_cv.pdf',
         'https://github.com/marcinkowalczyk', 'https://linkedin.com/in/marcinkowalczyk', 'marcin_kowalczyk_zdjecie.jpg',
-        1, 2, 4000.00, false, true, 1);
+        'Junior', 2, 4000.00, false, true, 1);
 
 -- Kandydat 10
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Karolina', 'Lis', 'karolina.lis@example.com', 'hasloqwe', '999999999', 9, '2023-05-09', 'Inż. informatyki',
         'Jazda na rowerze', 'Francuski', 'karolina_lis_cv.pdf', 'https://github.com/karolinalis',
-        'https://linkedin.com/in/karolinalis', 'karolina_lis_zdjecie.jpg', 3, 4, 6000.00, true, true, 2);
+        'https://linkedin.com/in/karolinalis', 'karolina_lis_zdjecie.jpg', 'Junior', 4, 6000.00, true, true, 2);
 
 -- Kandydat 11
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Tomasz', 'Wojciechowski', 'tomasz.wojciechowski@example.com', 'hasloasd', '101010101', 10, '2023-05-10',
         'Inż. informatyki', 'Fotografia', 'Włoski', 'tomasz_wojciechowski_cv.pdf',
         'https://github.com/tomaszwojciechowski', 'https://linkedin.com/in/tomaszwojciechowski',
-        'tomasz_wojciechowski_zdjecie.jpg', 2, 3, 5000.00, false, false, 3);
+        'tomasz_wojciechowski_zdjecie.jpg', 'Junior', 3, 5000.00, false, false, 3);
 
 -- Kandydat 12
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Monika', 'Wróblewska', 'monika.wroblewska@example.com', 'haslomnb', '111111111', 11, '2023-05-11',
         'Inż. informatyki', 'Podróże', 'Hiszpański', 'monika_wroblewska_cv.pdf', 'https://github.com/monikawroblewska',
-        'https://linkedin.com/in/monikawroblewska', 'monika_wroblewska_zdjecie.jpg', 1, 2, 4000.00, true, true, 1);
+        'https://linkedin.com/in/monikawroblewska', 'monika_wroblewska_zdjecie.jpg', 'Mid', 2, 4000.00, true, true, 1);
 
 -- Kandydat 13
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Marek', 'Laskowski', 'marek.laskowski@example.com', 'haslopou', '121212121', 12, '2023-05-12',
         'Mgr inż. Informatyki', 'Gra na gitarze', 'Angielski', 'marek_laskowski_cv.pdf',
-        'https://github.com/mareklaskowski', 'https://linkedin.com/in/mareklaskowski', 'marek_laskowski_zdjecie.jpg', 3,
+        'https://github.com/mareklaskowski', 'https://linkedin.com/in/mareklaskowski', 'marek_laskowski_zdjecie.jpg',
+        'Mid',
         4, 6000.00, false, true, 2);
 
 -- Kandydat 14
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Małgorzata', 'Kowal', 'malgorzata.kowal@example.com', 'haslozxc', '131313131', 13, '2023-05-13',
         'Inż. informatyki', 'Sport', 'Niemiecki', 'malgorzata_kowal_cv.pdf', 'https://github.com/malgorzatakowal',
-        'https://linkedin.com/in/malgorzatakowal', 'malgorzata_kowal_zdjecie.jpg', 2, 3, 5000.00, true, false, 3);
+        'https://linkedin.com/in/malgorzatakowal', 'malgorzata_kowal_zdjecie.jpg', 'Mid', 3, 5000.00, true, false, 3);
 
 -- Kandydat 15
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Grzegorz', 'Dudek', 'grzegorz.dudek@example.com', 'hasloqaz', '141414141', 14, '2023-05-14',
         'Inż. informatyki', 'Podróże', 'Francuski', 'grzegorz_dudek_cv.pdf', 'https://github.com/grzegorzdudek',
-        'https://linkedin.com/in/grzegorzdudek', 'grzegorz_dudek_zdjecie.jpg', 1, 2, 4000.00, false, true, 1);
+        'https://linkedin.com/in/grzegorzdudek', 'grzegorz_dudek_zdjecie.jpg', 'Mid', 2, 4000.00, false, true, 1);
 
 -- Kandydat 16
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Joanna', 'Jasińska', 'joanna.jasinska@example.com', 'hasloqwe', '151515151', 15, '2023-05-15', 'Informatyka',
         'Fotografia', 'Włoski', 'joanna_jasinska_cv.pdf', 'https://github.com/joannajasinska',
-        'https://linkedin.com/in/joannajasinska', 'joanna_jasinska_zdjecie.jpg', 3, 4, 6000.00, true, true, 2);
+        'https://linkedin.com/in/joannajasinska', 'joanna_jasinska_zdjecie.jpg', 'Mid', 4, 6000.00, true, true, 2);
 
 -- Kandydat 17
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Adam', 'Kaczorowski', 'adam.kaczorowski@example.com', 'haslodfg', '161616161', 16, '2023-05-16',
         'Inż. informatyki', 'Podróże', 'Hiszpański', 'adam_kaczorowski_cv.pdf', 'https://github.com/adamkaczorowski',
-        'https://linkedin.com/in/adamkaczorowski', 'adam_kaczorowski_zdjecie.jpg', 2, 3, 5000.00, false, false, 3);
+        'https://linkedin.com/in/adamkaczorowski', 'adam_kaczorowski_zdjecie.jpg', 'Mid', 3, 5000.00, false, false, 3);
 
 -- Kandydat 18
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Magdalena', 'Pawlak', 'magdalena.pawlak@example.com', 'haslojkl', '171717171', 17, '2023-05-17',
         'Inż. informatyki', 'Gry planszowe', 'Angielski', 'magdalena_pawlak_cv.pdf',
         'https://github.com/magdalenapawlak', 'https://linkedin.com/in/magdalenapawlak', 'magdalena_pawlak_zdjecie.jpg',
-        1, 2, 4000.00, true, true, 1);
+        'Mid', 2, 4000.00, true, true, 1);
 
 -- Kandydat 19
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Krzysztof', 'Zawadzki', 'krzysztof.zawadzki@example.com', 'haslolkj', '181818181', 18, '2023-05-18',
         'Informatyka', 'Sport', 'Niemiecki', 'krzysztof_zawadzki_cv.pdf', 'https://github.com/krzysztofzawadzki',
-        'https://linkedin.com/in/krzysztofzawadzki', 'krzysztof_zawadzki_zdjecie.jpg', 3, 4, 6000.00, false, true, 2);
+        'https://linkedin.com/in/krzysztofzawadzki', 'krzysztof_zawadzki_zdjecie.jpg', 'Mid', 4, 6000.00, false, true,
+        2);
 
 -- Kandydat 20
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Iwona', 'Jaworska', 'iwona.jaworska@example.com', 'haslopwe', '191919191', 19, '2023-05-19',
         'Inż. informatyki', 'Podróże', 'Francuski', 'iwona_jaworska_cv.pdf', 'https://github.com/iwonajaworska',
-        'https://linkedin.com/in/iwonajaworska', 'iwona_jaworska_zdjecie.jpg', 2, 3, 5000.00, true, false, 3);
+        'https://linkedin.com/in/iwonajaworska', 'iwona_jaworska_zdjecie.jpg', 'Mid', 3, 5000.00, true, false, 3);
 
 -- Kandydat 21
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Michał', 'Witkowski', 'michal.witkowski@example.com', 'haslozxc', '202020202', 20, '2023-05-20',
         'Inż. informatyki', 'Gra na gitarze', 'Włoski', 'michal_witkowski_cv.pdf', 'https://github.com/michalwitkowski',
-        'https://linkedin.com/in/michalwitkowski', 'michal_witkowski_zdjecie.jpg', 1, 2, 4000.00, false, true, 1);
+        'https://linkedin.com/in/michalwitkowski', 'michal_witkowski_zdjecie.jpg', 'Senior', 2, 4000.00, false, true,
+        1);
 
 -- Kandydat 22
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
-VALUES ('Anna', 'Nowak', 'anna.nowak@example.com', 'hasloqwe', '212121212', 1, '2023-05-21', 'Informatyka',
+VALUES ('Anna', 'Nowak', 'anna.nowakk@example.com', 'hasloqwe', '212121212', 1, '2023-05-21', 'Informatyka',
         'Fotografia', 'Hiszpański', 'anna_nowak_cv.pdf', 'https://github.com/annanowak',
-        'https://linkedin.com/in/annanowak', 'anna_nowak_zdjecie.jpg', 3, 4, 6000.00, true, true, 2);
+        'https://linkedin.com/in/annanowak', 'anna_nowak_zdjecie.jpg', 'Senior', 4, 6000.00, true, true, 2);
 
 -- Kandydat 23
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Paweł', 'Dąbrowski', 'pawel.dabrowski@example.com', 'hasloasd', '222222222', 2, '2023-05-22',
         'Inż. informatyki', 'Podróże', 'Angielski', 'pawel_dabrowski_cv.pdf', 'https://github.com/paweldabrowski',
-        'https://linkedin.com/in/paweldabrowski', 'pawel_dabrowski_zdjecie.jpg', 2, 3, 5000.00, false, false, 3);
+        'https://linkedin.com/in/paweldabrowski', 'pawel_dabrowski_zdjecie.jpg', 'Senior', 3, 5000.00, false, false, 3);
 
 -- Kandydat 24
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Ewa', 'Kwiatkowska', 'ewa.kwiatkowska@example.com', 'hasloouy', '232323232', 3, '2023-05-23', 'Informatyka',
         'Sport', 'Niemiecki', 'ewa_kwiatkowska_cv.pdf', 'https://github.com/ewakwiatkowska',
-        'https://linkedin.com/in/ewakwiatkowska', 'ewa_kwiatkowska_zdjecie.jpg', 1, 2, 4000.00, true, true, 1);
+        'https://linkedin.com/in/ewakwiatkowska', 'ewa_kwiatkowska_zdjecie.jpg', 'Senior', 2, 4000.00, true, true, 1);
 
 -- Kandydat 25
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Jan', 'Piotrowski', 'jan.piotrowski@example.com', 'haslolki', '242424242', 4, '2023-05-24',
         'Mgr inż. Informatyki', 'Gry planszowe', 'Francuski', 'jan_piotrowski_cv.pdf',
-        'https://github.com/janpiotrowski', 'https://linkedin.com/in/janpiotrowski', 'jan_piotrowski_zdjecie.jpg', 3, 4,
+        'https://github.com/janpiotrowski', 'https://linkedin.com/in/janpiotrowski', 'jan_piotrowski_zdjecie.jpg',
+        'Senior', 4,
         6000.00, false, true, 2);
 
 -- Kandydat 26
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Katarzyna', 'Zając', 'katarzyna.zajac@example.com', 'haslopoi', '252525252', 5, '2023-05-25',
         'Inż. informatyki', 'Podróże', 'Hiszpański', 'katarzyna_zajac_cv.pdf', 'https://github.com/katarzynazajac',
-        'https://linkedin.com/in/katarzynazajac', 'katarzyna_zajac_zdjecie.jpg', 2, 3, 5000.00, true, false, 3);
+        'https://linkedin.com/in/katarzynazajac', 'katarzyna_zajac_zdjecie.jpg', 'Senior', 3, 5000.00, true, false, 3);
 
 -- Kandydat 27
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Andrzej', 'Kowalczyk', 'andrzej.kowalczyk@example.com', 'haslomyt', '262626262', 6, '2023-05-26',
         'Inż. informatyki', 'Fotografia', 'Włoski', 'andrzej_kowalczyk_cv.pdf', 'https://github.com/andrzejkowalczyk',
-        'https://linkedin.com/in/andrzejkowalczyk', 'andrzej_kowalczyk_zdjecie.jpg', 1, 2, 4000.00, false, true, 1);
+        'https://linkedin.com/in/andrzejkowalczyk', 'andrzej_kowalczyk_zdjecie.jpg', 'Senior', 2, 4000.00, false, true,
+        1);
 
 -- Kandydat 28
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Karolina', 'Kaczmarek', 'karolina.kaczmarek@example.com', 'hasloqaz', '272727272', 7, '2023-05-27',
         'Inż. informatyki', 'Podróże', 'Angielski', 'karolina_kaczmarek_cv.pdf', 'https://github.com/karolinakaczmarek',
-        'https://linkedin.com/in/karolinakaczmarek', 'karolina_kaczmarek_zdjecie.jpg', 3, 4, 6000.00, true, true, 2);
+        'https://linkedin.com/in/karolinakaczmarek', 'karolina_kaczmarek_zdjecie.jpg', 'Senior', 4, 6000.00, true, true,
+        2);
 
 -- Kandydat 29
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Robert', 'Mazur', 'robert.mazur@example.com', 'hasloqwe', '282828282', 8, '2023-05-28', 'Informatyka',
         'Gra na gitarze', 'Niemiecki', 'robert_mazur_cv.pdf', 'https://github.com/robertmazur',
-        'https://linkedin.com/in/robertmazur', 'robert_mazur_zdjecie.jpg', 2, 3, 5000.00, false, false, 3);
+        'https://linkedin.com/in/robertmazur', 'robert_mazur_zdjecie.jpg', 'Senior', 3, 5000.00, false, false, 3);
 
 -- Kandydat 30
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Marta', 'Górka', 'marta.gorka@example.com', 'haslozxc', '292929292', 9, '2023-05-29', 'Informatyka', 'Sport',
         'Francuski', 'marta_gorka_cv.pdf', 'https://github.com/martagorka', 'https://linkedin.com/in/martagorka',
-        'marta_gorka_zdjecie.jpg', 1, 2, 4000.00, true, true, 1);
+        'marta_gorka_zdjecie.jpg', 'Senior', 2, 4000.00, true, true, 1);
 
 -- Kandydat 31
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Tomasz', 'Wójcik', 'tomasz.wojcik@example.com', 'haslopoi', '303030303', 10, '2023-05-30', 'Inż. informatyki',
         'Podróże', 'Hiszpański', 'tomasz_wojcik_cv.pdf', 'https://github.com/tomaszwojcik',
-        'https://linkedin.com/in/tomaszwojcik', 'tomasz_wojcik_zdjecie.jpg', 3, 4, 6000.00, false, true, 2);
+        'https://linkedin.com/in/tomaszwojcik', 'tomasz_wojcik_zdjecie.jpg', 'Senior', 4, 6000.00, false, true, 2);
 
 -- Kandydat 32
 INSERT INTO candidate (first_name, last_name, email, password, phone_number, residence_city_id, registration_date,
                        education, hobby, foreign_language, cv_file, github_link, linkedin_link, picture_file,
-                       experience_id, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
+                       experience, years_of_experience, salary_min, open_to_relocation, open_to_remote_job,
                        desired_job_city_id)
 VALUES ('Monika', 'Krawczyk', 'monika.krawczyk@example.com', 'haslolkj', '313131313', 11, '2023-05-31',
         'Inż. informatyki', 'Fotografia', 'Angielski', 'monika_krawczyk_cv.pdf', 'https://github.com/monikakrawczyk',
-        'https://linkedin.com/in/monikakrawczyk', 'monika_krawczyk_zdjecie.jpg', 2, 3, 5000.00, true, false, 3);
+        'https://linkedin.com/in/monikakrawczyk', 'monika_krawczyk_zdjecie.jpg', 'Senior', 3, 5000.00, true, false, 3);
 
 
 -- Pracodawca 1
@@ -896,125 +930,133 @@ VALUES ('Quick Tech', 'info@quicktech.com', 'quickpass', '101010101', 'Opis firm
 
 
 -- Oferta 1
-INSERT INTO offer (title, employer_id, description, project_description, city_id, experience_id, salary_min, salary_max,
+INSERT INTO offer (title, employer_id, description, project_description, city_id, experience, salary_min, salary_max,
                    publication_date, expiration_date)
-VALUES ('Programista Java', 1, 'Opis stanowiska programisty Java', 'Projektowanie i rozwijanie aplikacji w Javie', 1, 2,
+VALUES ('Programista Java', 1, 'Opis stanowiska programisty Java', 'Projektowanie i rozwijanie aplikacji w Javie', 1,
+        'Senior',
         5000.00, 8000.00, '2023-05-24', '2023-06-30');
 
 -- Oferta 2
-INSERT INTO offer (title, employer_id, description, project_description, city_id, experience_id, salary_min, salary_max,
+INSERT INTO offer (title, employer_id, description, project_description, city_id, experience, salary_min, salary_max,
                    publication_date, expiration_date)
 VALUES ('Front-end Developer', 3, 'Opis stanowiska Front-end Developera', 'Tworzenie responsywnych stron internetowych',
-        3, 1, 4000.00, 6000.00, '2023-05-24', '2023-06-30');
+        3, 'Senior', 4000.00, 6000.00, '2023-05-24', '2023-06-30');
 
 -- Oferta 3
-INSERT INTO offer (title, employer_id, description, project_description, city_id, experience_id, salary_min, salary_max,
+INSERT INTO offer (title, employer_id, description, project_description, city_id, experience, salary_min, salary_max,
                    publication_date, expiration_date)
 VALUES ('Full-stack Developer', 2, 'Opis stanowiska Full-stack Developera',
-        'Rozwój aplikacji webowych od front-endu do back-endu', 2, 3, 6000.00, 9000.00, '2023-05-24', '2023-06-30');
+        'Rozwój aplikacji webowych od front-endu do back-endu', 2, 'Senior', 6000.00, 9000.00, '2023-05-24',
+        '2023-06-30');
 
 -- Oferta 4
-INSERT INTO offer (title, employer_id, description, project_description, city_id, experience_id, salary_min, salary_max,
+INSERT INTO offer (title, employer_id, description, project_description, city_id, experience, salary_min, salary_max,
                    publication_date, expiration_date)
 VALUES ('Java Software Engineer', 4, 'Opis stanowiska Java Software Engineera', 'Tworzenie oprogramowania w Javie', 4,
-        2, 5500.00, 8500.00, '2023-05-24', '2023-06-30');
+        'Mid', 5500.00, 8500.00, '2023-05-24', '2023-06-30');
 
 -- Oferta 5
-INSERT INTO offer (title, employer_id, description, project_description, city_id, experience_id, salary_min, salary_max,
+INSERT INTO offer (title, employer_id, description, project_description, city_id, experience, salary_min, salary_max,
                    publication_date, expiration_date)
 VALUES ('Backend Developer', 5, 'Opis stanowiska Backend Developera',
-        'Tworzenie i utrzymanie serwerowej części aplikacji', 5, 2, 5000.00, 8000.00, '2023-05-24', '2023-06-30');
+        'Tworzenie i utrzymanie serwerowej części aplikacji', 5, 'Mid', 5000.00, 8000.00, '2023-05-24', '2023-06-30');
 
 -- Oferta 6
-INSERT INTO offer (title, employer_id, description, project_description, city_id, experience_id, salary_min, salary_max,
+INSERT INTO offer (title, employer_id, description, project_description, city_id, experience, salary_min, salary_max,
                    publication_date, expiration_date)
-VALUES ('Programista C#', 1, 'Opis stanowiska programisty C#', 'Tworzenie aplikacji w technologii C#', 1, 2, 4500.00,
+VALUES ('Programista C#', 1, 'Opis stanowiska programisty C#', 'Tworzenie aplikacji w technologii C#', 1, 'Mid',
+        4500.00,
         7000.00, '2023-05-24', '2023-06-30');
 
 -- Oferta 7
-INSERT INTO offer (title, employer_id, description, project_description, city_id, experience_id, salary_min, salary_max,
+INSERT INTO offer (title, employer_id, description, project_description, city_id, experience, salary_min, salary_max,
                    publication_date, expiration_date)
-VALUES ('QA Engineer', 3, 'Opis stanowiska QA Engineera', 'Testowanie i analiza jakości oprogramowania', 3, 1, 4000.00,
+VALUES ('QA Engineer', 3, 'Opis stanowiska QA Engineera', 'Testowanie i analiza jakości oprogramowania', 3, 'Junior',
+        4000.00,
         6000.00, '2023-05-24', '2023-06-30');
 
 -- Oferta 8
-INSERT INTO offer (title, employer_id, description, project_description, city_id, experience_id, salary_min, salary_max,
+INSERT INTO offer (title, employer_id, description, project_description, city_id, experience, salary_min, salary_max,
                    publication_date, expiration_date)
 VALUES ('Software Architect', 2, 'Opis stanowiska Software Architekta',
-        'Projektowanie i nadzór nad architekturą oprogramowania', 2, 3, 7000.00, 10000.00, '2023-05-24', '2023-06-30');
+        'Projektowanie i nadzór nad architekturą oprogramowania', 2, 'Senior', 7000.00, 10000.00, '2023-05-24',
+        '2023-06-30');
 
 -- Oferta 9
-INSERT INTO offer (title, employer_id, description, project_description, city_id, experience_id, salary_min, salary_max,
+INSERT INTO offer (title, employer_id, description, project_description, city_id, experience, salary_min, salary_max,
                    publication_date, expiration_date)
 VALUES ('Junior Java Developer', 4, 'Opis stanowiska Junior Java Developera', 'Wsparcie w tworzeniu aplikacji w Javie',
-        4, 1, 3500.00, 5000.00, '2023-05-24', '2023-06-30');
+        4, 'Junior', 3500.00, 5000.00, '2023-05-24', '2023-06-30');
 
 -- Oferta 10
-INSERT INTO offer (title, employer_id, description, project_description, city_id, experience_id, salary_min, salary_max,
+INSERT INTO offer (title, employer_id, description, project_description, city_id, experience, salary_min, salary_max,
                    publication_date, expiration_date)
 VALUES ('Software Tester', 5, 'Opis stanowiska Software Testera', 'Testowanie oprogramowania i raportowanie błędów', 5,
-        1, 3500.00, 5500.00, '2023-05-24', '2023-06-30');
+        'Junior', 3500.00, 5500.00, '2023-05-24', '2023-06-30');
 
 -- Oferta 11
-INSERT INTO offer (title, employer_id, description, project_description, city_id, experience_id, salary_min, salary_max,
+INSERT INTO offer (title, employer_id, description, project_description, city_id, experience, salary_min, salary_max,
                    publication_date, expiration_date)
-VALUES ('Python Developer', 1, 'Opis stanowiska Python Developera', 'Tworzenie aplikacji w języku Python', 1, 2,
+VALUES ('Python Developer', 1, 'Opis stanowiska Python Developera', 'Tworzenie aplikacji w języku Python', 1, 'Mid',
         4500.00, 7000.00, '2023-05-24', '2023-06-30');
 
 -- Oferta 12
-INSERT INTO offer (title, employer_id, description, project_description, city_id, experience_id, salary_min, salary_max,
+INSERT INTO offer (title, employer_id, description, project_description, city_id, experience, salary_min, salary_max,
                    publication_date, expiration_date)
 VALUES ('Mobile App Developer', 3, 'Opis stanowiska Mobile App Developera',
-        'Tworzenie mobilnych aplikacji dla systemów iOS i Android', 3, 2, 5000.00, 8000.00, '2023-05-24', '2023-06-30');
+        'Tworzenie mobilnych aplikacji dla systemów iOS i Android', 3, 'Mid', 5000.00, 8000.00, '2023-05-24',
+        '2023-06-30');
 
 -- Oferta 13
-INSERT INTO offer (title, employer_id, description, project_description, city_id, experience_id, salary_min, salary_max,
+INSERT INTO offer (title, employer_id, description, project_description, city_id, experience, salary_min, salary_max,
                    publication_date, expiration_date)
 VALUES ('Web Designer', 2, 'Opis stanowiska Web Designera',
-        'Tworzenie atrakcyjnych i responsywnych interfejsów użytkownika', 2, 1, 4000.00, 6000.00, '2023-05-24',
+        'Tworzenie atrakcyjnych i responsywnych interfejsów użytkownika', 2, 'Junior', 4000.00, 6000.00, '2023-05-24',
         '2023-06-30');
 
 -- Oferta 14
-INSERT INTO offer (title, employer_id, description, project_description, city_id, experience_id, salary_min, salary_max,
+INSERT INTO offer (title, employer_id, description, project_description, city_id, experience, salary_min, salary_max,
                    publication_date, expiration_date)
 VALUES ('DevOps Engineer', 4, 'Opis stanowiska DevOps Engineera',
-        'Wdrażanie narzędzi i procesów wspierających wytwarzanie oprogramowania', 4, 3, 6000.00, 9000.00, '2023-05-24',
+        'Wdrażanie narzędzi i procesów wspierających wytwarzanie oprogramowania', 4, 'Senior', 6000.00, 9000.00,
+        '2023-05-24',
         '2023-06-30');
 
 -- Oferta 15
-INSERT INTO offer (title, employer_id, description, project_description, city_id, experience_id, salary_min, salary_max,
+INSERT INTO offer (title, employer_id, description, project_description, city_id, experience, salary_min, salary_max,
                    publication_date, expiration_date)
 VALUES ('Backend Python Developer', 5, 'Opis stanowiska Backend Python Developera',
-        'Rozwój serwerowej części aplikacji w języku Python', 5, 2, 5500.00, 8500.00, '2023-05-24', '2023-06-30');
+        'Rozwój serwerowej części aplikacji w języku Python', 5, 'Mid', 5500.00, 8500.00, '2023-05-24', '2023-06-30');
 
 -- Oferta 16
-INSERT INTO offer (title, employer_id, description, project_description, city_id, experience_id, salary_min, salary_max,
+INSERT INTO offer (title, employer_id, description, project_description, city_id, experience, salary_min, salary_max,
                    publication_date, expiration_date)
-VALUES ('PHP Developer', 1, 'Opis stanowiska PHP Developera', 'Tworzenie aplikacji w języku PHP', 1, 2, 4500.00,
+VALUES ('PHP Developer', 1, 'Opis stanowiska PHP Developera', 'Tworzenie aplikacji w języku PHP', 1, 'Mid', 4500.00,
         7000.00, '2023-05-24', '2023-06-30');
 
 -- Oferta 17
-INSERT INTO offer (title, employer_id, description, project_description, city_id, experience_id, salary_min, salary_max,
+INSERT INTO offer (title, employer_id, description, project_description, city_id, experience, salary_min, salary_max,
                    publication_date, expiration_date)
 VALUES ('Software Engineer', 3, 'Opis stanowiska Software Engineera', 'Tworzenie oprogramowania zgodnie z wymaganiami',
-        3, 3, 6000.00, 9000.00, '2023-05-24', '2023-06-30');
+        3, 'Senior', 6000.00, 9000.00, '2023-05-24', '2023-06-30');
 
 -- Oferta 18
-INSERT INTO offer (title, employer_id, description, project_description, city_id, experience_id, salary_min, salary_max,
+INSERT INTO offer (title, employer_id, description, project_description, city_id, experience, salary_min, salary_max,
                    publication_date, expiration_date)
 VALUES ('Android Developer', 2, 'Opis stanowiska Android Developera',
-        'Tworzenie aplikacji mobilnych dla systemu Android', 2, 2, 5000.00, 8000.00, '2023-05-24', '2023-06-30');
+        'Tworzenie aplikacji mobilnych dla systemu Android', 2, 'Mid', 5000.00, 8000.00, '2023-05-24', '2023-06-30');
 
 -- Oferta 19
-INSERT INTO offer (title, employer_id, description, project_description, city_id, experience_id, salary_min, salary_max,
+INSERT INTO offer (title, employer_id, description, project_description, city_id, experience, salary_min, salary_max,
                    publication_date, expiration_date)
 VALUES ('Frontend JavaScript Developer', 4, 'Opis stanowiska Frontend JavaScript Developera',
-        'Rozwój interfejsów użytkownika w JavaScript', 4, 2, 5000.00, 8000.00, '2023-05-24', '2023-06-30');
+        'Rozwój interfejsów użytkownika w JavaScript', 4, 'Mid', 5000.00, 8000.00, '2023-05-24', '2023-06-30');
 
 -- Oferta 20
-INSERT INTO offer (title, employer_id, description, project_description, city_id, experience_id, salary_min, salary_max,
+INSERT INTO offer (title, employer_id, description, project_description, city_id, experience, salary_min, salary_max,
                    publication_date, expiration_date)
-VALUES ('Data Scientist', 5, 'Opis stanowiska Data Scientista', 'Analiza danych i tworzenie modeli predykcyjnych', 5, 3,
+VALUES ('Data Scientist', 5, 'Opis stanowiska Data Scientista', 'Analiza danych i tworzenie modeli predykcyjnych', 5,
+        'Senior',
         7000.00, 10000.00, '2023-05-24', '2023-06-30');
 
 
@@ -1034,13 +1076,6 @@ VALUES (3, 3, '2023-05-24', 'pending');
 INSERT INTO application (candidate_id, offer_id, application_date, status)
 VALUES (4, 4, '2023-05-24', 'pending');
 
-
--- Candidate 0
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (0, 1),
-       (0, 5),
-       (0, 10),
-       (0, 15);
 
 -- Candidate 1
 INSERT INTO candidate_skill (candidate_id, skill_id)
