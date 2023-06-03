@@ -1,4 +1,3 @@
-
 DROP TABLE IF EXISTS follow_employer CASCADE;
 DROP TABLE IF EXISTS follow_candidate CASCADE;
 DROP TABLE IF EXISTS follow_offer CASCADE;
@@ -29,13 +28,13 @@ DROP TYPE IF EXISTS response_state CASCADE;
 DROP TYPE IF EXISTS offer_state CASCADE;
 DROP TYPE IF EXISTS candidate_state CASCADE;
 
-CREATE TYPE candidate_state AS ENUM ('active', 'inactive', 'employed', 'employed_but_seeking_next_job', 'banned');
-CREATE TYPE offer_state AS ENUM ('open', 'closed');
-CREATE TYPE response_state AS ENUM ('accepted', 'rejected', 'pending');
-CREATE TYPE experience AS ENUM ('Junior', 'Mid', 'Senior');
-CREATE TYPE alert_type AS ENUM ('application_sent', 'candidate_status_changed', 'invitation_accepted', 'invitation_rejected',
-    'new_message', 'new_job_posted', 'offer_expired', 'job_invitation_received', 'hired',
-    'application_rejected', 'application_accepted');
+-- CREATE TYPE candidate_state AS ENUM ('active', 'inactive', 'employed', 'employed_but_seeking_next_job', 'banned');
+-- CREATE TYPE offer_state AS ENUM ('open', 'closed');
+-- CREATE TYPE response_state AS ENUM ('accepted', 'rejected', 'pending');
+-- CREATE TYPE experience AS ENUM ('Junior', 'Mid', 'Senior');
+-- CREATE TYPE alert_type AS ENUM ('application_sent', 'candidate_status_changed', 'invitation_accepted', 'invitation_rejected',
+--     'new_message', 'new_job_posted', 'offer_expired', 'job_invitation_received', 'hired',
+--     'application_rejected', 'application_accepted');
 
 -- CREATE TABLE admin
 -- (
@@ -69,16 +68,17 @@ CREATE TABLE employer
 (
     employer_id         SERIAL       NOT NULL,
     company_name        VARCHAR(255) NOT NULL,
-    email               VARCHAR(255) NOT NULL,
-    password            VARCHAR(100) NOT NULL,
-    phone_number        VARCHAR(255) NOT NULL,
-    description         VARCHAR(255) NOT NULL,
+--     email               VARCHAR(255) NOT NULL,
+--     password            VARCHAR(100) NOT NULL,
+    phone_number        VARCHAR(255),
+    description         VARCHAR(255),
     logo_file           VARCHAR(500),
     website             VARCHAR(255),
-    rating              NUMERIC(2, 1),
+--     rating              NUMERIC(2, 1),
     number_of_employees INTEGER,
     city_id             INTEGER      NOT NULL,
-    UNIQUE (email),
+    created_at          TIMESTAMP    NOT NULL,
+--     UNIQUE (email),
     UNIQUE (company_name),
     PRIMARY KEY (employer_id),
     CONSTRAINT fk_employer_city
@@ -87,23 +87,23 @@ CREATE TABLE employer
 
 CREATE TABLE offer
 (
-    offer_id            SERIAL         NOT NULL,
-    title               VARCHAR(255)   NOT NULL,
-    employer_id         INTEGER        NOT NULL,
-    description         TEXT           NOT NULL,
-    project_description TEXT           NOT NULL,
+    offer_id            SERIAL       NOT NULL,
+    title               VARCHAR(255) NOT NULL,
+    employer_id         INTEGER      NOT NULL,
+    description         TEXT,
+    project_description TEXT,
     requirements        TEXT,
-    city_id             INTEGER        NOT NULL,
+    city_id             INTEGER      NOT NULL,
     remote_work         INTEGER CHECK (remote_work BETWEEN 0 AND 100),
-    experience          experience     NOT NULL,
+    experience          VARCHAR(254) NOT NULL,
     years_of_experience INTEGER,
-    salary_min          NUMERIC(10, 2) NOT NULL,
-    salary_max          NUMERIC(10, 2) NOT NULL,
-    publication_date    TIMESTAMP      NOT NULL,
-    expiration_date     TIMESTAMP      NOT NULL,
-    benefits            TEXT,
-    promoted            BOOLEAN                 DEFAULT FALSE,
-    status              offer_state    NOT NULL DEFAULT 'open',
+    salary_min          NUMERIC(10, 2),
+    salary_max          NUMERIC(10, 2),
+    created_at          TIMESTAMP    NOT NULL,
+    expiration_date     TIMESTAMP,
+    benefits            VARCHAR(512),
+    promoted            BOOLEAN DEFAULT FALSE,
+    status              VARCHAR(254) NOT NULL,
     PRIMARY KEY (offer_id),
     CONSTRAINT fk_offer_city
         FOREIGN KEY (city_id) REFERENCES city (city_id),
@@ -113,15 +113,14 @@ CREATE TABLE offer
 
 CREATE TABLE candidate
 (
-    candidate_id        SERIAL          NOT NULL,
-    first_name          VARCHAR(255)    NOT NULL,
-    last_name           VARCHAR(255)    NOT NULL,
-    email               VARCHAR(255)    NOT NULL,
-    password            VARCHAR(255)    NOT NULL,
-    phone_number        TEXT            NOT NULL,
-    residence_city_id   INTEGER         NOT NULL,
-    registration_date   TIMESTAMP       NOT NULL,
-    status              candidate_state NOT NULL DEFAULT 'active',
+    candidate_id        SERIAL       NOT NULL,
+    first_name          VARCHAR(128) NOT NULL,
+    last_name           VARCHAR(128) NOT NULL,
+--     email               VARCHAR(255)    NOT NULL,
+--     password            VARCHAR(255)    NOT NULL,
+    phone_number        VARCHAR(32),
+    created_at          TIMESTAMP    NOT NULL,
+    status              VARCHAR(254) NOT NULL,
     education           VARCHAR(500),
     hobby               VARCHAR(500),
     foreign_language    VARCHAR(500),
@@ -129,14 +128,16 @@ CREATE TABLE candidate
     github_link         VARCHAR(500),
     linkedin_link       VARCHAR(500),
     picture_file        VARCHAR(500),
-    experience          experience,
+    experience          VARCHAR(254),
     years_of_experience INTEGER,
-    employer_id         INTEGER,
-    salary_min          NUMERIC(10, 2)  NOT NULL,
+    salary_min          NUMERIC(10, 2),
     open_to_relocation  BOOLEAN,
     open_to_remote_job  BOOLEAN,
-    desired_job_city_id INTEGER         NOT NULL,
-    UNIQUE (email),
+    employer_id         INTEGER,
+    desired_job_city_id INTEGER,
+    residence_city_id   INTEGER      NOT NULL,
+
+--     UNIQUE (email),
     PRIMARY KEY (candidate_id),
     CONSTRAINT fk_candidate_residence_city
         FOREIGN KEY (residence_city_id) REFERENCES city (city_id),
@@ -170,12 +171,12 @@ CREATE TABLE offer_skill
 
 CREATE TABLE invitation
 (
-    invitation_id   SERIAL         NOT NULL,
-    employer_id     INTEGER        NOT NULL,
-    candidate_id    INTEGER        NOT NULL,
-    offer_id        INTEGER        NOT NULL,
-    invitation_date TIMESTAMP      NOT NULL,
-    status          response_state NOT NULL DEFAULT 'pending',
+    invitation_id SERIAL       NOT NULL,
+    employer_id   INTEGER      NOT NULL,
+    candidate_id  INTEGER      NOT NULL,
+    offer_id      INTEGER      NOT NULL,
+    created_at    TIMESTAMP    NOT NULL,
+    status        VARCHAR(254) NOT NULL,
     PRIMARY KEY (invitation_id),
     UNIQUE (candidate_id, offer_id),
     CONSTRAINT fk_invitation_employer
@@ -188,11 +189,11 @@ CREATE TABLE invitation
 
 CREATE TABLE application
 (
-    application_id   SERIAL         NOT NULL,
-    candidate_id     INTEGER        NOT NULL,
-    offer_id         INTEGER        NOT NULL,
-    application_date TIMESTAMP      NOT NULL,
-    status           response_state NOT NULL DEFAULT 'pending',
+    application_id SERIAL       NOT NULL,
+    created_at     TIMESTAMP    NOT NULL,
+    status         VARCHAR(255) NOT NULL,
+    candidate_id   INTEGER      NOT NULL,
+    offer_id       INTEGER      NOT NULL,
     UNIQUE (candidate_id, offer_id),
     PRIMARY KEY (application_id),
     CONSTRAINT fk_application_candidate
@@ -210,7 +211,7 @@ CREATE TABLE employee
     employer_id    INTEGER   NOT NULL,
     begin_date     TIMESTAMP NOT NULL,
     finish_date    TIMESTAMP NOT NULL,
-    approved BOOLEAN NOT NULL DEFAULT 'false',
+    approved       BOOLEAN,
 
     PRIMARY KEY (employee_id),
     CONSTRAINT fk_employee_candidate
@@ -221,6 +222,37 @@ CREATE TABLE employee
         FOREIGN KEY (application_id) REFERENCES application (application_id),
     CONSTRAINT fk_employee_employer
         FOREIGN KEY (employer_id) REFERENCES employer (employer_id)
+);
+
+
+CREATE TABLE devfinder_user
+(
+    user_id   SERIAL       NOT NULL,
+    user_name VARCHAR(32)  NOT NULL,
+    email     VARCHAR(32)  NOT NULL,
+    password  VARCHAR(128) NOT NULL,
+    active    BOOLEAN      NOT NULL,
+    PRIMARY KEY (user_id)
+);
+
+CREATE TABLE devfinder_role
+(
+    role_id SERIAL      NOT NULL,
+    role    VARCHAR(20) NOT NULL,
+    PRIMARY KEY (role_id)
+);
+
+CREATE TABLE devfinder_user_role
+(
+    user_id INT NOT NULL,
+    role_id INT NOT NULL,
+    PRIMARY KEY (user_id, role_id),
+    CONSTRAINT fk_devfinder_user_role_user
+        FOREIGN KEY (user_id)
+            REFERENCES devfinder_user (user_id),
+    CONSTRAINT fk_devfinder_user_role_role
+        FOREIGN KEY (role_id)
+            REFERENCES devfinder_role (role_id)
 );
 
 -- CREATE TABLE alert
@@ -323,7 +355,6 @@ CREATE TABLE employee
 --     CONSTRAINT fk_follow_employer_employer
 --         FOREIGN KEY (employer_id) REFERENCES employer (employer_id)
 -- );
-
 
 
 INSERT INTO city (city_name)
