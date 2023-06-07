@@ -51,7 +51,7 @@ DROP TYPE IF EXISTS candidate_state CASCADE;
 CREATE TABLE city
 (
     city_id   SERIAL       NOT NULL,
-    city_name VARCHAR(255) NOT NULL,
+    city_name VARCHAR(64) NOT NULL,
     UNIQUE (city_name),
     PRIMARY KEY (city_id)
 );
@@ -59,7 +59,7 @@ CREATE TABLE city
 CREATE TABLE skill
 (
     skill_id   SERIAL       NOT NULL,
-    skill_name VARCHAR(255) NOT NULL,
+    skill_name VARCHAR(64) NOT NULL,
     UNIQUE (skill_name),
     PRIMARY KEY (skill_id)
 );
@@ -67,17 +67,20 @@ CREATE TABLE skill
 CREATE TABLE employer
 (
     employer_id         SERIAL       NOT NULL,
+    employer_uuid       VARCHAR(64)  NOT NULL,
     company_name        VARCHAR(255) NOT NULL,
+    email_contact       VARCHAR(128) NOT NULL,
 --     email               VARCHAR(255) NOT NULL,
 --     password            VARCHAR(100) NOT NULL,
-    phone_number        VARCHAR(255),
+    phone_number        VARCHAR(255) NOT NULL,
     description         VARCHAR(255),
     logo_file           VARCHAR(500),
     website             VARCHAR(255),
 --     rating              NUMERIC(2, 1),
     number_of_employees INTEGER,
-    city_id             INTEGER      NOT NULL,
     created_at          TIMESTAMP    NOT NULL,
+    city_id             INTEGER,
+
 --     UNIQUE (email),
     UNIQUE (company_name),
     PRIMARY KEY (employer_id),
@@ -88,22 +91,23 @@ CREATE TABLE employer
 CREATE TABLE offer
 (
     offer_id            SERIAL       NOT NULL,
-    title               VARCHAR(255) NOT NULL,
-    employer_id         INTEGER      NOT NULL,
+    offer_uuid          VARCHAR(64)  NOT NULL,
+    title               VARCHAR(256) NOT NULL,
     description         TEXT,
-    project_description TEXT,
-    requirements        TEXT,
-    city_id             INTEGER      NOT NULL,
+    other_skills        VARCHAR(256),
     remote_work         INTEGER CHECK (remote_work BETWEEN 0 AND 100),
-    experience          VARCHAR(254) NOT NULL,
+    experience_level    VARCHAR(16) NOT NULL,
     years_of_experience INTEGER,
     salary_min          NUMERIC(10, 2),
     salary_max          NUMERIC(10, 2),
     created_at          TIMESTAMP    NOT NULL,
     expiration_date     TIMESTAMP,
-    benefits            VARCHAR(512),
-    promoted            BOOLEAN DEFAULT FALSE,
-    status              VARCHAR(254) NOT NULL,
+    benefits            VARCHAR(256),
+    status              VARCHAR(256) NOT NULL,
+    employer_id         INTEGER      NOT NULL,
+    city_id             INTEGER      NOT NULL,
+
+
     PRIMARY KEY (offer_id),
     CONSTRAINT fk_offer_city
         FOREIGN KEY (city_id) REFERENCES city (city_id),
@@ -114,28 +118,31 @@ CREATE TABLE offer
 CREATE TABLE candidate
 (
     candidate_id        SERIAL       NOT NULL,
+    candidate_uuid       VARCHAR(64)  NOT NULL,
     first_name          VARCHAR(128) NOT NULL,
     last_name           VARCHAR(128) NOT NULL,
+    email_contact       VARCHAR(128) NOT NULL,
 --     email               VARCHAR(255)    NOT NULL,
 --     password            VARCHAR(255)    NOT NULL,
     phone_number        VARCHAR(32),
     created_at          TIMESTAMP    NOT NULL,
     status              VARCHAR(254) NOT NULL,
     education           VARCHAR(500),
+    other_skills        VARCHAR(500),
     hobby               VARCHAR(500),
     foreign_language    VARCHAR(500),
     cv_file             VARCHAR(500),
     github_link         VARCHAR(500),
     linkedin_link       VARCHAR(500),
     picture_file        VARCHAR(500),
-    experience          VARCHAR(254),
+    experience_level    VARCHAR(16),
     years_of_experience INTEGER,
     salary_min          NUMERIC(10, 2),
     open_to_relocation  BOOLEAN,
     open_to_remote_job  BOOLEAN,
     employer_id         INTEGER,
     desired_job_city_id INTEGER,
-    residence_city_id   INTEGER      NOT NULL,
+    residence_city_id   INTEGER,
 
 --     UNIQUE (email),
     PRIMARY KEY (candidate_id),
@@ -149,9 +156,10 @@ CREATE TABLE candidate
 
 CREATE TABLE candidate_skill
 (
+    candidate_skill_id SERIAL NOT NULL,
     candidate_id INTEGER NOT NULL,
     skill_id     INTEGER NOT NULL,
-    PRIMARY KEY (candidate_id, skill_id),
+    PRIMARY KEY (candidate_skill_id),
     CONSTRAINT fk_candidate_skill_candidate
         FOREIGN KEY (candidate_id) REFERENCES candidate (candidate_id),
     CONSTRAINT fk_candidate_skill_skill
@@ -160,70 +168,15 @@ CREATE TABLE candidate_skill
 
 CREATE TABLE offer_skill
 (
+    offer_skill_id SERIAL NOT NULL,
     offer_id INTEGER NOT NULL,
     skill_id INTEGER NOT NULL,
-    PRIMARY KEY (offer_id, skill_id),
+    PRIMARY KEY (offer_skill_id),
     CONSTRAINT fk_offer_skill_offer
         FOREIGN KEY (offer_id) REFERENCES offer (offer_id),
     CONSTRAINT fk_offer_skill_skill
         FOREIGN KEY (skill_id) REFERENCES skill (skill_id)
 );
-
-CREATE TABLE invitation
-(
-    invitation_id SERIAL       NOT NULL,
-    employer_id   INTEGER      NOT NULL,
-    candidate_id  INTEGER      NOT NULL,
-    offer_id      INTEGER      NOT NULL,
-    created_at    TIMESTAMP    NOT NULL,
-    status        VARCHAR(254) NOT NULL,
-    PRIMARY KEY (invitation_id),
-    UNIQUE (candidate_id, offer_id),
-    CONSTRAINT fk_invitation_employer
-        FOREIGN KEY (employer_id) REFERENCES employer (employer_id),
-    CONSTRAINT fk_invitation_candidate
-        FOREIGN KEY (candidate_id) REFERENCES candidate (candidate_id),
-    CONSTRAINT _fk_invitation_offer
-        FOREIGN KEY (offer_id) REFERENCES offer (offer_id)
-);
-
-CREATE TABLE application
-(
-    application_id SERIAL       NOT NULL,
-    created_at     TIMESTAMP    NOT NULL,
-    status         VARCHAR(255) NOT NULL,
-    candidate_id   INTEGER      NOT NULL,
-    offer_id       INTEGER      NOT NULL,
-    UNIQUE (candidate_id, offer_id),
-    PRIMARY KEY (application_id),
-    CONSTRAINT fk_application_candidate
-        FOREIGN KEY (candidate_id) REFERENCES candidate (candidate_id),
-    CONSTRAINT fk_application_offer
-        FOREIGN KEY (offer_id) REFERENCES offer (offer_id)
-);
-
-CREATE TABLE employee
-(
-    employee_id    SERIAL    NOT NULL,
-    candidate_id   INTEGER   NOT NULL,
-    offer_id       INTEGER   NOT NULL,
-    application_id INTEGER,
-    employer_id    INTEGER   NOT NULL,
-    begin_date     TIMESTAMP NOT NULL,
-    finish_date    TIMESTAMP NOT NULL,
-    approved       BOOLEAN,
-
-    PRIMARY KEY (employee_id),
-    CONSTRAINT fk_employee_candidate
-        FOREIGN KEY (candidate_id) REFERENCES candidate (candidate_id),
-    CONSTRAINT fk_employee_offer
-        FOREIGN KEY (offer_id) REFERENCES offer (offer_id),
-    CONSTRAINT fk_employee_application
-        FOREIGN KEY (application_id) REFERENCES application (application_id),
-    CONSTRAINT fk_employee_employer
-        FOREIGN KEY (employer_id) REFERENCES employer (employer_id)
-);
-
 
 CREATE TABLE devfinder_user
 (
@@ -232,6 +185,7 @@ CREATE TABLE devfinder_user
     email     VARCHAR(32)  NOT NULL,
     password  VARCHAR(128) NOT NULL,
     active    BOOLEAN      NOT NULL,
+    UNIQUE (email),
     PRIMARY KEY (user_id)
 );
 
@@ -254,6 +208,62 @@ CREATE TABLE devfinder_user_role
         FOREIGN KEY (role_id)
             REFERENCES devfinder_role (role_id)
 );
+
+-- CREATE TABLE invitation
+-- (
+--     invitation_id SERIAL       NOT NULL,
+--     employer_id   INTEGER      NOT NULL,
+--     candidate_id  INTEGER      NOT NULL,
+--     offer_id      INTEGER      NOT NULL,
+--     created_at    TIMESTAMP    NOT NULL,
+--     status        VARCHAR(254) NOT NULL,
+--     PRIMARY KEY (invitation_id),
+--     UNIQUE (candidate_id, offer_id),
+--     CONSTRAINT fk_invitation_employer
+--         FOREIGN KEY (employer_id) REFERENCES employer (employer_id),
+--     CONSTRAINT fk_invitation_candidate
+--         FOREIGN KEY (candidate_id) REFERENCES candidate (candidate_id),
+--     CONSTRAINT _fk_invitation_offer
+--         FOREIGN KEY (offer_id) REFERENCES offer (offer_id)
+-- );
+
+-- CREATE TABLE application
+-- (
+--     application_id SERIAL       NOT NULL,
+--     created_at     TIMESTAMP    NOT NULL,
+--     status         VARCHAR(255) NOT NULL,
+--     candidate_id   INTEGER      NOT NULL,
+--     offer_id       INTEGER      NOT NULL,
+--     UNIQUE (candidate_id, offer_id),
+--     PRIMARY KEY (application_id),
+--     CONSTRAINT fk_application_candidate
+--         FOREIGN KEY (candidate_id) REFERENCES candidate (candidate_id),
+--     CONSTRAINT fk_application_offer
+--         FOREIGN KEY (offer_id) REFERENCES offer (offer_id)
+-- );
+
+-- CREATE TABLE employee
+-- (
+--     employee_id    SERIAL    NOT NULL,
+--     candidate_id   INTEGER   NOT NULL,
+--     offer_id       INTEGER   NOT NULL,
+--     application_id INTEGER,
+--     employer_id    INTEGER   NOT NULL,
+--     begin_date     TIMESTAMP NOT NULL,
+--     finish_date    TIMESTAMP NOT NULL,
+--     approved       BOOLEAN,
+--
+--     PRIMARY KEY (employee_id),
+--     CONSTRAINT fk_employee_candidate
+--         FOREIGN KEY (candidate_id) REFERENCES candidate (candidate_id),
+--     CONSTRAINT fk_employee_offer
+--         FOREIGN KEY (offer_id) REFERENCES offer (offer_id),
+--     CONSTRAINT fk_employee_application
+--         FOREIGN KEY (application_id) REFERENCES application (application_id),
+--     CONSTRAINT fk_employee_employer
+--         FOREIGN KEY (employer_id) REFERENCES employer (employer_id)
+-- );
+
 
 -- CREATE TABLE alert
 -- (

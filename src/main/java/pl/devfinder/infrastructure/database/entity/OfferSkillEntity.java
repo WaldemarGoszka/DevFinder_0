@@ -14,24 +14,25 @@ import java.time.OffsetDateTime;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of = "candidateId")
-@ToString(of = {"candidateId", "firstName", "lastName", "phoneNumber", "createdAt", "status"})
+@EqualsAndHashCode(of = "offerSkillId")
+@ToString(of = {"offerSkillId", "offerId", "skillId",})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "candidate")
+@Table(name = "offer_skill")
 public class OfferSkillEntity {
-    @EmbeddedId
-    private OfferSkillId id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "offer_skill_id")
+    private Long offerSkillId;
 
     @ManyToOne
-    @MapsId("offerId")
     @JoinColumn(name = "offer_id")
-    private Offer offer;
+    private OfferEntity offerId;
 
     @ManyToOne
-    @MapsId("skillId")
     @JoinColumn(name = "skill_id")
-    private Skill skill;
+    private SkillEntity skillId;
 }

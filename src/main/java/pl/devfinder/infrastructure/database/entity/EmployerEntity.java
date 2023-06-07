@@ -7,8 +7,8 @@ import java.time.OffsetDateTime;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of = "employerId")
-@ToString(of = {"employerId", "companyName", "phoneNumber"})
+@EqualsAndHashCode(of = "employerUUId")
+@ToString(of = {"employerId", "employerUUId", "companyName", "phoneNumber"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,10 +20,16 @@ public class EmployerEntity {
     @Column(name = "employer_id")
     private Long employerId;
 
-    @Column(name = "company_name", nullable = false)
+    @Column(name = "employer_uuid", nullable = false)
+    private String employerUUId;
+
+    @Column(name = "company_name",  unique = true,  nullable = false)
     private String companyName;
 
-    @Column(name = "phone_number")
+    @Column(name = "email_contact", nullable = false)
+    private String email_Contact;
+
+    @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
     @Column(name = "description")
@@ -41,7 +47,7 @@ public class EmployerEntity {
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;
 
-    @ManyToOne
-    @JoinColumn(name = "city_id", nullable = false)
-    private CityEntity city;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id")
+    private CityEntity cityId;
 }

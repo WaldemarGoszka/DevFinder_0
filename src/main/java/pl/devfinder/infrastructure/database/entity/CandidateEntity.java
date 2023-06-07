@@ -14,8 +14,8 @@ import java.time.OffsetDateTime;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of = "candidateId")
-@ToString(of = {"candidateId", "firstName", "lastName", "phoneNumber", "createdAt", "status"})
+@EqualsAndHashCode(of = "candidateUUId")
+@ToString(of = {"candidateId", "candidateUUId", "firstName", "lastName", "phoneNumber", "createdAt", "status"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,13 +27,19 @@ public class CandidateEntity {
         @Column(name = "candiate_id")
         private Long candidateId;
 
+        @Column(name = "candiate_uuid", nullable = false)
+        private String candidateUUId;
+
         @Column(name = "first_name", nullable = false)
         private String firstName;
 
         @Column(name = "last_name", nullable = false)
         private String lastName;
 
-        @Column(name = "phone_number", nullable = false)
+        @Column(name = "email_contact", nullable = false)
+        private String email_Contact;
+
+        @Column(name = "phone_number")
         private String phoneNumber;
 
         @Column(name = "created_at", nullable = false)
@@ -44,6 +50,9 @@ public class CandidateEntity {
 
         @Column(name = "education")
         private String education;
+
+        @Column(name = "other_skills")
+        private String otherSkills;
 
         @Column(name = "hobby")
         private String hobby;
@@ -63,8 +72,8 @@ public class CandidateEntity {
         @Column(name = "picture_file")
         private String pictureFile;
 
-        @Column(name = "experience")
-        private String experience;
+        @Column(name = "experience_level")
+        private String experienceLevel;
 
         @Column(name = "years_of_experience")
         private Integer yearsOfExperience;
@@ -82,12 +91,12 @@ public class CandidateEntity {
         @JoinColumn(name = "employer_id")
         private EmployerEntity employer;
 
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "desired_job_city_id")
-        private CityEntity desiredJobCity;
+        private CityEntity desiredJobCityId;
 
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "residence_city_id")
-        private CityEntity residenceCity;
+        private CityEntity ResidenceCityId;
 
 }

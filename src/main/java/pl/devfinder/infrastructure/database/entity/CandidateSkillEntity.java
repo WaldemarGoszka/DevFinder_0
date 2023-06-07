@@ -9,29 +9,28 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
-
 @Getter
 @Setter
-@EqualsAndHashCode(of = "candidateId")
-@ToString(of = {"candidateId", "firstName", "lastName", "phoneNumber", "createdAt", "status"})
+@EqualsAndHashCode(of = "candidateSkillId")
+@ToString(of = {"candidateSkillId", "candidateId", "skillId"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "candidate")
+@Table(name = "candidate_skill")
 public class CandidateSkillEntity {
-    @EmbeddedId
-    private CandidateSkillId id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "candiate_skill_id")
+    private Long candidateSkillId;
 
     @ManyToOne
-    @MapsId("candidateId")
     @JoinColumn(name = "candidate_id")
-    private Candidate candidate;
+    private CandidateEntity candidateId;
 
     @ManyToOne
-    @MapsId("skillId")
     @JoinColumn(name = "skill_id")
-    private Skill skill;
+    private SkillEntity skillId;
+
 }

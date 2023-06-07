@@ -15,49 +15,43 @@ import java.time.OffsetDateTime;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of = "candidateId")
-@ToString(of = {"candidateId", "firstName", "lastName", "phoneNumber", "createdAt", "status"})
+@EqualsAndHashCode(of = "offerUUId")
+@ToString(of = {"offerId", "offerUUId", "title", "description", "createdAt", "status"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "candidate")
+@Table(name = "offer")
 public class OfferEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long offerId;
 
-    @Column(nullable = false)
+    @Column(name = "offer_uuid", nullable = false)
+    private String offerUUId;
+
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @ManyToOne
-    @JoinColumn(name = "employer_id", nullable = false)
-    private Employer employer;
-
-    @Column(nullable = false)
+    @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(nullable = false)
-    private String projectDescription;
+    @Column(name = "other_skills")
+    private String otherSkills;
 
-    private String requirements;
-
-    @ManyToOne
-    @JoinColumn(name = "city_id", nullable = false)
-    private City city;
-
+    @Column(name = "remote_work")
     private Integer remoteWork;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Experience experience;
+    @Column(name = "experience_level", nullable = false)
+    private String experienceLevel;
 
+    @Column(name = "years_of_experience")
     private Integer yearsOfExperience;
 
-    @Column(nullable = false)
+    @Column(name = "salary_min")
     private BigDecimal salaryMin;
 
-    @Column(nullable = false)
+    @Column(name = "salary_max")
     private BigDecimal salaryMax;
 
     @Column(name = "created_at", nullable = false)
@@ -66,10 +60,18 @@ public class OfferEntity {
     @Column(name = "expiration_date")
     private OffsetDateTime expirationDate;
 
+    @Column(name = "benefits")
     private String benefits;
 
-    private boolean promoted;
-
-    @Column(nullable = false)
+    @Column(name = "status", nullable = false)
     private String status;
+
+    @ManyToOne
+    @JoinColumn(name = "employer_id", nullable = false)
+    private EmployerEntity employer_id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id")
+    private CityEntity cityId;
+
 }
