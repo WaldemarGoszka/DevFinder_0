@@ -13,7 +13,7 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "city")
+@Table(name = "employer")
 public class EmployerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

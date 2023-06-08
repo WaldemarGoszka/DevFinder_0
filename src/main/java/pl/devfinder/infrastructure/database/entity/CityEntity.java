@@ -3,7 +3,7 @@ package pl.devfinder.infrastructure.database.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -23,16 +23,16 @@ public class CityEntity {
     @Column(name = "city_name", unique = true, nullable = false)
     private String cityName;
 
-    @OneToMany(mappedBy = "city_id")
-    private List<EmployerEntity> employerCities;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cityId")
+    private Set<EmployerEntity> employerCities;
 
-    @OneToMany(mappedBy = "city_id")
-    private List<OfferEntity> offerCities;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cityId")
+    private Set<OfferEntity> offerCities;
 
-    @OneToMany(mappedBy = "desired_job_city_id")
-    private List<CandidateEntity> candidateDesiredJobCities;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "desiredJobCityId")
+    private Set<CandidateEntity> candidateDesiredJobCities;
 
-    @OneToMany(mappedBy = "residence_city_id")
-    private List<CandidateEntity> candidateResidenceCities;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "residenceCityId")
+    private Set<CandidateEntity> candidateResidenceCities;
 
 }

@@ -3,6 +3,8 @@ package pl.devfinder.infrastructure.database.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @EqualsAndHashCode(of = "skillId")
@@ -20,4 +22,11 @@ public class SkillEntity {
 
     @Column(name = "skill_name",  unique = true, nullable = false)
     private String skillName;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "skillId")
+    private Set<CandidateSkillEntity> candidateSkills;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "skillId")
+    private Set<OfferSkillEntity> offerSkills;
+
 }

@@ -1,16 +1,11 @@
 package pl.devfinder.infrastructure.database.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,10 +19,10 @@ import java.time.OffsetDateTime;
 public class CandidateEntity {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name = "candiate_id")
+        @Column(name = "candidate_id")
         private Long candidateId;
 
-        @Column(name = "candiate_uuid", nullable = false)
+        @Column(name = "candidate_uuid", nullable = false)
         private String candidateUUId;
 
         @Column(name = "first_name", nullable = false)
@@ -97,6 +92,9 @@ public class CandidateEntity {
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "residence_city_id")
-        private CityEntity ResidenceCityId;
+        private CityEntity residenceCityId;
+
+        @OneToMany(fetch = FetchType.LAZY, mappedBy = "candidateId")
+        private Set<CandidateSkillEntity> candidateSkills;
 
 }
