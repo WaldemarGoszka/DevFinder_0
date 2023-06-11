@@ -1,12 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+          crossorigin="anonymous">
     <title>Employer Portal</title>
 </head>
 <body>
 <div class="container">
     <h1>Employer Portal</h1>
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <a th:href="@{/employer/profile}" class="btn btn-info" role="button">Company Profile</a>
+        </div>
+        <div class="col-md-4">
+            <a th:href="@{/employer/find_developer}" class="btn btn-info" role="button">Find a developers</a>
+        </div>
+        <div class="col-md-4">
+            <a th:href="@{/employer/post_job}" class="btn btn-info" role="button">Post a job</a>
+        </div>
+        <div class="col-md-4">
+            <a th:href="@{/employer/employee}" class="btn btn-info" role="button">Employee</a>
+        </div>
+        <div class="col-md-4">
+            <a th:href="@{/employer/settings}" class="btn btn-info" role="button">Account settings</a>
+        </div>
+        <div class="col-md-4">
+            <a th:href="@{/logout}" class="btn btn-info" role="button">Log out</a>
+        </div>
+    </div>
 </div>
 
 </body>
