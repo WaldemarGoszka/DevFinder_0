@@ -21,13 +21,13 @@ public class EmployerController {
     @GetMapping(value = EMPLOYER)
     public String homePage(Model model) {
 
-        return "employer_portal";
+        return "employer/portal";
     }
 
     @GetMapping(value = EMPLOYER_PROFILE)
     public String getProfile(Model model) {
 // getEmpoyerProfile
-        return "employer_profile";
+        return "employer/profile";
     }
 
 
