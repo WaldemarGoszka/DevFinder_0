@@ -1,4 +1,4 @@
-package pl.devfinder.api.dto.mapper;
+package pl.devfinder.api.dto;
 
 public class OfferDetailsDTO {
 }

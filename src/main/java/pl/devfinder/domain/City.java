@@ -1,7 +1,9 @@
 package pl.devfinder.domain;
 
 import lombok.*;
+
 import java.util.Set;
+
 @With
 @Value
 @Builder

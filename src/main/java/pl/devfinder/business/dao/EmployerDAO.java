@@ -10,5 +10,5 @@ public interface EmployerDAO {
     // sortuj liczba ofert
     // sortuj jakie miasto
     // sortuj nazwa firmy
-  
+
 }

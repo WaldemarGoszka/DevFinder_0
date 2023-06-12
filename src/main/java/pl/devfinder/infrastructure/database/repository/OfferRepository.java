@@ -8,5 +8,9 @@ import pl.devfinder.business.dao.OfferDAO;
 @Repository
 @AllArgsConstructor
 public class OfferRepository implements OfferDAO {
-   
+
+    @Override
+    public Integer offerCountByEmployerId(Integer employerId) {
+        return null;
+    }
 }

@@ -12,8 +12,9 @@ import java.util.List;
 @Repository
 @AllArgsConstructor
 public class EmployerRepository implements EmployerDAO {
-private final EmployerJpaRepository employerJpaRepository;
-    private  final EmployerEntityMapper employerEntityMapper;
+    private final EmployerJpaRepository employerJpaRepository;
+    private final EmployerEntityMapper employerEntityMapper;
+
     @Override
     public List<Employer> findAll() {
         return employerJpaRepository.findAll().stream()

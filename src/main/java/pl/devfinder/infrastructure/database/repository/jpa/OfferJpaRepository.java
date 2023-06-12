@@ -8,5 +8,5 @@ import pl.devfinder.infrastructure.database.entity.OfferEntity;
 @Repository
 public interface OfferJpaRepository extends JpaRepository<OfferEntity, Integer> {
 
-    
+
 }

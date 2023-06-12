@@ -3,7 +3,7 @@ package pl.devfinder.business.management;
 
 public interface Keys {
 
-    public enum CandidateState {
+    enum CandidateState {
         ACTIVE("active"),
         INACTIVE("inactive"),
         EMPLOYED("employed"),
@@ -21,7 +21,7 @@ public interface Keys {
         }
     }
 
-    public enum OfferState {
+    enum OfferState {
         OPEN("open"),
         CLOSED("closed");
 
@@ -36,7 +36,7 @@ public interface Keys {
         }
     }
 
-    public enum ResponseState {
+    enum ResponseState {
         ACCEPTED("accepted"),
         REJECTED("rejected"),
         PENDING("pending");
@@ -52,7 +52,7 @@ public interface Keys {
         }
     }
 
-    public enum Experience {
+    enum Experience {
         JUNIOR("Junior"),
         MID("Mid"),
         SENIOR("Senior");
