@@ -19,7 +19,6 @@ public class EmployerRepository implements EmployerDAO {
     public List<Employer> findAll() {
         return employerJpaRepository.findAll().stream()
                 .map(employerEntityMapper::mapFromEntity)
-                .toList()
-                ;
+                .toList();
     }
 }

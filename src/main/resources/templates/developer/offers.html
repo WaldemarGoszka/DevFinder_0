@@ -17,7 +17,37 @@
             <a th:href="@{/developer/matched_offers}" class="btn btn-info" role="button">Matched offers</a>
         </div>
     </div>
-    Lista wszystkich ofert
+    <div class="container">
+        <h1>Find Company</h1>
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <a th:href="@{/developer}" class="btn btn-info" role="button">Go back to the main page</a>
+            </div>
+        </div>
+
+        <table class="table">
+            <thead class="table-dark">
+            <tr>
+                <th>Logo</th>
+                <th>Compamy Name</th>
+                <th>Website</th>
+                <th>Number Of Employees</th>
+                <th>City</th>
+                <th>Number Of Job Offers</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="offer : ${allOffersDTOs}">
+                <td th:text="${employer.logoFile}"></td>
+                <td th:text="${employer.companyName}"></td>
+                <td th:text="${employer.website}"></td>
+                <td th:text="${employer.numberOfEmployees}"></td>
+                <td th:text="${employer.cityId.cityName}"></td>
+                <td th:text="${employer.cityId.cityName}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
 </div>
 </body>

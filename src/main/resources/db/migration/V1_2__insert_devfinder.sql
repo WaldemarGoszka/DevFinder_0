@@ -355,27 +355,43 @@ VALUES ('5e8dd047-7b07-44fb-bbd6-1f15db0f6a8c', 'Jan', 'Kowalski', '123456789', 
         'https://linkedin.com/in/monikakrawczyk', 'monika_krawczyk_zdjecie.jpg', 'Senior', 3, 5000.00, true, false, 3,
         'monika.krawczyk@example.com', 'active');
 
--- Candidate 1
-INSERT INTO candidate_skill (candidate_id, skill_id)
+INSERT INTO offer (offer_uuid, title, employer_id, description, city_id, experience_level, salary_min, salary_max,
+                   created_at, status)
+VALUES ('6c84fb90-12c4-11e1-840d-7b25c5ee775a', 'Programista Java', 1, 'Opis stanowiska programisty Java', 1, 'Senior', 5000.00, 8000.00, '2023-05-24', 'open'),
+     ('6d203a2a-12c4-11e1-840d-7b25c5ee775a', 'Front-end Developer', 3, 'Opis stanowiska Front-end Developera', 3, 'Senior', 4000.00, 6000.00, '2023-05-24', 'open'),
+     ('6d3f4b90-12c4-11e1-840d-7b25c5ee775a', 'Full-stack Developer', 2, 'Opis stanowiska Full-stack Developera', 2, 'Senior', 6000.00, 9000.00, '2023-05-24', 'open'),
+     ('6d5e5c00-12c4-11e1-840d-7b25c5ee775a', 'Java Software Engineer', 4, 'Opis stanowiska Java Software Engineera', 4, 'Mid', 5500.00, 8500.00, '2023-05-24', 'open'),
+     ('6d7d6d70-12c4-11e1-840d-7b25c5ee775a', 'Backend Developer', 5, 'Opis stanowiska Backend Developera', 5, 'Mid', 5000.00, 8000.00, '2023-05-24', 'open'),
+     ('6d9c7e80-12c4-11e1-840d-7b25c5ee775a', 'Programista C#', 1, 'Opis stanowiska programisty C#', 1, 'Mid', 4500.00, 7000.00, '2023-05-24', 'open'),
+     ('6dbb8f90-12c4-11e1-840d-7b25c5ee775a', 'QA Engineer', 3, 'Opis stanowiska QA Engineera', 3, 'Junior', 4000.00, 6000.00, '2023-05-24', 'open'),
+     ('6dda00a0-12c4-11e1-840d-7b25c5ee775a', 'Software Architect', 2, 'Opis stanowiska Software Architekta', 2, 'Senior', 7000.00, 10000.00, '2023-05-24', 'open'),
+     ('6df911b0-12c4-11e1-840d-7b25c5ee775a', 'Junior Java Developer', 4, 'Opis stanowiska Junior Java Developera', 4, 'Junior', 3500.00, 5000.00, '2023-05-24', 'open'),
+     ('6e1822c0-12c4-11e1-840d-7b25c5ee775a', 'Software Tester', 5, 'Opis stanowiska Software Testera', 5, 'Junior', 3500.00, 5500.00, '2023-05-24', 'open'),
+     ('6e3733d0-12c4-11e1-840d-7b25c5ee775a', 'Python Developer', 1, 'Opis stanowiska Python Developera', 1, 'Mid', 4500.00, 7000.00, '2023-05-24', 'open'),
+     ('6e5644e0-12c4-11e1-840d-7b25c5ee775a', 'Mobile App Developer', 3, 'Opis stanowiska Mobile App Developera', 3, 'Mid', 5000.00, 8000.00, '2023-05-24', 'open'),
+     ('6e7555f0-12c4-11e1-840d-7b25c5ee775a', 'Web Designer', 2, 'Opis stanowiska Web Designera', 2, 'Junior', 4000.00, 6000.00, '2023-05-24', 'open'),
+     ('6e946600-12c4-11e1-840d-7b25c5ee775a', 'DevOps Engineer', 4, 'Opis stanowiska DevOps Engineera', 4, 'Senior', 6000.00, 9000.00, '2023-05-24', 'open'),
+     ('6eb37710-12c4-11e1-840d-7b25c5ee775a', 'Backend Python Developer', 5, 'Opis stanowiska Backend Python Developera', 5, 'Mid', 5500.00, 8500.00, '2023-05-24', 'open'),
+     ('6ed28820-12c4-11e1-840d-7b25c5ee775a', 'PHP Developer', 1, 'Opis stanowiska PHP Developera', 1, 'Mid', 4500.00, 7000.00, '2023-05-24', 'open'),
+     ('6ef19930-12c4-11e1-840d-7b25c5ee775a', 'Software Engineer', 3, 'Opis stanowiska Software Engineera', 3, 'Senior', 6000.00, 9000.00, '2023-05-24', 'open'),
+     ('6f10aa40-12c4-11e1-a0dd-c8f733efa55b', 'Android Developer', 2, 'Opis stanowiska Android Developera', 2, 'Mid', 5000.00, 8000.00, '2023-05-24', 'open'),
+     ('6f2fbb50-c8f733efa55b-a0dd-c8f733efa55b', 'Frontend JavaScript Developer', 4, 'Opis stanowiska Frontend JavaScript Developera', 4, 'Mid', 5000.00, 8000.00, '2023-05-24', 'open'),
+     ('6f4ecc60-c8f733efa55b-a0dd-c8f733efa55b', 'Data Scientist', 5, 'Opis stanowiska Data Scientista', 5, 'Senior', 7000.00, 10000.00, '2023-05-24', 'open');
+
+INSERT INTO offer_skill (offer_id, skill_id)
 VALUES (1, 2),
        (1, 6),
        (1, 11),
        (1, 16),
        (1, 20),
        (1, 25),
-       (1, 30);
-
--- Candidate 2
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (2, 3),
+       (1, 30),
+       (2, 3),
        (2, 7),
        (2, 12),
        (2, 17),
-       (2, 21);
-
--- Candidate 3
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (3, 4),
+       (2, 21),
+       (3, 4),
        (3, 8),
        (3, 13),
        (3, 18),
@@ -384,22 +400,16 @@ VALUES (3, 4),
        (3, 31),
        (3, 36),
        (3, 40),
-       (3, 45);
-
--- Candidate 4
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (4, 5),
+       (3, 45),
+       (4, 5),
        (4, 9),
        (4, 14),
        (4, 19),
        (4, 23),
        (4, 27),
        (4, 32),
-       (4, 37);
-
--- Candidate 5
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (5, 6),
+       (4, 37),
+       (5, 6),
        (5, 10),
        (5, 15),
        (5, 20),
@@ -408,11 +418,7 @@ VALUES (5, 6),
        (5, 33),
        (5, 38),
        (5, 41),
-       (5, 46);
-
--- Candidate 6
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (6, 7),
+       (6, 7),
        (6, 11),
        (6, 16),
        (6, 21),
@@ -420,11 +426,8 @@ VALUES (6, 7),
        (6, 29),
        (6, 34),
        (6, 39),
-       (6, 42);
-
--- Candidate 7
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (7, 8),
+       (6, 42),
+       (7, 8),
        (7, 12),
        (7, 17),
        (7, 22),
@@ -432,11 +435,8 @@ VALUES (7, 8),
        (7, 30),
        (7, 35),
        (7, 40),
-       (7, 43);
-
--- Candidate 8
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (8, 9),
+       (7, 43),
+       (8, 9),
        (8, 13),
        (8, 18),
        (8, 23),
@@ -444,11 +444,8 @@ VALUES (8, 9),
        (8, 31),
        (8, 36),
        (8, 41),
-       (8, 44);
-
--- Candidate 9
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (9, 10),
+       (8, 44),
+       (9, 10),
        (9, 14),
        (9, 19),
        (9, 24),
@@ -456,184 +453,336 @@ VALUES (9, 10),
        (9, 32),
        (9, 37),
        (9, 42),
-       (9, 45);
--- Candidate 10
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (10, 11),
+       (9, 45),
+       (10, 11),
        (10, 15),
        (10, 20),
        (10, 25),
        (10, 30),
        (10, 35),
-       (10, 40);
-
--- Candidate 11
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (11, 12),
+       (10, 40),
+       (11, 12),
        (11, 16),
        (11, 21),
        (11, 26),
        (11, 31),
        (11, 36),
        (11, 41),
-       (11, 46);
-
--- Candidate 12
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (12, 13),
+       (12, 13),
        (12, 17),
        (12, 22),
        (12, 27),
        (12, 32),
        (12, 37),
        (12, 42),
-       (12, 45);
-
--- Candidate 13
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (13, 14),
+       (12, 45),
+       (13, 14),
        (13, 18),
        (13, 23),
        (13, 28),
        (13, 33),
        (13, 38),
-       (13, 43);
-
--- Candidate 14
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (14, 15),
+       (13, 43),
+       (14, 15),
        (14, 19),
        (14, 24),
        (14, 29),
        (14, 34),
        (14, 39),
-       (14, 44);
-
--- Candidate 15
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (15, 16),
+       (14, 44),
+       (15, 16),
        (15, 20),
        (15, 25),
        (15, 30),
        (15, 35),
        (15, 40),
-       (15, 45);
-
--- Candidate 16
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (16, 17),
+       (15, 45),
+       (16, 17),
        (16, 21),
        (16, 26),
        (16, 31),
        (16, 36),
        (16, 41),
-       (16, 46);
-
--- Candidate 17
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (17, 18),
+       (16, 46),
+       (17, 18),
        (17, 22),
        (17, 27),
        (17, 32),
        (17, 37),
        (17, 42),
-       (17, 45);
-
--- Candidate 18
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (18, 19),
+       (17, 45),
+       (18, 19),
        (18, 23),
        (18, 28),
        (18, 33),
        (18, 38),
-       (18, 43);
-
--- Candidate 19
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (19, 20),
+       (18, 43),
+       (19, 20),
        (19, 24),
        (19, 29),
        (19, 34),
        (19, 39),
-       (19, 44);
-
--- Candidate 20
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (20, 21),
+       (19, 44),
+       (20, 21),
        (20, 25),
        (20, 30),
        (20, 35),
        (20, 40),
        (20, 45);
 
--- Candidate 21
+
 INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (21, 22),
+VALUES (1, 2),
+       (1, 6),
+       (1, 11),
+       (1, 16),
+       (1, 20),
+       (1, 25),
+       (1, 30),
+       (2, 3),
+       (2, 7),
+       (2, 12),
+       (2, 17),
+       (2, 21),
+       (3, 4),
+       (3, 8),
+       (3, 13),
+       (3, 18),
+       (3, 22),
+       (3, 26),
+       (3, 31),
+       (3, 36),
+       (3, 40),
+       (3, 45),
+       (4, 5),
+       (4, 9),
+       (4, 14),
+       (4, 19),
+       (4, 23),
+       (4, 27),
+       (4, 32),
+       (4, 37),
+       (5, 6),
+       (5, 10),
+       (5, 15),
+       (5, 20),
+       (5, 24),
+       (5, 28),
+       (5, 33),
+       (5, 38),
+       (5, 41),
+       (6, 7),
+       (6, 11),
+       (6, 16),
+       (6, 21),
+       (6, 25),
+       (6, 29),
+       (6, 34),
+       (6, 39),
+       (6, 42),
+       (7, 8),
+       (7, 12),
+       (7, 17),
+       (7, 22),
+       (7, 26),
+       (7, 30),
+       (7, 35),
+       (7, 40),
+       (7, 43),
+       (8, 9),
+       (8, 13),
+       (8, 18),
+       (8, 23),
+       (8, 27),
+       (8, 31),
+       (8, 36),
+       (8, 41),
+       (8, 44),
+       (9, 10),
+       (9, 14),
+       (9, 19),
+       (9, 24),
+       (9, 28),
+       (9, 32),
+       (9, 37),
+       (9, 42),
+       (9, 45),
+       (10, 11),
+       (10, 15),
+       (10, 20),
+       (10, 25),
+       (10, 30),
+       (10, 35),
+       (10, 40),
+       (11, 12),
+       (11, 16),
+       (11, 21),
+       (11, 26),
+       (11, 31),
+       (11, 36),
+       (11, 41),
+       (12, 13),
+       (12, 17),
+       (12, 22),
+       (12, 27),
+       (12, 32),
+       (12, 37),
+       (12, 42),
+       (12, 45),
+       (13, 14),
+       (13, 18),
+       (13, 23),
+       (13, 28),
+       (13, 33),
+       (13, 38),
+       (13, 43),
+       (14, 15),
+       (14, 19),
+       (14, 24),
+       (14, 29),
+       (14, 34),
+       (14, 39),
+       (14, 44),
+       (15, 16),
+       (15, 20),
+       (15, 25),
+       (15, 30),
+       (15, 35),
+       (15, 40),
+       (15, 45),
+       (16, 17),
+       (16, 21),
+       (16, 26),
+       (16, 31),
+       (16, 36),
+       (16, 41),
+       (16, 46),
+       (17, 18),
+       (17, 22),
+       (17, 27),
+       (17, 32),
+       (17, 37),
+       (17, 42),
+       (17, 45),
+       (18, 19),
+       (18, 23),
+       (18, 28),
+       (18, 33),
+       (18, 38),
+       (18, 43),
+       (19, 20),
+       (19, 24),
+       (19, 29),
+       (19, 34),
+       (19, 39),
+       (19, 44),
+       (20, 21),
+       (20, 25),
+       (20, 30),
+       (20, 35),
+       (20, 40),
+       (20, 45),
+       (21, 22),
        (21, 26),
        (21, 31),
        (21, 36),
        (21, 41),
-       (21, 46);
-
--- Candidate 22
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (22, 23),
+       (21, 46),
+       (22, 23),
        (22, 27),
        (22, 32),
        (22, 37),
        (22, 42),
-       (22, 45);
-
--- Candidate 23
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (23, 24),
+       (22, 45),
+       (23, 24),
        (23, 28),
        (23, 33),
        (23, 38),
-       (23, 43);
-
--- Candidate 24
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (24, 25),
+       (23, 43),
+       (24, 25),
        (24, 29),
        (24, 34),
        (24, 39),
-       (24, 44);
-
--- Candidate 25
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (25, 26),
+       (24, 44),
+       (25, 26),
        (25, 30),
        (25, 35),
        (25, 40),
-       (25, 45);
-
--- Candidate 26
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (26, 27),
+       (25, 45),
+       (26, 27),
        (26, 31),
        (26, 36),
        (26, 41),
-       (26, 46);
-
--- Candidate 27
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (27, 28),
+       (26, 46),
+       (27, 28),
        (27, 32),
        (27, 37),
        (27, 42),
-       (27, 45);
-
--- Candidate 28
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (28, 29),
+       (27, 45),
+       (28, 29),
        (28, 33),
        (28, 38),
-       (28, 43);
-
--- Candidate 29
-INSERT INTO candidate_skill (candidate_id, skill_id)
-VALUES (29, 30),
+       (28, 43),
+       (29, 30),
        (29, 34),
        (29, 39),
        (29, 44);
+
+
+INSERT INTO devfinder_role (role_id, role)
+VALUES
+(1, 'DEVELOPER'), (2, 'EMPLOYER');
+
+INSERT INTO devfinder_user (user_uuid, email, password, active, role_id)
+VALUES
+('5e8dd047-7b07-44fb-bbd6-1f15db0f6a8c', 'jan.kowalski@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('9c6d5a77-7250-4d4e-b0c9-af65fdd1c3b3', 'anna.nowak@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('7f7b1e1b-8c5c-4c71-bc3a-1485dfcc7ac4', 'michal.wisniewski@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('2d6c9a0d-350e-4dbb-a3c0-ef334d8fcd34', 'daniel.lewandowski@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('9a2e1a2d-0a45-44be-b214-d4a9d26e54b5', 'aleksandra.kaczmare@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('6f2ea2fb-f1bf-4fe7-bf63-d431f5e68776', 'piotr.jankowski@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('e3b0c442-98fc-1c14-9af3-d0f07aa18bbf', 'katarzyna.wojcik@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('a3d9e614-5d57-4596-a6d8-c1d2302ef8bd', 'marcin.kowalczyk@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('f5cc59f5-e20e-4dc4-bf29-d1c03675cd80', 'karolina.lis@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('dcf05d74-f6f0-4eb8-bf58-fa35cbcedcd1', 'tomasz.wojciechowski@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('ecfb5ad9-f22e-4675-b728-c011ec275cc2', 'monika.wroblewska@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('a2b06eb9-c1e7-4ea2-a46c-cf349ffcc32d', 'marek.laskowski@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('b3a8cfcb-f48e-405d-a085-eafabfcec3be', 'malgorzata.kowal@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('c4b9debc-g59f-506e-b196-fdb0dfddc4cf', 'grzegorz.dudek@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('d5caefcd-h60g-607f-c207-gedcefdec5dg', 'joanna.jasinska@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('e6dbfgde-i71h-708g-d318-hfdcefed6eh', 'adam.kaczorowski@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('f7ecghed-j82i-809h-e429-ifedeffg7fi', 'magdalena.pawlak@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('g8fdhife-k93j-910i-f530-jgeefghh8gj', 'krzysztof.zawadzki@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('h9geijgf-l04k-a21j-g641-khfghii9hk', 'iwona.jaworska@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('iahfkjhg-m15l-b32k-h752-ligihjjakl', 'michal.witkowski@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('jbilkhji-n26m-c43l-i863-mjhihkkbjm', 'anna.nowakk@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('kcjmlkjk-o37n-d54m-j974-nkjikllckn', 'pawel.dabrowski@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('ldknmklm-p48o-e65n-k085-okjklmmldo', 'ewa.kwiatkowska@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('melonmnm-q59p-f76o-l196-plkmnnoemq', 'jan.piotrowski@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('nfpopnon-r60q-g87p-m207-qnlnooppfr', 'katarzyna.zajac@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('ogqqpoop-s71r-h98q-n318-rooppqqqgs', 'andrzej.kowalczyk@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('phrrqpqq-t82s-i09r-o429-sppqqrrrht', 'karolina.kaczmarek@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('qissqrqr-u93t-j10s-p530-tqqrrsssiu', 'robert.mazur@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('rjttsrss-v04u-k21t-q641-uqrrssttjv', 'marta.gorka@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('skuutstt-w15v-l32u-r752-vrssttuukw', 'tomasz.wojcik@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('tlvvutuu-x26w-m43v-s863-wsttuuvvxl', 'monika.krawczyk@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('11d3a76b-d2ff-4e9d-aa2b-5f8c9484cc9b', 'kontakt@abccorp.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),
+('69752da4-71da-4c0e-b738-5213d6e4b6da', 'info@xyztech.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),
+('a0b673fe-7e74-47c4-bb19-d07e8506ff14', 'hr@acmeindustries.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),
+('ddd4c00a-1773-42d7-bba4-12679140a428', 'info@techsolutions.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),
+('c5af8a81-4aa7-44e4-9902-3d63dab53f1e', 'kariera@globalbank.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),
+('ece4e5b3-2142-4a9b-a70f-c370f4a4a822', 'info@innowacyjnestartupy.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),
+('1f5a2c49-b745-42f9-b006-8c4e28a2a6b5', 'info@softwaresolutions.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),
+('49660bfb-0ff5-49dd-b500-776cb0b0ef83', 'kariera@systemymedyczne.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),
+('4e9870d2-c9c3-4424-9446-90ab32b9a121', 'info@innowatorzyecommerce.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),
+('8e44d70a-5e0f-480d-8f77-0feaafe383a5', 'rekrutacja@techstart.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),
+('5d5d260b-51f1-4088-8d4d-156067cb566b', 'info@greenenergysolutions.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),
+('67b7690a-4b8e-4a1a-ae88-179064f3e970', 'konta@specjalisticonsulting.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),
+('39878f79-3f84-4a35-8e85-7c88ae8c8d8f', 'info@techinnovations.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),
+('bbdad901-89af-407a-8570-1c78fd1e58f4', 'info@doradcyfinansowi.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),
+('71f22b71-58c1-4f64-9601-7e8ccdcac8e9', 'info@studioprojektowe.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),
+('2e2e3f15-6e85-4c7f-862d-bf9db3dd09e9', 'kariera@produkcjemedialne.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),
+('f39ad77f-4e86-4dbf-a41b-4f78e9e5a7fd', 'info@rozwiazamotoryzacyjne.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),
+('34528742-aa70-4526-9baf-8e2420e85af0', 'kontakt@eksperciedukacji.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),
+('b2a85a7b-fc8f-4f39-9b62-519cfbce7e7e', 'info@agencjamarketingowa.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),
+('9477c8cd-2993-4ebc-9f52-b4f268694ecd', 'kariera@grupahotelowa.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2);

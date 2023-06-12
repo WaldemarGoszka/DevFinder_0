@@ -53,9 +53,6 @@ public class OfferEntity {
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;
 
-    @Column(name = "expiration_date")
-    private OffsetDateTime expirationDate;
-
     @Column(name = "benefits")
     private String benefits;
 

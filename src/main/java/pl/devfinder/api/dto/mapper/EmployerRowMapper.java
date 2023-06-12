@@ -1,11 +1,11 @@
 package pl.devfinder.api.dto.mapper;
 
 import org.mapstruct.Mapper;
-import pl.devfinder.api.dto.EmployerResultDTO;
+import pl.devfinder.api.dto.EmployerRowDTO;
 import pl.devfinder.domain.Employer;
 
 @Mapper(componentModel = "spring")
-public interface EmployerResultMapper {
+public interface EmployerRowMapper {
 
-    EmployerResultDTO map(final Employer employer);
+    EmployerRowDTO map(final Employer employer);
 }

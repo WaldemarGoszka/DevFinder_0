@@ -6,12 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.devfinder.domain.City;
 
-import java.time.OffsetDateTime;
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmployerResultDTO {
+public class EmployerRowDTO {
 //    Long employerId;
 //    String employerUUId;
     String companyName;
@@ -23,4 +22,6 @@ public class EmployerResultDTO {
     Integer numberOfEmployees;
 //    OffsetDateTime createdAt;
     City cityId;
+    //TODO https://stackoverflow.com/questions/45500779/mapstruct-add-a-new-calculated-field-to-the-dto
+    //Integer NumberOfOffers;
 }

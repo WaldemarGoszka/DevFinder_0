@@ -8,7 +8,7 @@ import java.util.Set;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "cityId")
-@ToString(of = {"cityId", "cityName"})
+@ToString(of = {"cityName"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

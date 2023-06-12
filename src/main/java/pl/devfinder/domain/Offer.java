@@ -24,7 +24,6 @@ public class Offer {
     BigDecimal salaryMin;
     BigDecimal salaryMax;
     OffsetDateTime createdAt;
-    OffsetDateTime expirationDate;
     String benefits;
     String status;
     Employer employer_id;
