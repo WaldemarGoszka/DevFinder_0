@@ -1,6 +1,7 @@
 package pl.devfinder.domain;
 
 import lombok.*;
+import pl.devfinder.business.OfferService;
 
 import java.time.OffsetDateTime;
 

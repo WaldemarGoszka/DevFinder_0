@@ -48,7 +48,7 @@ public class DeveloperController {
         List<EmployerRowDTO> allEmployers = employerService.findAllEmployers().stream()
                 .map(employerRowMapper::map)
                 .toList();
-//todo dodać liczbę ofert w ostatnim wierszu
+//TODO dodać liczbę ofert w ostatnim wierszu
 //todo przyciks Details odnoszący się do profilu firmy
         model.addAttribute("allEmployersDTOs", allEmployers);
         return "developer/find_employer";

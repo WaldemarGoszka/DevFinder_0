@@ -27,4 +27,9 @@ public class OfferRepository implements OfferDAO {
                 .map(offerEntityMapper::mapFromEntity)
                 .toList();
     }
+
+    @Override
+    public Integer getNumberOfAvailableOffers(Long employerId) {
+        return offerJpaRepository.getNumberOfAvailableOffers(employerId);
+    }
 }

@@ -10,4 +10,6 @@ public interface OfferDAO {
     Integer offerCountByEmployerId(Integer employerId);
 
     List<Offer> findAll();
+
+    Integer getNumberOfAvailableOffers(Long employerId);
 }

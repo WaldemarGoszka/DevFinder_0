@@ -17,6 +17,11 @@ import java.util.List;
 @AllArgsConstructor
 public class OfferService {
     private final OfferDAO offerDAO;
+    OfferService offerService;
+@Transactional
+    public Integer getNumberOfAvailableOffers(Employer employer) {
+        return offerDAO.getNumberOfAvailableOffers(employer.getEmployerId());
+    }
 
     //    public Integer offerCountByEmployerId(Integer employerId) {
 //        Integer offerCount = offerDAO.offerCountByEmployerId(employerId);
