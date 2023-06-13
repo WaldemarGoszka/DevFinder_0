@@ -28,22 +28,26 @@
         <table class="table">
             <thead class="table-dark">
             <tr>
-                <th>Logo</th>
-                <th>Compamy Name</th>
-                <th>Website</th>
-                <th>Number Of Employees</th>
+                <th>Title</th>
+                <th>Experience Level  </th>
+                <th>Employer </th>
                 <th>City</th>
-                <th>Number Of Job Offers</th>
+                <th>Remote Work</th>
+                <th>Salary Min</th>
+                <th>Salary Max</th>
+                <th>Created At</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="offer : ${allOffersDTOs}">
-                <td th:text="${employer.logoFile}"></td>
-                <td th:text="${employer.companyName}"></td>
-                <td th:text="${employer.website}"></td>
-                <td th:text="${employer.numberOfEmployees}"></td>
-                <td th:text="${employer.cityId.cityName}"></td>
-                <td th:text="${employer.cityId.cityName}"></td>
+                <td th:text="${offer.getTitle()}"></td>
+                <td th:text="${offer.getExperienceLevel()}"></td>
+                <td th:text="${offer.getEmployerId().getCompanyName()}"></td>
+                <td th:text="${offer.getCityId().getCityName()}"></td>
+                <td th:text="${offer.getRemoteWork()}"></td>
+                <td th:text="${offer.getSalaryMin()}"></td>
+                <td th:text="${offer.getSalaryMax()}"></td>
+                <td th:text="${offer.getCreatedAt()}"></td>
             </tr>
             </tbody>
         </table>

@@ -31,12 +31,12 @@
             </thead>
             <tbody>
             <tr th:each="employer : ${allEmployersDTOs}">
-                <td th:text="${employer.logoFile}"></td>
-                <td th:text="${employer.companyName}"></td>
-                <td th:text="${employer.website}"></td>
-                <td th:text="${employer.numberOfEmployees}"></td>
-                <td th:text="${employer.cityId.cityName}"></td>
-                <td th:text="${employer.cityId.cityName}"></td>
+                <td th:text="${employer.getLogoFile()}"></td>
+                <td th:text="${employer.getCompanyName()}"></td>
+                <td th:text="${employer.getWebsite()}"></td>
+                <td th:text="${employer.getNumberOfEmployees()}"></td>
+                <td th:text="${employer.getCityId().getCityName()}"></td>
+                <td th:text="${employer}"></td>
             </tr>
             </tbody>
         </table>

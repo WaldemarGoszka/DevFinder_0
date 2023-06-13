@@ -26,7 +26,7 @@ public class Offer {
     OffsetDateTime createdAt;
     String benefits;
     String status;
-    Employer employer_id;
+    Employer employerId;
     City cityId;
     Set<OfferSkill> offerSkills;
 

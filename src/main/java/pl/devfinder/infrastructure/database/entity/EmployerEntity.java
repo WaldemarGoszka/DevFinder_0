@@ -27,7 +27,7 @@ public class EmployerEntity {
     private String companyName;
 
     @Column(name = "email_contact", nullable = false)
-    private String email_Contact;
+    private String emailContact;
 
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
