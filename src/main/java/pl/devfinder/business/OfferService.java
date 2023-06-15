@@ -17,10 +17,10 @@ import java.util.List;
 @AllArgsConstructor
 public class OfferService {
     private final OfferDAO offerDAO;
-    OfferService offerService;
+
 @Transactional
-    public Integer getNumberOfAvailableOffers(Employer employer) {
-        return offerDAO.getNumberOfAvailableOffers(employer.getEmployerId());
+    public Long getNumberOfAvailableOffers(Long employerId) {
+        return offerDAO.getNumberOfAvailableOffers(employerId);
     }
 
     //    public Integer offerCountByEmployerId(Integer employerId) {

@@ -6,7 +6,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import pl.devfinder.domain.Employer;
 import pl.devfinder.infrastructure.database.entity.EmployerEntity;
-import pl.devfinder.infrastructure.database.entity.OfferEntity;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface EmployerEntityMapper {

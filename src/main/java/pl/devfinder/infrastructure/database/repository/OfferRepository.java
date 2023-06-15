@@ -29,7 +29,9 @@ public class OfferRepository implements OfferDAO {
     }
 
     @Override
-    public Integer getNumberOfAvailableOffers(Long employerId) {
-        return offerJpaRepository.getNumberOfAvailableOffers(employerId);
+    public Long getNumberOfAvailableOffers(Long employerId) {
+        Long numberOfAvailableOffers = offerJpaRepository.getNumberOfAvailableOffers(employerId);
+        System.out.println(numberOfAvailableOffers);
+        return numberOfAvailableOffers;
     }
 }

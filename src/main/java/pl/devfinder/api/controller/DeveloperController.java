@@ -25,6 +25,7 @@ public class DeveloperController {
     public static final String DEVELOPER_SETTINGS = "/developer/settings";
     public static final String DEVELOPER_MATCHED_OFFERS = "/developer/matched_offers";
     public static final String DEVELOPER_APPLICATIONS = "/developer/applications";
+    public static final String EMPLOYER_OFFERS = "/developer/employer_offers";
 
     private final EmployerService employerService;
     private final EmployerRowMapper employerRowMapper;

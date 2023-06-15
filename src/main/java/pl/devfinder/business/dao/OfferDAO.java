@@ -11,5 +11,5 @@ public interface OfferDAO {
 
     List<Offer> findAll();
 
-    Integer getNumberOfAvailableOffers(Long employerId);
+    Long getNumberOfAvailableOffers(Long employerId);
 }
