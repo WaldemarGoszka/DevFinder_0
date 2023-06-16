@@ -10,18 +10,13 @@ import pl.devfinder.domain.Employer;
 @Mapper(componentModel = "spring")
 public abstract class EmployerRowMapper {
     @Autowired
-    OfferService offerService;
+    private OfferService offerService;
 
-    @Mapping(target = "numberOfAvailableOffers", ignore = true)
-    //EmployerRowDTO map(final Employer employer);
     public EmployerRowDTO map(Employer employer) {
-
         if (employer == null) {
             return null;
         }
-
         EmployerRowDTO.EmployerRowDTOBuilder employerRowDTO = EmployerRowDTO.builder();
-
         employerRowDTO.companyName(employer.getCompanyName());
         employerRowDTO.logoFile(employer.getLogoFile());
         employerRowDTO.website(employer.getWebsite());
@@ -34,7 +29,6 @@ public abstract class EmployerRowMapper {
 //    @AfterMapping
 //    protected void getNumberOfAvailableOffers(@MappingTarget EmployerRowDTO employerRowDTO, Employer employer, @Context OfferService offerService) {
 //        //employerRowDTO.setNumberOfAvailableOffers(offerService.getNumberOfAvailableOffers(employer));
-//        System.out.println("****************");
 //        //employerRowDTO.numberOfAvailableOffers(2);
 //        //return offerService.getNumberOfAvailableOffers(employer);
 //        //return 5;

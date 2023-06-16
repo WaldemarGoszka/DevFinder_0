@@ -12,7 +12,7 @@ import pl.devfinder.infrastructure.database.entity.OfferEntity;
 public interface OfferJpaRepository extends JpaRepository<OfferEntity, Integer> {
 
     @Query("""
-        SELECT COUNT(*) FROM OfferEntity offer WHERE offer.employer_id = :employerId
+        SELECT COUNT(*) FROM OfferEntity offer WHERE offer.employerId.employerId = :employerId
         """)
-    EmployerEntity getNumberOfAvailableOffers(Long employerId);
+    Long getNumberOfAvailableOffers(Long employerId);
 }

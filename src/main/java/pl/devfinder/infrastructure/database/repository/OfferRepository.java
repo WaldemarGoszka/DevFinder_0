@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import pl.devfinder.business.dao.OfferDAO;
 import pl.devfinder.domain.Offer;
+import pl.devfinder.infrastructure.database.entity.EmployerEntity;
 import pl.devfinder.infrastructure.database.repository.jpa.OfferJpaRepository;
 import pl.devfinder.infrastructure.database.repository.mapper.OfferEntityMapper;
 
@@ -30,8 +31,6 @@ public class OfferRepository implements OfferDAO {
 
     @Override
     public Long getNumberOfAvailableOffers(Long employerId) {
-        Long numberOfAvailableOffers = offerJpaRepository.getNumberOfAvailableOffers(employerId);
-        System.out.println(numberOfAvailableOffers);
-        return numberOfAvailableOffers;
+        return offerJpaRepository.getNumberOfAvailableOffers(employerId);
     }
 }

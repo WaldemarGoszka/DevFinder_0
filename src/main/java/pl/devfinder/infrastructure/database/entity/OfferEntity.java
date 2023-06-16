@@ -61,7 +61,7 @@ public class OfferEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employer_id", nullable = false)
-    private Integer employer_id;
+    private EmployerEntity employerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")
