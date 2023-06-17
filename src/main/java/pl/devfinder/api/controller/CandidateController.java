@@ -10,6 +10,7 @@ import pl.devfinder.api.dto.mapper.EmployerRowMapper;
 import pl.devfinder.api.dto.mapper.OfferRowMapper;
 import pl.devfinder.business.EmployerService;
 import pl.devfinder.business.OfferService;
+import pl.devfinder.business.management.Keys;
 
 import java.util.List;
 
@@ -58,7 +59,7 @@ public class CandidateController {
     @GetMapping(value = OFFERS_LIST)
     public String getOffersList(Model model) {
         //todo
-        List<OfferRowDTO> allOffers = offerService.findAllOffers().stream()
+        List<OfferRowDTO> allOffers = offerService.findAllByState(Keys.OfferState.OPEN).stream()
                 .map(offerRowMapper::map)
                 .toList();
         model.addAttribute("allOffersDTOs", allOffers);

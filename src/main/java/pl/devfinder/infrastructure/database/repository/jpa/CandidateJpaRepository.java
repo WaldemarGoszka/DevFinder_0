@@ -13,8 +13,8 @@ import java.util.List;
 @Repository
 public interface CandidateJpaRepository extends JpaRepository<CandidateEntity, Integer> {
 @Query("""
-        SELECT candidate FROM CandidateEntity candidate WHERE candidate.status = :state
+        SELECT candidate FROM CandidateEntity candidate WHERE candidate.status LIKE :state
         """
 )
-    List<CandidateEntity> findAllByState(@Param("state")String state);
+    List<CandidateEntity> findAllByState(String state);
 }

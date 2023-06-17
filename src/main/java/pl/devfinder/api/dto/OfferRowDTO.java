@@ -16,12 +16,12 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 public class OfferRowDTO {
     String title;
-    Integer remoteWork;
+    String remoteWorkFormated;
     String experienceLevel;
-    BigDecimal salaryMin;
-    BigDecimal salaryMax;
+    String salaryRange;
     OffsetDateTime createdAt;
     Employer employerId;
     City cityId;
+    String daysSinceCreated;
 //todo dodać odliczanie czasu ile dni oferta jest dostępna,, zamiast salary min i mac dodać Sring salary np 5000 - 6000
 }

@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.devfinder.api.dto.EmployerRowDTO;
 import pl.devfinder.business.OfferService;
+import pl.devfinder.business.management.Keys;
 import pl.devfinder.domain.Employer;
 
 @Mapper(componentModel = "spring")
@@ -22,7 +23,7 @@ public abstract class EmployerRowMapper {
         employerRowDTO.website(employer.getWebsite());
         employerRowDTO.numberOfEmployees(employer.getNumberOfEmployees());
         employerRowDTO.cityId(employer.getCityId());
-        employerRowDTO.numberOfAvailableOffers(offerService.getNumberOfAvailableOffers(employer.getEmployerId()));
+        employerRowDTO.numberOfAvailableOffers(offerService.getNumberOfOffersByEmployerAndByState(employer.getEmployerId(), Keys.OfferState.OPEN));
         return employerRowDTO.build();
     }
 

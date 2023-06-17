@@ -33,9 +33,8 @@
                 <th>Employer </th>
                 <th>City</th>
                 <th>Remote Work</th>
-                <th>Salary Min</th>
-                <th>Salary Max</th>
-                <th>Created At</th>
+                <th>Salary</th>
+                <th>Days Since Created</th>
             </tr>
             </thead>
             <tbody>
@@ -44,10 +43,9 @@
                 <td th:text="${offer.getExperienceLevel()}"></td>
                 <td th:text="${offer.getEmployerId().getCompanyName()}"></td>
                 <td th:text="${offer.getCityId().getCityName()}"></td>
-                <td th:text="${offer.getRemoteWork()}"></td>
-                <td th:text="${offer.getSalaryMin()}"></td>
-                <td th:text="${offer.getSalaryMax()}"></td>
-                <td th:text="${offer.getCreatedAt()}"></td>
+                <td th:text="${offer.getRemoteWorkFormated()}"></td>
+                <td th:text="${offer.getSalaryRange()}"></td>
+                <td th:text="${offer.getDaysSinceCreated()}"></td>
             </tr>
             </tbody>
         </table>

@@ -19,7 +19,7 @@ public class CandidateRepository implements CandidateDAO {
 
     @Override
     public List<Candidate> findAllByState(Keys.CandidateState state) {
-        return candidateJpaRepository.findAllByState(state.name()).stream()
+        return candidateJpaRepository.findAllByState(state.getState()).stream()
                 .map(candidateEntityMapper::mapFromEntity)
                 .toList();
     }

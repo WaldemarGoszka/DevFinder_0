@@ -84,7 +84,7 @@ public class CandidateEntity {
 
     @ManyToOne
     @JoinColumn(name = "employer_id")
-    private EmployerEntity employer;
+    private EmployerEntity employerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "desired_job_city_id")

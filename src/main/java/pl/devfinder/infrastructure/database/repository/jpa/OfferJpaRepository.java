@@ -8,11 +8,19 @@ import org.springframework.stereotype.Repository;
 import pl.devfinder.infrastructure.database.entity.EmployerEntity;
 import pl.devfinder.infrastructure.database.entity.OfferEntity;
 
+import java.util.List;
+
 @Repository
 public interface OfferJpaRepository extends JpaRepository<OfferEntity, Integer> {
 
     @Query("""
-        SELECT COUNT(*) FROM OfferEntity offer WHERE offer.employerId.employerId = :employerId
+        SELECT COUNT(*) FROM OfferEntity offer WHERE offer.employerId.employerId = :employerId AND offer.status LIKE :state
         """)
-    Long getNumberOfAvailableOffers(Long employerId);
+    Long getNumberOfOffersByEmployerAndByState(Long employerId, String state);
+    @Query("""
+        SELECT offer FROM OfferEntity offer WHERE offer.status LIKE :state
+""")
+    List<OfferEntity> findAllByState(String state);
+
+
 }
