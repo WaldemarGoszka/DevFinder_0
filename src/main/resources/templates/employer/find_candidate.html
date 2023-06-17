@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+          crossorigin="anonymous">
+    <title>Candidates</title>
+</head>
+
+<body>
+<div class="container">
+    <h1>Candidates</h1>
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <a th:href="@{/employer/matched_candidates}" class="btn btn-info" role="button">Matched Candidates</a>
+        </div>
+    </div>
+    <table class="table">
+        <thead class="table-dark">
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Experience Level</th>
+            <th>Years Of Experience</th>
+            <th>Skills</th>
+            <th>City</th>
+            <th>Salary Min</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="candidate : ${allCandidatesDTOs}">
+            <td th:text="${candidate.getFirstName()}"></td>
+            <td th:text="${candidate.getLastName()}"></td>
+            <td th:text="${candidate.getExperienceLevel()}"></td>
+            <td th:text="${candidate.getYearsOfExperience()}"></td>
+            <td th:text="${candidate.getCandidateSkills()}"></td>
+            <td th:text="${candidate.getResidenceCityId().getCityName()}"></td>
+            <td th:text="${candidate.getSalaryMin()}"></td>
+            <td th:text="${candidate}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

@@ -15,33 +15,34 @@ import java.util.List;
 
 @Controller
 @AllArgsConstructor
-public class DeveloperController {
+public class CandidateController {
 
-    public static final String DEVELOPER = "/developer";
-    public static final String DEVELOPER_PROFILE = "/developer/profile";
-    public static final String DEVELOPER_EDIT_PROFILE = "/developer/edit_profile";
-    public static final String OFFERS_LIST = "/developer/offers";
-    public static final String EMPLOYERS_LIST = "/developer/employers";
-    public static final String DEVELOPER_SETTINGS = "/developer/settings";
-    public static final String DEVELOPER_MATCHED_OFFERS = "/developer/matched_offers";
-    public static final String DEVELOPER_APPLICATIONS = "/developer/applications";
-    public static final String EMPLOYER_OFFERS = "/developer/employer_offers";
+    public static final String CANDIDATE = "/candidate";
+    public static final String CANDIDATE_PROFILE = "/candidate/profile";
+    public static final String CANDIDATE_EDIT_PROFILE = "/candidate/edit_profile";
+    public static final String OFFERS_LIST = "/candidate/offers";
+    public static final String EMPLOYERS_LIST = "/candidate/employers";
+    public static final String MY_EMPLOYER = "/candidate/my_employer";
+    public static final String CANDIDATE_SETTINGS = "/candidate/settings";
+    public static final String CANDIDATE_MATCHED_OFFERS = "/candidate/matched_offers";
+    public static final String CANDIDATE_APPLICATIONS = "/candidate/applications";
+    public static final String EMPLOYER_OFFERS = "/candidate/employer_offers";
 
     private final EmployerService employerService;
     private final EmployerRowMapper employerRowMapper;
     private final OfferService offerService;
     private final OfferRowMapper offerRowMapper;
 
-    @GetMapping(value = DEVELOPER)
+    @GetMapping(value = CANDIDATE)
     public String homePage(Model model) {
 
-        return "developer/portal";
+        return "candidate/portal";
     }
 
-    @GetMapping(value = DEVELOPER_PROFILE)
+    @GetMapping(value = CANDIDATE_PROFILE)
     public String getProfile(Model model) {
-// getDeveloperProfile
-        return "developer/profile";
+//
+        return "candidate/profile";
     }
 
     @GetMapping(value = EMPLOYERS_LIST)
@@ -51,7 +52,7 @@ public class DeveloperController {
                 .toList();
 //todo przyciks Details odnoszący się do profilu firmy
         model.addAttribute("allEmployersDTOs", allEmployers);
-        return "developer/find_employer";
+        return "candidate/find_employer";
     }
 
     @GetMapping(value = OFFERS_LIST)
@@ -61,7 +62,7 @@ public class DeveloperController {
                 .map(offerRowMapper::map)
                 .toList();
         model.addAttribute("allOffersDTOs", allOffers);
-        return "developer/offers";
+        return "candidate/offers";
     }
 
 }

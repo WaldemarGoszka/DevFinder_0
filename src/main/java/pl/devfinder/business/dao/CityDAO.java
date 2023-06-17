@@ -1,6 +1,6 @@
 package pl.devfinder.business.dao;
 
 
-public interface CityEntityDAO {
+public interface CityDAO {
 
 }
