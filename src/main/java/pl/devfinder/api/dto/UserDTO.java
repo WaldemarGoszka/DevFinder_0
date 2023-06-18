@@ -19,4 +19,6 @@ public class UserDTO {
     @Size(min = 8, message = "Invalid password (too short)")
     private String password;
     private String repeatPassword;
+    private Boolean active;
+    private String role;
 }

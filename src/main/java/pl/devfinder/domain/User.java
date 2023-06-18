@@ -1,13 +1,18 @@
 package pl.devfinder.domain;
 
+import lombok.*;
 import pl.devfinder.infrastructure.database.entity.RoleEntity;
-
+@With
+@Value
+@Builder
+@EqualsAndHashCode(of = "userUuid")
+@ToString(of = {"email"})
 public class User {
 
-    private String userName;
-    private String userUuid;
-    private String email;
-    private String password;
-    private Boolean active;
-    private RoleEntity roleId;
+     String userName;
+     String userUuid;
+     String email;
+     String password;
+     Boolean active;
+     Role roleId;
 }

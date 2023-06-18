@@ -67,4 +67,18 @@ public interface Keys {
             return level;
         }
     }
+    enum Role {
+        DEVELOPER("DEVELOPER"),
+        EMPLOYER("EMPLOYER");
+
+        private final String name;
+
+        Role(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
 }
