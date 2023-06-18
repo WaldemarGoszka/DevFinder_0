@@ -14,11 +14,7 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface CandidateEntityMapper {
     @Mappings({
-//            @Mapping(target = "candidateSkills.candidateSkillId", ignore = true),
-//            @Mapping(target = "candidateSkills.candidateId", ignore = true),
-//            @Mapping(target = "candidateSkills.skillId", ignore = true),
             @Mapping(source = "candidateSkills", target = "candidateSkills", qualifiedByName = "mapCandidateSkills"),
-
             @Mapping(target = "desiredJobCityId.employerCities", ignore = true),
             @Mapping(target = "desiredJobCityId.offerCities", ignore = true),
             @Mapping(target = "desiredJobCityId.candidateDesiredJobCities", ignore = true),
@@ -35,7 +31,8 @@ public interface CandidateEntityMapper {
         return entities.stream().map(this::mapFromEntity).collect(Collectors.toSet());
     }
 
-    @Mapping(target = "candidateSkills", ignore = true)
-    @Mapping(target = "offerSkills", ignore = true)
+    @Mapping(target = "candidateId", ignore = true)
+    @Mapping(target = "skillId.candidateSkills", ignore = true)
+    @Mapping(target = "skillId.offerSkills", ignore = true)
     CandidateSkill mapFromEntity(CandidateSkillEntity entity);
 }

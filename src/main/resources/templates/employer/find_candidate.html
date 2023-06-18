@@ -35,10 +35,14 @@
             <td th:text="${candidate.getLastName()}"></td>
             <td th:text="${candidate.getExperienceLevel()}"></td>
             <td th:text="${candidate.getYearsOfExperience()}"></td>
-            <td th:text="${candidate.getCandidateSkills()}"></td>
+            <td>
+                <span th:each="skill : ${candidate.getCandidateSkills()}">
+                    <span th:text="${skill.getSkillId().getSkillName()}"></span>
+                    <br/>
+                </span>
+            </td>
             <td th:text="${candidate.getResidenceCityId().getCityName()}"></td>
             <td th:text="${candidate.getSalaryMin()}"></td>
-            <td th:text="${candidate}"></td>
         </tr>
         </tbody>
     </table>

@@ -11,7 +11,7 @@ import pl.devfinder.infrastructure.database.entity.OfferEntity;
 import java.util.List;
 
 @Repository
-public interface OfferJpaRepository extends JpaRepository<OfferEntity, Integer> {
+public interface OfferJpaRepository extends JpaRepository<OfferEntity, Long> {
 
     @Query("""
         SELECT COUNT(*) FROM OfferEntity offer WHERE offer.employerId.employerId = :employerId AND offer.status LIKE :state

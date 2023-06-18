@@ -11,7 +11,7 @@ import pl.devfinder.infrastructure.database.entity.CandidateEntity;
 import java.util.List;
 
 @Repository
-public interface CandidateJpaRepository extends JpaRepository<CandidateEntity, Integer> {
+public interface CandidateJpaRepository extends JpaRepository<CandidateEntity, Long> {
 @Query("""
         SELECT candidate FROM CandidateEntity candidate WHERE candidate.status LIKE :state
         """

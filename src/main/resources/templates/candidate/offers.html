@@ -18,7 +18,6 @@
         </div>
     </div>
     <div class="container">
-        <h1>Find Company</h1>
         <div class="row mt-3">
             <div class="col-md-4">
                 <a th:href="@{/developer}" class="btn btn-info" role="button">Go back to the main page</a>
@@ -45,7 +44,7 @@
                 <td th:text="${offer.getCityId().getCityName()}"></td>
                 <td th:text="${offer.getRemoteWorkFormated()}"></td>
                 <td th:text="${offer.getSalaryRange()}"></td>
-                <td th:text="${offer.getDaysSinceCreated()}"></td>
+                <td th:text="${offer.getDaysSinceCreated()} + ' days ago'"></td>
             </tr>
             </tbody>
         </table>

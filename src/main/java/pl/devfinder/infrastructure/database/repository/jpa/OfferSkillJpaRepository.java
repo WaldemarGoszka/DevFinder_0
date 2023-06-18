@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import pl.devfinder.infrastructure.database.entity.OfferSkillEntity;
 
 @Repository
-public interface OfferSkillJpaRepository extends JpaRepository<OfferSkillEntity, Integer> {
+public interface OfferSkillJpaRepository extends JpaRepository<OfferSkillEntity, Long> {
 
 }

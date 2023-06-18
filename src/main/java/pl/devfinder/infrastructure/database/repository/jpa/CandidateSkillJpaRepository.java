@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import pl.devfinder.infrastructure.database.entity.CandidateSkillEntity;
 
 @Repository
-public interface CandidateSkillJpaRepository extends JpaRepository<CandidateSkillEntity, Integer> {
+public interface CandidateSkillJpaRepository extends JpaRepository<CandidateSkillEntity, Long> {
 
 }

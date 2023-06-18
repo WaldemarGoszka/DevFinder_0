@@ -22,7 +22,7 @@ public class EmployerController {
     public static final String SEARCH_CANDIDATE = "/employer/find_candidate";
     public static final String POST_A_JOB = "/employer/post_job";
 
-    public static final String MY_JOB_OFFERS = "/employer/my_job_offers";
+    public static final String MY_JOB_OFFERS = "/employer/posted_offers";
     public static final String EMPLOYER_SETTINGS = "/employer/settings";
     public static final String EMPLOYEE = "/employer/employee";
 
