@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import pl.devfinder.api.dto.UserDTO;
 import pl.devfinder.business.dao.UserDAO;
 import pl.devfinder.domain.User;
+import pl.devfinder.infrastructure.database.entity.UserEntity;
 import pl.devfinder.infrastructure.database.repository.jpa.UserJpaRepository;
 import pl.devfinder.infrastructure.database.repository.mapper.UserEntityMapper;
 
@@ -24,8 +25,13 @@ public class UserRepository implements UserDAO {
     }
 
     @Override
-    public void save(UserDTO userDTO) {
-        userJpaRepository.save()
+    public void save(User user) {
+        UserEntity userEntity = userEntityMapper.mapToEntity(user);
+        userJpaRepository.save(userEntity);
+    }
 
+    @Override
+    public Optional<User> findByUserName(String userName) {
+        return Optional.ofNullable(userEntityMapper.mapFromEntity(userJpaRepository.findByUserName(userName)));
     }
 }

@@ -11,7 +11,7 @@ import pl.devfinder.infrastructure.database.entity.RoleEntity;
 public abstract class UserMapper {
     RoleService roleService;
 
-    public User map(UserDTO userDTO) {
+    public User mapFromDTO(UserDTO userDTO) {
         if ( userDTO == null ) {
             return null;
         }
@@ -19,15 +19,20 @@ public abstract class UserMapper {
         User.UserBuilder user = User.builder();
 
         user.email( userDTO.getEmail() );
-        user.password( userDTO.getPassword() );
+        user.password(userDTO.getPassword() );
         user.active(userDTO.getActive());
         user.userUuid(Utility.generateUUID());
-        user.roleId(roleService.findByRole(userDTO.getRole()));
+        user.role(roleService.findByRole(userDTO.getRole().getRole()));
         return user.build();
 
     }
-    public UserDTO map(User user){
-        return null;
+    public UserDTO mapToDTO(User user){
+        return UserDTO.builder()
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .active(user.getActive())
+                .role(user.getRole())
+                .build();
     }
 }
 

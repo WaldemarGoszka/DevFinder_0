@@ -19,17 +19,20 @@ public class UserService {
     @Transactional
     public User findByEmail(String email) {
         Optional<User> user = userDAO.findByEmail(email);
-        if (user.isEmpty()) {
-            throw new NotFoundException("Could not find user by email: [%s]".formatted(email));
-        }
-        return user.get();
+//        if (user.isEmpty()) {
+//            throw new NotFoundException("Could not find user by email: [%s]".formatted(email));
+//        }
+        return user.orElseThrow(() -> new NotFoundException("Could not find user by email: [%s]".formatted(email)));
+    }
+    @Transactional
+    public User findByUserName(String userName) {
+        Optional<User> user = userDAO.findByUserName(userName);
+        return user.orElseThrow(() -> new NotFoundException("Could not find user by userName: [%s]".formatted(userName)));
     }
 
     @Transactional
-    public User save(UserDTO userDTO) {
-        //User.UserB
-        //userDAO.save(userDTO);
-        return null;
+    public void save(User user) {
+        userDAO.save(user);
     }
 
 

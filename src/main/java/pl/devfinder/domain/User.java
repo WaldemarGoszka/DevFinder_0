@@ -14,5 +14,5 @@ public class User {
      String email;
      String password;
      Boolean active;
-     Role roleId;
+     Role role;
 }

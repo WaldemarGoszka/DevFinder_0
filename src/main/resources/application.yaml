@@ -1,10 +1,11 @@
-
 server:
   port: 8190
   servlet:
     context-path: /devfinder
 
 spring:
+  jpa:
+    show-sql: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: org.postgresql.Driver
@@ -18,7 +19,7 @@ spring:
       maximumPoolSize: 20
     jpa:
       hibernate:
-        ddl-auto: none
+        ddl-auto: validate
       properties:
         hibernate:
           dialect: org.hibernate.dialect.PostgreSQLDialect

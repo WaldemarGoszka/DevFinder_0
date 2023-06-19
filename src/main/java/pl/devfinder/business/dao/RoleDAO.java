@@ -2,6 +2,8 @@ package pl.devfinder.business.dao;
 
 import pl.devfinder.domain.Role;
 
+import java.util.Optional;
+
 public interface RoleDAO {
-    Role findByRole(String role);
+    Optional<Role> findByRole(String role);
 }

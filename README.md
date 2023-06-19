@@ -13,6 +13,11 @@ http://localhost:8190/devfinder
 preffer:
 https://startbootstrap.com/theme/sb-admin-2
 
+dark:
+https://themewagon.com/themes/corona-free-responsive-bootstrap-4-admin-dashboard-template/
+
+https://themewagon.com/themes/free-bootstrap-5-admin-dashboard-template-darkpan/
+
 https://startbootstrap.com/template/sb-admin
 
 

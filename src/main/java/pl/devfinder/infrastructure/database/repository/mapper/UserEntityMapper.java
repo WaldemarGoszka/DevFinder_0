@@ -12,4 +12,6 @@ import pl.devfinder.infrastructure.database.entity.UserEntity;
 public interface UserEntityMapper {
     @Mapping(target = "roleId.userId", ignore = true)
     User mapFromEntity(UserEntity userEntity);
+    UserEntity mapToEntity(User user);
+    //Ciekawe czy nie będzie trzeba dodć oddzielnego mappera do RoleEntity
 }

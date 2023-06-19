@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import pl.devfinder.business.dao.RoleDAO;
 import pl.devfinder.domain.Role;
 import pl.devfinder.infrastructure.database.repository.jpa.RoleJpaRepository;
+import pl.devfinder.infrastructure.database.repository.mapper.RoleEntityMapper;
 
 import java.util.Optional;
 
@@ -15,7 +16,7 @@ public class RoleRepository implements RoleDAO {
     RoleEntityMapper roleEntityMapper;
     @Override
     public Optional<Role> findByRole(String role) {
-        roleJpaRepository.findByRole(role)
-                .map(roleEntityMapper:mapFromEntity);
+        return roleJpaRepository.findByRole(role)
+                .map(roleEntityMapper::mapFromEntity);
     }
 }
