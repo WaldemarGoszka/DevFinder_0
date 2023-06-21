@@ -58,7 +58,6 @@ public class CandidateController {
 
     @GetMapping(value = OFFERS_LIST)
     public String getOffersList(Model model) {
-        //todo
         List<OfferRowDTO> allOffers = offerService.findAllByState(Keys.OfferState.OPEN).stream()
                 .map(offerRowMapper::map)
                 .toList();

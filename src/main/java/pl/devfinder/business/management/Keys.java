@@ -68,7 +68,7 @@ public interface Keys {
         }
     }
     enum Role {
-        DEVELOPER("DEVELOPER"),
+        CANDIDATE("CANDIDATE"),
         EMPLOYER("EMPLOYER");
 
         private final String name;

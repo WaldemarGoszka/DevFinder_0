@@ -1,6 +1,8 @@
 package pl.devfinder.api.dto.mapper;
 
 import org.mapstruct.Mapper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.devfinder.api.dto.UserDTO;
 import pl.devfinder.business.RoleService;
 import pl.devfinder.business.management.Utility;
@@ -19,10 +21,10 @@ public abstract class UserMapper {
         User.UserBuilder user = User.builder();
 
         user.email( userDTO.getEmail() );
-        user.password(userDTO.getPassword() );
+        user.password(Utility.encodePassword(userDTO.getPassword()));
         user.active(userDTO.getActive());
         user.userUuid(Utility.generateUUID());
-        user.role(roleService.findByRole(userDTO.getRole().getRole()));
+        user.role(roleService.findByRole(userDTO.getRole()));
         return user.build();
 
     }
@@ -31,7 +33,7 @@ public abstract class UserMapper {
                 .email(user.getEmail())
                 .password(user.getPassword())
                 .active(user.getActive())
-                .role(user.getRole())
+                .role(user.getRole().getRole())
                 .build();
     }
 }

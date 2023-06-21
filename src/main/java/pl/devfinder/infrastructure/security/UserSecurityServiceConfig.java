@@ -5,7 +5,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+
+import pl.devfinder.domain.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,14 +23,19 @@ import java.util.List;
 @NoArgsConstructor
 public class UserSecurityServiceConfig implements UserDetailsService {
 
-    UserRepository userRepository;
+
     UserService userService;
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        pl.devfinder.domain.User user = userService.findByUserName(username);
-        return new User(
-                user.getUserName(),
-                user.getPassword(),
-                List.of(new SimpleGrantedAuthority(user.getRole().getRole())));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        pl.devfinder.domain.User user = userService.findByEmail(email);
+
+        if (user != null) {
+            return new org.springframework.security.core.userdetails.User(
+                    user.getEmail(),
+                    user.getPassword(),
+                    List.of(new SimpleGrantedAuthority(user.getRole().getRole())));
+        }else{
+            throw new UsernameNotFoundException("Invalid username or password.");
+        }
     }
 }

@@ -8,7 +8,7 @@ public class UserLoginController {
     public static final String LOGIN_PAGE = "/login";
 
     @GetMapping(LOGIN_PAGE)
-    public String loginForm(){
+    public String getLoginPage(){
         return "login";
     }
 }

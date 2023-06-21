@@ -731,7 +731,7 @@ VALUES (1, 2),
 
 INSERT INTO devfinder_role (role_id, role)
 VALUES
-(1, 'DEVELOPER'), (2, 'EMPLOYER');
+(1, 'CANDIDATE'), (2, 'EMPLOYER');
 
 INSERT INTO devfinder_user (user_uuid, email, password, active, role_id)
 VALUES
