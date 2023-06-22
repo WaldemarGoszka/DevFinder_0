@@ -15,4 +15,5 @@ public interface EmployerEntityMapper {
     @Mapping(target = "cityId.candidateResidenceCities", ignore = true)
     Employer mapFromEntity(EmployerEntity employerEntity);
 
+    EmployerEntity mapToEntity(Employer employer);
 }

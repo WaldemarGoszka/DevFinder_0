@@ -25,13 +25,13 @@ public class CandidateEntity {
     @Column(name = "candidate_uuid", nullable = false)
     private String candidateUUId;
 
-    @Column(name = "first_name", nullable = false)
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "email_contact", nullable = false)
+    @Column(name = "email_contact")
     private String email_Contact;
 
     @Column(name = "phone_number")

@@ -11,4 +11,6 @@ public class UserLoginController {
     public String getLoginPage(){
         return "login";
     }
+
+    //TODO jesli zaloguje się użytkownik z employer to ma przenieść do endpointu /employer a jeśli candidate to do /canddate
 }

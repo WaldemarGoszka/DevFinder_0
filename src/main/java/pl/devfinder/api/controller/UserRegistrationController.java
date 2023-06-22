@@ -18,8 +18,8 @@ import pl.devfinder.domain.User;
 @AllArgsConstructor
 public class UserRegistrationController {
 
-  UserService userService;
-  UserMapper userMapper;
+  private final UserService userService;
+  private final UserMapper userMapper;
   @GetMapping("/register")
   public String getRegistrationPage(Model model){
     model.addAttribute("user", new UserDTO());
@@ -29,10 +29,10 @@ public class UserRegistrationController {
   }
 
   @PostMapping("/register/save")
-  public String postRegistrationPage(@Valid @ModelAttribute("user") UserDTO user,
+  public String postRegistrationPage(@Valid @ModelAttribute("user") UserDTO userDTO,
                              BindingResult result,
                              Model model){
-    User existing = userService.findByEmail(user.getEmail());
+    User existing = userService.findByEmail(userDTO.getEmail());
     if (existing != null) {
       result.rejectValue("email"
               , null
@@ -46,10 +46,10 @@ public class UserRegistrationController {
 
 
     if (result.hasErrors()) {
-      model.addAttribute("user", user);
+      model.addAttribute("user", userDTO);
       return "register";
     }
-    userService.save(user);
+    userService.save(userDTO);
     return "redirect:/register?success";
   }
 

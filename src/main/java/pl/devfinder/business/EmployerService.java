@@ -5,8 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.devfinder.business.dao.EmployerDAO;
+import pl.devfinder.business.management.Keys;
+import pl.devfinder.domain.Candidate;
 import pl.devfinder.domain.Employer;
+import pl.devfinder.domain.User;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Slf4j
@@ -21,5 +25,14 @@ public class EmployerService {
         List<Employer> allEmployers = employerDAO.findAll();
         log.info("Count Employers: [{}]", allEmployers.size());
         return allEmployers;
+    }
+
+    public void save(User user) {
+        //TODO
+        Employer employer = Employer.builder()
+                .employerUUId(user.getUserUuid())
+                .createdAt(OffsetDateTime.now())
+                .build();
+        employerDAO.save(employer);
     }
 }

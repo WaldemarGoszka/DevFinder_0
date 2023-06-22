@@ -16,5 +16,9 @@ public class IndexController {
     public String homePage() {
         return "index";
     }
+    @GetMapping("/403")
+    public String forbidden(){
+        return "403";
+    }
 
 }

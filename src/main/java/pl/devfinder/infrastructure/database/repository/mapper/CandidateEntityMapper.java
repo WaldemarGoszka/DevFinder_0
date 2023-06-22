@@ -4,6 +4,7 @@ import org.mapstruct.*;
 import pl.devfinder.domain.Candidate;
 import pl.devfinder.domain.CandidateSkill;
 import pl.devfinder.domain.Skill;
+import pl.devfinder.domain.User;
 import pl.devfinder.infrastructure.database.entity.CandidateEntity;
 import pl.devfinder.infrastructure.database.entity.CandidateSkillEntity;
 import pl.devfinder.infrastructure.database.entity.SkillEntity;
@@ -35,4 +36,6 @@ public interface CandidateEntityMapper {
     @Mapping(target = "skillId.candidateSkills", ignore = true)
     @Mapping(target = "skillId.offerSkills", ignore = true)
     CandidateSkill mapFromEntity(CandidateSkillEntity entity);
+
+    CandidateEntity mapToEntity(Candidate candidate);
 }

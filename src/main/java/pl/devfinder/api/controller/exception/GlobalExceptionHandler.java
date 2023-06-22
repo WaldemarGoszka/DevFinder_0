@@ -1,4 +1,4 @@
-package pl.devfinder.api.controller;
+package pl.devfinder.api.controller.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;

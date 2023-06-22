@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import pl.devfinder.api.dto.EmployerRowDTO;
 import pl.devfinder.api.dto.OfferRowDTO;
 import pl.devfinder.api.dto.mapper.EmployerRowMapper;
@@ -16,18 +17,19 @@ import java.util.List;
 
 @Controller
 @AllArgsConstructor
+@RequestMapping("/candidate")
 public class CandidateController {
 
-    public static final String CANDIDATE = "/candidate";
-    public static final String CANDIDATE_PROFILE = "/candidate/profile";
-    public static final String CANDIDATE_EDIT_PROFILE = "/candidate/edit_profile";
-    public static final String OFFERS_LIST = "/candidate/offers";
-    public static final String EMPLOYERS_LIST = "/candidate/employers";
-    public static final String MY_EMPLOYER = "/candidate/my_employer";
-    public static final String CANDIDATE_SETTINGS = "/candidate/settings";
-    public static final String CANDIDATE_MATCHED_OFFERS = "/candidate/matched_offers";
-    public static final String CANDIDATE_APPLICATIONS = "/candidate/applications";
-    public static final String EMPLOYER_OFFERS = "/candidate/employer_offers";
+    public static final String CANDIDATE = "/";
+    public static final String CANDIDATE_PROFILE = "/profile";
+    public static final String CANDIDATE_EDIT_PROFILE = "/edit_profile";
+    public static final String OFFERS_LIST = "/offers";
+    public static final String EMPLOYERS_LIST = "/employers";
+    public static final String MY_EMPLOYER = "/my_employer";
+    public static final String CANDIDATE_SETTINGS = "/settings";
+    public static final String CANDIDATE_MATCHED_OFFERS = "/matched_offers";
+    public static final String CANDIDATE_APPLICATIONS = "/applications";
+    public static final String EMPLOYER_OFFERS = "/employer_offers";
 
     private final EmployerService employerService;
     private final EmployerRowMapper employerRowMapper;

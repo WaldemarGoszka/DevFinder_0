@@ -8,6 +8,7 @@ import pl.devfinder.api.dto.UserDTO;
 import pl.devfinder.api.dto.mapper.UserMapper;
 import pl.devfinder.business.dao.RoleDAO;
 import pl.devfinder.business.dao.UserDAO;
+import pl.devfinder.business.management.Keys;
 import pl.devfinder.business.management.Utility;
 import pl.devfinder.domain.User;
 import pl.devfinder.domain.exception.NotFoundException;
@@ -19,6 +20,8 @@ import java.util.Optional;
 public class UserService {
 
     private final UserDAO userDAO;
+    private final CandidateService candidateService;
+    private final EmployerService employerService;
 
     private final UserMapper userMapper;
 
@@ -42,17 +45,16 @@ public class UserService {
     }
 
     /////////////////
-
+@Transactional
     public void save(UserDTO userDTO) {
         User user = userMapper.mapFromDTO(userDTO);
-//        User user = User.builder()
-//                .userName(userDTO.getUserName())
-//                .userUuid(Utility.generateUUID())
-//                .email(userDTO.getEmail())
-//                .password(passwordEncoder.encode(userDTO.getPassword()))
-//                .active(userDTO.getActive())
-//                .role(roleService.findByRole(userDTO.getRole()))
-//                .build();
+
+    if(user.getRole().getRole().equals(Keys.Role.CANDIDATE.getName())) {
+        candidateService.save(user);
+    }
+    if(user.getRole().getRole().equals(Keys.Role.EMPLOYER.getName())) {
+        employerService.save(user);
+    }
         userDAO.save(user);
     }
 
