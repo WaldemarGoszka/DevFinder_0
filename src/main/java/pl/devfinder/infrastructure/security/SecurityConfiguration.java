@@ -42,6 +42,7 @@ public class SecurityConfiguration {
 
         http
                 .authorizeHttpRequests()
+                .requestMatchers("/login", "/error", "/*", "/js/**", "/css/**", "/lib/**", "/scss/**", "/images/**").permitAll()
                 .requestMatchers("/candidate/**").hasAuthority(Keys.Role.CANDIDATE.getName())
                 .requestMatchers("/employer/**").hasAuthority(Keys.Role.EMPLOYER.getName())
                 .anyRequest().authenticated()
@@ -75,12 +76,13 @@ public class SecurityConfiguration {
         return http.build();
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) ->
-                web.ignoring()
-                        .requestMatchers("/js/**", "/css/**", "/lib/**", "/scss/**", "/images/**");
-    }
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        return (web) ->
+//                web.ignoring()
+//                        .requestMatchers("/js/**", "/css/**", "/lib/**", "/scss/**", "/images/**");
+//    }
+
 //    @Bean
 //    @ConditionalOnProperty(value = "spring.security.enabled", havingValue = "false")
 //    SecurityFilterChain securityDisabled(HttpSecurity http) throws Exception {
