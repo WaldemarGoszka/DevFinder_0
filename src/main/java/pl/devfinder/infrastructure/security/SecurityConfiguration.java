@@ -8,10 +8,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import pl.devfinder.business.management.Keys;
 
@@ -42,11 +46,20 @@ public class SecurityConfiguration {
 
         http
                 .authorizeHttpRequests()
-                .requestMatchers("/login", "/error", "/*", "/js/**", "/css/**", "/lib/**", "/scss/**", "/images/**").permitAll()
+//                .requestMatchers("/login", "/error", "/*", "/js/**", "/css/**", "/lib/**", "/scss/**", "/images/**", "/img/**").permitAll()
                 .requestMatchers("/candidate/**").hasAuthority(Keys.Role.CANDIDATE.getName())
                 .requestMatchers("/employer/**").hasAuthority(Keys.Role.EMPLOYER.getName())
                 .anyRequest().authenticated()
                 .and()
+                
+                // ... pozostała konfiguracja ...
+//                .formLogin()
+//                .loginPage("/login")
+//                .loginProcessingUrl("/do-login")
+//                .successHandler(customAuthenticationSuccessHandler())
+//                .permitAll()
+                // ... pozostała konfiguracja ...
+                
                 .formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/do-login")
@@ -77,11 +90,32 @@ public class SecurityConfiguration {
     }
 
 //    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        return (web) ->
-//                web.ignoring()
-//                        .requestMatchers("/js/**", "/css/**", "/lib/**", "/scss/**", "/images/**");
+//    public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+//        return new CustomAuthenticationSuccessHandler();
 //    }
+
+    @Bean
+    public InMemoryUserDetailsManager userDetailsManager(){
+        UserDetails employer = User
+                .withUsername("employer")
+                .password(passwordEncoder().encode("12345678"))
+                .roles(Keys.Role.EMPLOYER.getName())
+                .build();
+        UserDetails candidate = User
+                .withUsername("candidate")
+                .password(passwordEncoder().encode("12345678"))
+                .roles(Keys.Role.CANDIDATE.getName())
+                .build();
+        return new InMemoryUserDetailsManager(employer, candidate);
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) ->
+                web.ignoring()
+//                        .requestMatchers("/js/**", "/css/**", "/lib/**", "/scss/**", "/images/**");
+                        .requestMatchers("/*", "/js/**", "/css/**", "/lib/**", "/scss/**", "/images/**", "/img/**");
+    }
 
 //    @Bean
 //    @ConditionalOnProperty(value = "spring.security.enabled", havingValue = "false")
