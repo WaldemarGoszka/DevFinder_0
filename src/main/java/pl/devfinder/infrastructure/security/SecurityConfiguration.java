@@ -45,6 +45,7 @@ public class SecurityConfiguration {
         AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
 
         http
+                .csrf().disable()
                 .authorizeHttpRequests()
 //                .requestMatchers("/login", "/error", "/*", "/js/**", "/css/**", "/lib/**", "/scss/**", "/images/**", "/img/**").permitAll()
                 .requestMatchers("/candidate/**").hasAuthority(Keys.Role.CANDIDATE.getName())
@@ -62,8 +63,9 @@ public class SecurityConfiguration {
                 
                 .formLogin()
                 .loginPage("/login")
+                .usernameParameter("email")
                 .loginProcessingUrl("/do-login")
-                .defaultSuccessUrl("/index", true)
+                .defaultSuccessUrl("/", true)
                 .permitAll()
                 .and()
                 .logout()
@@ -75,9 +77,9 @@ public class SecurityConfiguration {
                 .permitAll()
                 .and()
 
-                .exceptionHandling()
-                .accessDeniedPage("/403")
-                .and()
+//                .exceptionHandling()
+//                .accessDeniedPage("/403")
+//                .and()
 
 //                .csrf().disable()
                 .authenticationManager(authenticationManager)

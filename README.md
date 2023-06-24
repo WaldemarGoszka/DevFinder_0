@@ -20,5 +20,10 @@ https://themewagon.com/themes/free-bootstrap-5-admin-dashboard-template-darkpan/
 
 https://startbootstrap.com/template/sb-admin
 
+Database Troubleshoting :
+https://www.jetbrains.com/help/datagrip/2023.1/connectivity-problems.html?utm_source=from_product&utm_medium=help_link&utm_campaign=DB&utm_content=2023.1#configure-driver-from-the-existing-procedure
+
+favicon.ico:
+https://freefavicon.com/freefavicons/business/iconinfo/business-man-avatar-vector-152-185058.html
 
 
