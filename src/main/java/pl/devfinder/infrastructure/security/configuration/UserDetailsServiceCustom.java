@@ -1,4 +1,4 @@
-package pl.devfinder.infrastructure.security;
+package pl.devfinder.infrastructure.security.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

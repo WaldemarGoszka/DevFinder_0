@@ -1,6 +1,5 @@
 package pl.devfinder.api.dto;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -8,8 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import pl.devfinder.domain.Role;
 
 @Data
 @Builder
@@ -27,7 +24,7 @@ public class UserDTO {
     @NotEmpty(message = "Password should not be empty")
     @Size(min = 8, max = 32, message = "Invalid password (too short)")
     private String password;
-    private Boolean active;
+    private Boolean isEnabled;
     @NotEmpty
     private String role;
 }

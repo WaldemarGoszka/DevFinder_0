@@ -1,5 +1,6 @@
 package pl.devfinder.business.management;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.experimental.UtilityClass;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -15,6 +16,11 @@ public final class Utility {
     public static String encodePassword(String password){
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         return bCryptPasswordEncoder.encode(password);
+    }
+    public static String getApplicationUrl(HttpServletRequest request){
+        String appUrl = request.getRequestURL().toString();
+        return appUrl.replace(request.getServletPath(), "");
+
     }
 
 }

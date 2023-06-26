@@ -1,7 +1,7 @@
 package pl.devfinder.domain;
 
 import lombok.*;
-import pl.devfinder.infrastructure.database.entity.RoleEntity;
+
 @With
 @Value
 @Builder
@@ -13,6 +13,6 @@ public class User {
      String userUuid;
      String email;
      String password;
-     Boolean active;
+     Boolean isEnabled;
      Role role;
 }

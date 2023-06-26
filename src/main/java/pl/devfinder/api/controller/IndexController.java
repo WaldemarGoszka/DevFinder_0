@@ -21,8 +21,12 @@ public class IndexController {
         return "index";
     }
     @GetMapping("/403")
-    public String forbidden(){
+    public String error403(){
         return "403";
+    }
+    @GetMapping("/404")
+    public String error404(){
+        return "404";
     }
 
 }

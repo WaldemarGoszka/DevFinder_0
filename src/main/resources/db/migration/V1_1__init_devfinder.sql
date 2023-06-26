@@ -129,7 +129,7 @@ CREATE TABLE devfinder_user
     user_uuid VARCHAR(64)  NOT NULL,
     email     VARCHAR(64)  NOT NULL,
     password  VARCHAR(128) NOT NULL,
-    active    BOOLEAN      NOT NULL,
+    is_enabled    BOOLEAN  NOT NULL DEFAULT FALSE,
     role_id INT NOT NULL,
     UNIQUE (email),
     PRIMARY KEY (user_id),
@@ -138,3 +138,22 @@ CREATE TABLE devfinder_user
             REFERENCES devfinder_role (role_id)
 );
 
+CREATE TABLE reset_password_token (
+    password_reset_token_id     SERIAL NOT NULL,
+    token                       VARCHAR(255),
+    expiration_time             TIMESTAMP,
+    user_id                     INTEGER,
+    PRIMARY KEY (password_reset_token_id),
+    CONSTRAINT "fk_password_reset_token_user"
+        FOREIGN KEY (user_id) REFERENCES devfinder_user (id) ON DELETE CASCADE
+);
+
+CREATE TABLE  email_verification_token (
+    verification_token_id   SERIAL PRIMARY KEY,
+    token                   VARCHAR(255),
+    expiration_time         TIMESTAMP,
+    user_id                 INTEGER,
+    PRIMARY KEY (verification_token_id),
+    CONSTRAINT "verification_token_user_id"
+        FOREIGN KEY (user_id) REFERENCES devfinder_user (id) ON DELETE CASCADE
+);

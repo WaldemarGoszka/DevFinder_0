@@ -1,4 +1,4 @@
-package pl.devfinder.infrastructure.security;
+package pl.devfinder.infrastructure.security.configuration;
 
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -47,6 +47,6 @@ public class UserDetailsCustom implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return user.getIsEnabled();
     }
 }

@@ -733,7 +733,7 @@ INSERT INTO devfinder_role (role_id, role)
 VALUES
 (1, 'CANDIDATE'), (2, 'EMPLOYER');
 
-INSERT INTO devfinder_user (user_uuid, email, password, active, role_id)
+INSERT INTO devfinder_user (user_uuid, email, password, is_enabled, role_id)
 VALUES
 ('5e8dd047-7b07-44fb-bbd6-1f15db0f6a8c', 'jan.kowalski@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
 ('9c6d5a77-7250-4d4e-b0c9-af65fdd1c3b3', 'anna.nowak@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),

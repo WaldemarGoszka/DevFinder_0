@@ -33,10 +33,18 @@ public class UserEntity {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "active")
-    private Boolean active;
+    @Column(name = "is_enabled", nullable = false)
+    private Boolean isEnabled;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     private RoleEntity roleId;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
+    private EmailVerificationTokenEntity emailVerificationToken;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
+    private ResetPasswordTokenEntity resetPasswordTokenEntity;
+
+
 }

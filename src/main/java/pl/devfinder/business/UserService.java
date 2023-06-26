@@ -13,6 +13,8 @@ import pl.devfinder.business.management.Utility;
 import pl.devfinder.domain.User;
 import pl.devfinder.domain.exception.NotFoundException;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,14 +41,14 @@ public class UserService {
         return user.orElseThrow(() -> new NotFoundException("Could not find user by userName: [%s]".formatted(userName)));
     }
 
-    @Transactional
-    public void save(User user) {
-        userDAO.save(user);
-    }
+//    @Transactional
+//    public User save(User user) {
+//        return userDAO.save(user);
+//    }
 
     /////////////////
 @Transactional
-    public void save(UserDTO userDTO) {
+    public User save(UserDTO userDTO) {
         User user = userMapper.mapFromDTO(userDTO);
 
     if(user.getRole().getRole().equals(Keys.Role.CANDIDATE.getName())) {
@@ -55,8 +57,17 @@ public class UserService {
     if(user.getRole().getRole().equals(Keys.Role.EMPLOYER.getName())) {
         employerService.save(user);
     }
-        userDAO.save(user);
+        return userDAO.save(user);
     }
+
+
+    //public List<User> findAll();
+
+   // Optional<User> findByUUID(Long id);
+
+   // void updateUser(Long id, String firstName, String lastName, String email);
+
+   // void deleteUser(Long id);
 
 
 //    @Override

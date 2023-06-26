@@ -8,4 +8,6 @@ DROP TABLE IF EXISTS city CASCADE;
 
 DROP TABLE IF EXISTS devfinder_user CASCADE;
 DROP TABLE IF EXISTS devfinder_role CASCADE;
+DROP TABLE IF EXISTS reset_password_token CASCADE;
+DROP TABLE IF EXISTS email_verification_token CASCADE;
 DROP TABLE IF EXISTS flyway_schema_history CASCADE;
