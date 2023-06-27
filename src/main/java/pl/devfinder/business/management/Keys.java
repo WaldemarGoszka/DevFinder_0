@@ -81,4 +81,19 @@ public interface Keys {
             return name;
         }
     }
+    enum TokenStatus {
+        INVALID("INVALID"),
+        EXPIRED("EXPIRED"),
+        VALID("VALID");
+
+        private final String name;
+
+        TokenStatus(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
 }

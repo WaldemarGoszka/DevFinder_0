@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.devfinder.business.EmailVerificationTokenService;
 import pl.devfinder.business.ResetPasswordTokenService;
 import pl.devfinder.business.UserService;
+import pl.devfinder.domain.User;
 import pl.devfinder.infrastructure.security.event.RegistrationCompleteEventListener;
 
 
@@ -46,6 +47,7 @@ public class RegistrationController {
         }
         String verificationResult = emailVerificationTokenService.validateToken(token);
         switch (verificationResult.toLowerCase()) {
+            //TODO zamienić na keys INVALID
             case "expired":
                 return "redirect:/error?expired";
             case "valid":
@@ -90,9 +92,9 @@ public class RegistrationController {
         if (!tokenVerificationResult.equalsIgnoreCase("valid")){
             return "redirect:/error?invalid_token";
         }
-        Optional<User> theUser = resetPasswordTokenService.findUserByPasswordResetToken(theToken);
-        if (theUser.isPresent()){
-            resetPasswordTokenService.resetPassword(theUser.get(), password);
+        Optional<User> user = resetPasswordTokenService.findUserByResetPasswordToken(theToken);
+        if (user.isPresent()){
+            resetPasswordTokenService.resetPassword(user.get(), password);
             return "redirect:/login?reset_success";
         }
         return "redirect:/error?not_found";

@@ -9,6 +9,7 @@ import pl.devfinder.infrastructure.database.entity.UserEntity;
 import pl.devfinder.infrastructure.database.repository.jpa.UserJpaRepository;
 import pl.devfinder.infrastructure.database.repository.mapper.UserEntityMapper;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -24,6 +25,11 @@ public class UserRepository implements UserDAO {
 
     }
 
+    @Override
+    public Optional<User> findById(Long userId) {
+        return userJpaRepository.findById(userId).map(userEntityMapper::mapFromEntity);
+    }
+
 
     public User save(User user) {
         UserEntity userEntity = userEntityMapper.mapToEntity(user);
@@ -33,5 +39,20 @@ public class UserRepository implements UserDAO {
     @Override
     public Optional<User> findByUserName(String userName) {
         return Optional.ofNullable(userEntityMapper.mapFromEntity(userJpaRepository.findByUserName(userName)));
+    }
+
+    @Override
+    public void deleteById(Long userId) {
+        userJpaRepository.deleteById(userId);
+    }
+
+    @Override
+    public void update(String userName, String email, Long id) {
+        userJpaRepository.update(userName, email, id);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userJpaRepository.findAll().stream().map(userEntityMapper::mapFromEntity).toList();
     }
 }

@@ -24,50 +24,60 @@ public class UserService {
     private final UserDAO userDAO;
     private final CandidateService candidateService;
     private final EmployerService employerService;
+    private final EmailVerificationTokenService emailVerificationTokenService;
 
-    private final UserMapper userMapper;
 
     @Transactional
     public User findByEmail(String email) {
         Optional<User> user = userDAO.findByEmail(email);
-//        if (user.isEmpty()) {
-//            throw new NotFoundException("Could not find user by email: [%s]".formatted(email));
-//        }
         return user.orElseThrow(() -> new NotFoundException("Could not find user by email: [%s]".formatted(email)));
     }
+
     @Transactional
     public User findByUserName(String userName) {
         Optional<User> user = userDAO.findByUserName(userName);
         return user.orElseThrow(() -> new NotFoundException("Could not find user by userName: [%s]".formatted(userName)));
     }
 
-//    @Transactional
-//    public User save(User user) {
-//        return userDAO.save(user);
-//    }
-
-    /////////////////
-@Transactional
-    public User save(UserDTO userDTO) {
-        User user = userMapper.mapFromDTO(userDTO);
-
-    if(user.getRole().getRole().equals(Keys.Role.CANDIDATE.getName())) {
-        candidateService.save(user);
-    }
-    if(user.getRole().getRole().equals(Keys.Role.EMPLOYER.getName())) {
-        employerService.save(user);
-    }
+    @Transactional
+    public User save(User user) {
+        if (user.getRole().getRole().equals(Keys.Role.CANDIDATE.getName())) {
+            candidateService.save(user);
+        }
+        if (user.getRole().getRole().equals(Keys.Role.EMPLOYER.getName())) {
+            employerService.save(user);
+        }
         return userDAO.save(user);
     }
 
+    @Transactional
+    public void deleteUserById(Long userId) {
+        Optional<User> user1 = userDAO.findById(userId);
+        user1.ifPresent(user -> emailVerificationTokenService.deleteUserEmailVerificationToken(user.getId()));
+        userDAO.deleteById(userId);
+    }
 
-    //public List<User> findAll();
+    @Transactional
+    public void updateUser(String userName, String email, Long id) {
+        userDAO.update(userName, email, id);
+    }
 
-   // Optional<User> findByUUID(Long id);
+    public Optional<User> findById(Long id) {
 
-   // void updateUser(Long id, String firstName, String lastName, String email);
+        ///////////
 
-   // void deleteUser(Long id);
+        zmienić typ zwracamy z optional na User
+
+        return userDAO.findById(id);
+    }
+
+    public List<User> findAll() {
+        return userDAO.findAll();
+    }
+
+
+    // Optional<User> findByUUID(Long id);
+
 
 
 //    @Override
@@ -86,7 +96,6 @@ public class UserService {
 //        userDto.setEmail(user.getEmail());
 //        return userDto;
 //    }
-
 
 
 }

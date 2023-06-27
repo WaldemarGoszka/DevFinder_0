@@ -2,33 +2,37 @@ package pl.devfinder.business;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.devfinder.business.dao.EmailVerificationTokenDAO;
 import pl.devfinder.business.management.TokenExpirationTime;
 import pl.devfinder.domain.EmailVerificationToken;
 import pl.devfinder.domain.User;
-import pl.devfinder.infrastructure.database.repository.EmailVerificationTokenRepository;
 
-import java.util.Calendar;
+import java.time.OffsetDateTime;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class EmailVerificationTokenService {
-    private final EmailVerificationTokenRepository emailVerificationTokenRepository;
+    private final EmailVerificationTokenDAO emailVerificationTokenDAO;
     private final UserService userService;
 
     public String validateToken(String token) {
-        Optional<EmailVerificationToken> theToken = emailVerificationTokenRepository.findByToken(token);
-        if (theToken.isEmpty()){
+        Optional<EmailVerificationToken> emailVerificationToken = emailVerificationTokenDAO.findByToken(token);
+        if (emailVerificationToken.isEmpty()){
             return "INVALID";
+            //TODO zamienić na keys INVALID
+
         }
-        User user = theToken.get().getUser();
-        Calendar calendar = Calendar.getInstance();
-        if ((theToken.get().getExpirationTime().getTime()-calendar.getTime().getTime())<= 0){
+        User user = emailVerificationToken.get().getUser();
+        if (emailVerificationToken.get().getExpirationTime().isBefore(OffsetDateTime.now())){
             return "EXPIRED";
+            //TODO zamienić na keys EXPIRED
+
         }
-        user.setEnabled(true);
+        user.withIsEnabled(true); //setEnabled(true);
         userService.save(user);
         return "VALID";
+        //TODO zamienić na keys INVALID
     }
 
     public void saveVerificationTokenForUser(User user, String token) {
@@ -37,14 +41,14 @@ public class EmailVerificationTokenService {
                 .user(user)
                 .expirationTime(TokenExpirationTime.getExpirationTime())
                 .build();
-        emailVerificationTokenRepository.save(emailVerificationToken);
+        emailVerificationTokenDAO.save(emailVerificationToken);
     }
 
     public Optional<EmailVerificationToken> findByToken(String token) {
-        return emailVerificationTokenRepository.findByToken(token);
+        return emailVerificationTokenDAO.findByToken(token);
     }
 
-    public void deleteUserToken(Long id) {
-        emailVerificationTokenRepository.deleteByUserId(id);
+    public void deleteUserEmailVerificationToken(Long tokenId) {
+        emailVerificationTokenDAO.deleteByUserId(tokenId);
     }
 }

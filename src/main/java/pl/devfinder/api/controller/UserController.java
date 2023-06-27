@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import pl.devfinder.api.dto.UserDTO;
+import pl.devfinder.api.dto.mapper.UserMapper;
+import pl.devfinder.business.UserService;
+import pl.devfinder.domain.User;
 
 
 import java.util.Optional;
@@ -18,23 +22,24 @@ import java.util.Optional;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final IUserService userService;
+    private final UserService userService;
+    private final UserMapper userMapper;
 
-    @GetMapping
-    public String getUsers(Model model){
-        model.addAttribute("users", userService.getAllUsers());
-        return "users";
-    }
+//    @GetMapping
+//    public String getUsers(Model model){
+//        model.addAttribute("users", userService.getAllUsers());
+//        return "users";
+//    }
     @GetMapping("/edit/{id}")
     public String showUpdateForm(@PathVariable("id") Long id, Model model){
-        Optional<User> user = userService.findById(id);
+        UserDTO user = userMapper.mapToDTO(userService.findById(id).get());
         model.addAttribute("user", user.get());
         return "update-user";
     }
 
     @PostMapping("/update/{id}")
-    public String updateUser(@PathVariable("id") Long id, User user){
-        userService.updateUser(id, user.getFirstName(), user.getLastName(), user.getEmail());
+    public String updateUser(@PathVariable("id") Long id, UserDTO userDTO){
+        userService.updateUser(userDTO.getUserName(), userDTO.getEmail(), id);
         return "redirect:/users?update_success";
     }
     @GetMapping("/delete/{id}")

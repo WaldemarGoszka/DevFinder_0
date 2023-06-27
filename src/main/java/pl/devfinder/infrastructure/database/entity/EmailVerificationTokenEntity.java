@@ -24,7 +24,7 @@ public class EmailVerificationTokenEntity {
 
     private OffsetDateTime expirationTime;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 

@@ -3,7 +3,12 @@ package pl.devfinder.business.dao;
 
 import pl.devfinder.domain.EmailVerificationToken;
 
+import java.util.Optional;
+
 public interface EmailVerificationTokenDAO {
-    public void save(EmailVerificationToken emailVerificationToken);
+     void deleteByUserId(Long userId);
+
+    Optional<EmailVerificationToken> findByToken(String token);
+     void save(EmailVerificationToken emailVerificationToken);
 
 }
