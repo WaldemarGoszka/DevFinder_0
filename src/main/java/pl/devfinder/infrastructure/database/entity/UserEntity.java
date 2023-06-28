@@ -21,7 +21,6 @@ public class UserEntity {
     private Long id;
 
     @Column(name = "user_name")
-    @Length(min = 5)
     private String userName;
 
     @Column(name = "user_uuid")

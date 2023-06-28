@@ -1,8 +1,11 @@
 package pl.devfinder.infrastructure.security.configuration;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,30 +23,40 @@ import pl.devfinder.business.management.Keys;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfiguration {
+    private final UserDetailsServiceCustom userDetailsServiceCustom;
+
     @Bean
     public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new UserDetailsServiceCustom();
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        return new UserDetailsServiceCustom();
+//    }
 
+    @Bean
+    public AuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsServiceCustom);
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder
-                = http.getSharedObject(AuthenticationManagerBuilder.class);
+//        AuthenticationManagerBuilder authenticationManagerBuilder
+//                = http.getSharedObject(AuthenticationManagerBuilder.class);
+//
+//        authenticationManagerBuilder
+//                .userDetailsService(userDetailsService())
+//                .passwordEncoder(passwordEncoder());
+//
+//        AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
 
-        authenticationManagerBuilder
-                .userDetailsService(userDetailsService())
-                .passwordEncoder(passwordEncoder());
-
-        AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
-
-        http
+        return http
                 .csrf().disable()
                 .authorizeHttpRequests()
 //                .requestMatchers("/login", "/error", "/*", "/js/**", "/css/**", "/lib/**", "/scss/**", "/images/**", "/img/**").permitAll()
@@ -81,13 +94,13 @@ public class SecurityConfiguration {
 //                .and()
 
 //                .csrf().disable()
-                .authenticationManager(authenticationManager)
 
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                //.authenticationManager(authenticationManager)
 
-        ;
-        return http.build();
+                //.sessionManagement()
+                //.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+
+        .build();
     }
 
 //    @Bean
@@ -115,7 +128,8 @@ public class SecurityConfiguration {
         return (web) ->
                 web.ignoring()
 //                        .requestMatchers("/js/**", "/css/**", "/lib/**", "/scss/**", "/images/**");
-                        .requestMatchers("/*", "/js/**", "/css/**", "/lib/**", "/scss/**", "/images/**", "/img/**");
+                        .requestMatchers("/*", "/js/**", "/css/**", "/lib/**", "/scss/**", "/images/**", "/img/**",
+                                "/register/**");
     }
 
 //    @Bean

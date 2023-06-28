@@ -1,6 +1,9 @@
 package pl.devfinder.api.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +41,17 @@ public class CandidateController {
 
     @GetMapping(value = CANDIDATE)
     public String homePage(Model model) {
+        // to uzyć do sprawdzania autentykatora na każdej stronie z ecommerce project
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+//            return "redirect:/login";
+//        }
+//        return "index";
+
+//        albo
+//
+//        if (principal == null) {
+//            return "redirect:/login";
 
         return "candidate/portal";
     }

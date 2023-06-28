@@ -1,6 +1,7 @@
 package pl.devfinder.infrastructure.database.repository;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import pl.devfinder.business.dao.UserDAO;
 import pl.devfinder.domain.User;
@@ -10,7 +11,7 @@ import pl.devfinder.infrastructure.database.repository.mapper.UserEntityMapper;
 
 import java.util.List;
 import java.util.Optional;
-
+@Slf4j
 @Repository
 @AllArgsConstructor
 public class UserRepository implements UserDAO {
@@ -31,6 +32,7 @@ public class UserRepository implements UserDAO {
 
 
     public User save(User user) {
+        log.info("Trying save user: [{}]", user);
         UserEntity userEntity = userEntityMapper.mapToEntity(user);
         return userEntityMapper.mapFromEntity(userJpaRepository.save(userEntity));
     }

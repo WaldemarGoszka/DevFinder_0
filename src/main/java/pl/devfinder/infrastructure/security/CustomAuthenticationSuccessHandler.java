@@ -15,10 +15,10 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                                         Authentication authentication) throws IOException, ServletException {
         if (authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_CANDIDATE"))) {
             // Jeśli użytkownik ma rolę "CANDIDATE", przekieruj na "/candidate/index"
-            getRedirectStrategy().sendRedirect(request, response, "/candidate/index");
+            getRedirectStrategy().sendRedirect(request, response, "/candidate");
         } else if (authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_EMPLOYER"))) {
             // Jeśli użytkownik ma rolę "EMPLOYER", przekieruj na "/employer/index"
-            getRedirectStrategy().sendRedirect(request, response, "/employer/index");
+            getRedirectStrategy().sendRedirect(request, response, "/employer");
         } else {
             // Domyślny przypadek - przekieruj na "/index"
             super.onAuthenticationSuccess(request, response, authentication);

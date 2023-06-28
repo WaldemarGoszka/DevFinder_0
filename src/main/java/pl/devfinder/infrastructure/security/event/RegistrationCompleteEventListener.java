@@ -4,6 +4,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
+import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,8 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
     private final EmailVerificationTokenService emailVerificationTokenService;
     private final JavaMailSender javaMailSender;
     private User user;
+
+
 
     @Override
     public void onApplicationEvent(RegistrationCompleteEvent registrationCompleteEvent) {
@@ -67,6 +70,7 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
         MimeMessageHelper messageHelper = new MimeMessageHelper(message);
         //TODO zamiast maila wykożystać klasę Environment i pobrać z konfiguracji maila
         //TODO zahasłować hasło do maila w application.yaml
+//        environment.getProperty("devfinder-conf.disable-email-verification", Boolean.class)
         messageHelper.setFrom("devfinder.service@gmail.com", senderName);
         messageHelper.setTo(user.getEmail());
         messageHelper.setSubject(subject);
