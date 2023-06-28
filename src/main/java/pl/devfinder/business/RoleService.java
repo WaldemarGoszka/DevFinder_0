@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import pl.devfinder.business.dao.RoleDAO;
 import pl.devfinder.domain.Role;
 import pl.devfinder.domain.exception.NotFoundException;
-import pl.devfinder.infrastructure.database.repository.RoleRepository;
 
 @Service
 @AllArgsConstructor

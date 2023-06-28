@@ -2,7 +2,6 @@ package pl.devfinder.infrastructure.database.repository;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
-import pl.devfinder.api.dto.UserDTO;
 import pl.devfinder.business.dao.UserDAO;
 import pl.devfinder.domain.User;
 import pl.devfinder.infrastructure.database.entity.UserEntity;

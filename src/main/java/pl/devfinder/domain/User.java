@@ -6,7 +6,7 @@ import lombok.*;
 @Value
 @Builder
 @EqualsAndHashCode(of = "userUuid")
-@ToString(of = {"email"})
+@ToString(of = {"userName","email"})
 public class User {
     Long id;
     String userName;

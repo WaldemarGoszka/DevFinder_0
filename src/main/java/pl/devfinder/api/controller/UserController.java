@@ -1,6 +1,5 @@
 package pl.devfinder.api.controller;
 
-import com.dailycodework.sbend2endapplication.registration.token.VerificationTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -12,10 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import pl.devfinder.api.dto.UserDTO;
 import pl.devfinder.api.dto.mapper.UserMapper;
 import pl.devfinder.business.UserService;
-import pl.devfinder.domain.User;
-
-
-import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -32,8 +27,8 @@ public class UserController {
 //    }
     @GetMapping("/edit/{id}")
     public String showUpdateForm(@PathVariable("id") Long id, Model model){
-        UserDTO user = userMapper.mapToDTO(userService.findById(id).get());
-        model.addAttribute("user", user.get());
+        UserDTO user = userMapper.mapToDTO(userService.findById(id));
+        model.addAttribute("user", user);
         return "update-user";
     }
 
@@ -44,7 +39,7 @@ public class UserController {
     }
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable("id") Long id){
-        userService.deleteUser(id);
+        userService.deleteUserById(id);
         return "redirect:/users?delete_success";
     }
 }

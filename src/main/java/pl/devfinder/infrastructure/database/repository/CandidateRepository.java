@@ -5,10 +5,7 @@ import org.springframework.stereotype.Repository;
 import pl.devfinder.business.dao.CandidateDAO;
 import pl.devfinder.business.management.Keys;
 import pl.devfinder.domain.Candidate;
-import pl.devfinder.domain.Employer;
-import pl.devfinder.domain.User;
 import pl.devfinder.infrastructure.database.entity.CandidateEntity;
-import pl.devfinder.infrastructure.database.entity.UserEntity;
 import pl.devfinder.infrastructure.database.repository.jpa.CandidateJpaRepository;
 import pl.devfinder.infrastructure.database.repository.mapper.CandidateEntityMapper;
 

@@ -2,8 +2,6 @@ package pl.devfinder.business.management;
 
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
-import java.util.Date;
 
 
 public class TokenExpirationTime {

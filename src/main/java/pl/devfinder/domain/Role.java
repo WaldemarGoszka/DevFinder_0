@@ -1,7 +1,6 @@
 package pl.devfinder.domain;
 
 import lombok.*;
-import pl.devfinder.infrastructure.database.entity.UserEntity;
 
 import java.util.Set;
 

@@ -7,13 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.devfinder.business.dao.OfferDAO;
 import pl.devfinder.business.management.Keys;
-import pl.devfinder.domain.Employer;
 import pl.devfinder.domain.Offer;
 
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.OffsetDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 @Slf4j

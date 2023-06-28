@@ -14,5 +14,4 @@ public class ResetPasswordToken {
     String token;
     OffsetDateTime expirationTime;
     User user;
-
 }

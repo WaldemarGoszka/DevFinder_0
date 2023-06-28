@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import pl.devfinder.business.dao.EmployerDAO;
 import pl.devfinder.domain.Employer;
-import pl.devfinder.infrastructure.database.entity.CandidateEntity;
 import pl.devfinder.infrastructure.database.entity.EmployerEntity;
 import pl.devfinder.infrastructure.database.repository.jpa.EmployerJpaRepository;
 import pl.devfinder.infrastructure.database.repository.mapper.EmployerEntityMapper;

@@ -1,6 +1,5 @@
 package pl.devfinder.business.dao;
 
-import pl.devfinder.api.dto.UserDTO;
 import pl.devfinder.domain.User;
 
 import java.util.List;

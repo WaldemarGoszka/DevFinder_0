@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import pl.devfinder.domain.City;
 import pl.devfinder.domain.Employer;
 
-import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 @Data

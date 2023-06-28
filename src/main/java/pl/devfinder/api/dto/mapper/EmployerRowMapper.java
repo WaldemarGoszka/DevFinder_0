@@ -1,7 +1,6 @@
 package pl.devfinder.api.dto.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.devfinder.api.dto.EmployerRowDTO;
 import pl.devfinder.business.OfferService;

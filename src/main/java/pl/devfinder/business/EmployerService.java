@@ -5,8 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.devfinder.business.dao.EmployerDAO;
-import pl.devfinder.business.management.Keys;
-import pl.devfinder.domain.Candidate;
 import pl.devfinder.domain.Employer;
 import pl.devfinder.domain.User;
 
