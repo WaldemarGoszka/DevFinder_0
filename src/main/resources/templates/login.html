@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>DevFinder Login</title>
+    <title>DevFinder Log in</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <!-- Favicon -->
@@ -44,18 +44,29 @@
     <div class="container-fluid">
         <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
             <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
-                <!---->
+
+                <!--      PARAM ALERTS       -->
                 <div th:if="${param.error}">
                     <div class="alert alert-danger">Invalid Email or Password.</div>
                 </div>
                 <div th:if="${param.logout}">
                     <div class="alert alert-success">You have been logged out.</div>
                 </div>
-                <!---->
+                <div th:if="${param.verified}">
+                    <div class="alert alert-success">This account has already been verified,  please log in here.</div>
+                </div>
+                <div th:if="${param.valid}">
+                    <div class="alert alert-success">This account has already been verified,  please log in here.</div>
+                </div>
+                <div th:if="${param.reset_success}">
+                    <div class="alert alert-success">You have successfully reset your password, please log in here.</div>
+                </div>
+                <!--      PARAM ALERTS ENDS       -->
+
                 <div class="bg-secondary rounded p-4 p-sm-5 my-4 mx-3">
                     <form
                             method="post"
-                            th:action="@{/do-login}"
+                            th:action="@{/login}"
                             class="form-horizontal"
                             role="form"
                     >
@@ -63,14 +74,14 @@
                             <a th:href="@{/}" class="">
                                 <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>DevFinder</h3>
                             </a>
-                            <h3>Login</h3>
+                            <h3>Log in</h3>
                         </div>
                         <div class="form-floating mb-3">
                             <input
                                     type="email"
                                     class="form-control"
                                     id="email"
-                                    name="email"
+                                    name="username"
                                     placeholder="name@example.com"
                                     required
                             >
@@ -93,7 +104,7 @@
                             <!--                            </div>-->
                             <a th:href="@{register/forgot-password-request}">Forgot Password</a>
                         </div>
-                        <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Login</button>
+                        <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Log in</button>
                         <p class="text-center mb-0">Don't have an Account? <a a th:href="@{/register/register_page}">Register</a></p>
                     </form>
                 </div>

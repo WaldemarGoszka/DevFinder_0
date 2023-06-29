@@ -10,6 +10,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import pl.devfinder.api.dto.UserDTO;
 import pl.devfinder.api.dto.mapper.UserMapper;
@@ -52,43 +54,53 @@ public class UserRegistrationController {
 
     @PostMapping("/save")
     public String postRegistrationPage(@Valid @ModelAttribute("user") UserDTO userDTO,
-                                       BindingResult result,
+                                       BindingResult bindingResult,
                                        Model model, HttpServletRequest request) {
         try {
             Optional<User> existing = userService.findByEmail(userDTO.getEmail());
             if (existing.isPresent()) {
-                result.rejectValue("email"
-                        , null
-                        , "There is already an account registered with that email");
-
-                //TODO tutaj może zamiat komunikatu to przekierować na stosowny endpoint i pokaać fragment html
-                // np taki return "redirect:/register/register?email_registered" i komunikat Email has been register!
-                return "redirect:/register/register?email_already_registered";
-            }
-            if (result.hasErrors()) {
-                log.error("result.hasErrors() userDTO: [{}]", userDTO);
-//                model.addAttribute("user", userDTO);
-//                return "register";
+//                result.rejectValue("email"
+//                        , null
+//                        , "There is already an account registered with that email");
+                log.warn("User already registered with this email, userDTO: [{}]", userDTO);
+                return "redirect:/register/register_page?email_already_registered";
             }
             if (Objects.isNull(userDTO.getRole())) {
                 log.error("The user has not selected a role");
-                return "redirect:/register/register?select_role";
+                return "redirect:/register/register_page?select_role";
             }
-
+//            if (bindingResult.hasErrors()) {
+//                log.error("Error in register user, userDTO: [{}]", userDTO);
+//                for (ObjectError error : bindingResult.getAllErrors()) {
+//                    if (error instanceof FieldError fieldError) {
+//                        String fieldName = fieldError.getField();
+//                        String errorMessage = fieldError.getDefaultMessage();
+//                        log.error("Error register form, field name: [{}], message: [{}]", fieldName, errorMessage);
+//                    } else {
+//                        String objectName = error.getObjectName();
+//                        String errorMessage = error.getDefaultMessage();
+//                        log.error("Error register form, object name: [{}], message: [{}]", objectName, errorMessage);
+//                    }
+//                }
+//                System.out.println(bindingResult.toString());
+//                model.addAttribute("user", userDTO);
+//                return "register";
+//            }
             Boolean disableEmailVerification = environment.getProperty("devfinder-conf.disable-email-verification", Boolean.class);
-//            log.info("Trying register userDTO: [{}]", userDTO.withIsEnabled(disableEmailVerification));
-            User user = userService.save(userMapper.mapFromDTO(userDTO.withIsEnabled(disableEmailVerification)));
-            //TODO dodać parametr w application.yaml wyłączający email validation albo dodać że jak jest uruchomuiony lokalnie to validate jest wyłączone
-            // send verification email:
+            UserDTO userDtoOnCondition = userDTO.withIsEnabled(disableEmailVerification);
+            log.info("Trying register user, userDTO: [{}]", userDtoOnCondition);
+            User user = userService.save(userMapper.mapFromDTO(userDtoOnCondition));
             if (disableEmailVerification) {
                 applicationEventPublisher.publishEvent(new RegistrationCompleteEvent(user, Utility.getApplicationUrl(request)));
             }
-            return "redirect:/register/register?success";
+            log.info("User is registered userDTO: [{}]", userDtoOnCondition);
+            return "redirect:/register/register_page?success";
         } catch (Exception e) {
             e.printStackTrace();
-            model.addAttribute("error", "Server is error, try again later!");
+//            model.addAttribute("error", "Server is error, try again later!");
+            return "redirect:/register/register_page?server_error";
         }
-        return "register";
+//        return "register";
     }
 
     @GetMapping("/verify_email")
