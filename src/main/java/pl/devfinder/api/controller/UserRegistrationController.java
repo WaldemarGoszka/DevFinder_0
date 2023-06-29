@@ -24,9 +24,9 @@ import pl.devfinder.infrastructure.security.event.RegistrationCompleteEvent;
 import pl.devfinder.infrastructure.security.event.RegistrationCompleteEventListener;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
+
 @Slf4j
 @Controller
 @AllArgsConstructor
@@ -70,13 +70,17 @@ public class UserRegistrationController {
 //                model.addAttribute("user", userDTO);
 //                return "register";
             }
+            if (Objects.isNull(userDTO.getRole())) {
+                log.error("The user has not selected a role");
+                return "redirect:/register/register?select_role";
+            }
 
             Boolean disableEmailVerification = environment.getProperty("devfinder-conf.disable-email-verification", Boolean.class);
 //            log.info("Trying register userDTO: [{}]", userDTO.withIsEnabled(disableEmailVerification));
             User user = userService.save(userMapper.mapFromDTO(userDTO.withIsEnabled(disableEmailVerification)));
             //TODO dodać parametr w application.yaml wyłączający email validation albo dodać że jak jest uruchomuiony lokalnie to validate jest wyłączone
             // send verification email:
-            if(disableEmailVerification) {
+            if (disableEmailVerification) {
                 applicationEventPublisher.publishEvent(new RegistrationCompleteEvent(user, Utility.getApplicationUrl(request)));
             }
             return "redirect:/register/register?success";

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+>
 
 
-<head th:fragment="bootstrap">
-
+<!-- Fragment CSS -->
+<div th:fragment="bootstrapCss">
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
 
@@ -26,9 +26,9 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet"></link>
+</div>
 
-</head>
 
 <body th:fragment="js">
 
@@ -45,7 +45,6 @@
 
 <!-- Template Javascript -->
 <script src="js/main.js"></script>
-
 
 
 <!--<div th:fragment="nav_bar">-->
