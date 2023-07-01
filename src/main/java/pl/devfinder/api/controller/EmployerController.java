@@ -17,7 +17,6 @@ import java.util.List;
 @RequestMapping("/employer")
 public class EmployerController {
 
-    public static final String EMPLOYER = "/";
     public static final String EMPLOYER_PROFILE = "/profile";
     public static final String EMPLOYER_EDIT_PROFILE = "/edit_profile";
     public static final String MATCHED_CANDIDATE = "/matched_candidate";
@@ -31,7 +30,7 @@ public class EmployerController {
     private final CandidateService candidateService;
     private final CandidateRowMapper candidateRowMapper;
 
-    @GetMapping(value = EMPLOYER)
+    @GetMapping()
     public String homePage(Model model) {
 
         return "employer/portal";

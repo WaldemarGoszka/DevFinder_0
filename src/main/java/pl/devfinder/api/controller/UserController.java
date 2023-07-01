@@ -14,7 +14,7 @@ import pl.devfinder.business.UserService;
 
 @Slf4j
 @Controller
-@RequestMapping("/users")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
@@ -25,8 +25,20 @@ public class UserController {
 //        model.addAttribute("users", userService.getAllUsers());
 //        return "users";
 //    }
+    @GetMapping("/my_profile")
+    public String getMyProfilePage(Model model) {
+        return "user_my_profile";
+        // sprawdzenie czy użytkownik jest zalogowany, i pobranie z bazu jego dancyh
+    }
+    @GetMapping("/settings")
+    public String getSettingsPage(Model model) {
+        return "user_settings";
+        // sprawdzenie czy użytkownik jest zalogowany, i pobranie z bazu jego dancyh
+    }
+
+
     @GetMapping("/edit/{id}")
-    public String showUpdateForm(@PathVariable("id") Long id, Model model){
+    public String getUpdatePage(@PathVariable("id") Long id, Model model){
         UserDTO user = userMapper.mapToDTO(userService.findById(id));
         model.addAttribute("user", user);
         return "update-user";

@@ -16,7 +16,13 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserEntityMapper {
     @Mapping(target = "roleId.userId", ignore = true)
+    @Mapping(source = "roleId", target = "role", qualifiedByName = "mapUserRoleFromEntity")
     User mapFromEntity(UserEntity userEntity);
+    @Named(value = "mapUserRoleFromEntity")
+    default Role mapUserRoleFromEntity(RoleEntity roleEntity){
+        return mapFromEntity(roleEntity);
+    }
+    Role mapFromEntity(RoleEntity roleEntity);
 
     @Mapping(source = "role", target = "roleId", qualifiedByName = "mapUserRole")
     UserEntity mapToEntity(User user);

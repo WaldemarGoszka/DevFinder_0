@@ -23,7 +23,6 @@ import java.util.List;
 @RequestMapping("/candidate")
 public class CandidateController {
 
-    public static final String CANDIDATE = "/";
     public static final String CANDIDATE_PROFILE = "/profile";
     public static final String CANDIDATE_EDIT_PROFILE = "/edit_profile";
     public static final String OFFERS_LIST = "/offers";
@@ -39,7 +38,7 @@ public class CandidateController {
     private final OfferService offerService;
     private final OfferRowMapper offerRowMapper;
 
-    @GetMapping(value = CANDIDATE)
+    @GetMapping()
     public String homePage(Model model) {
         // to uzyć do sprawdzania autentykatora na każdej stronie z ecommerce project
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
