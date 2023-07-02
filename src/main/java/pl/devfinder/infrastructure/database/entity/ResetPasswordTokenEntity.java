@@ -1,10 +1,7 @@
 package pl.devfinder.infrastructure.database.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.OffsetDateTime;
 
@@ -12,6 +9,8 @@ import java.time.OffsetDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = "passwordResetTokenId")
+@ToString(of = {"passwordResetTokenId", "token"})
 @Entity
 @Table(name  = "reset_password_token")
 public class ResetPasswordTokenEntity {

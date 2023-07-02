@@ -1,16 +1,15 @@
 package pl.devfinder.infrastructure.database.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = "id")
+@ToString(of = {"id", "userName", "email", "isEnabled", "roleId"})
 @Entity
 @Table(name = "devfinder_user")
 public class UserEntity {

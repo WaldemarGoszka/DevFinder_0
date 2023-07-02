@@ -70,10 +70,11 @@
                 <!--                        </div>-->
                 <!--                    </div>-->
                 <a href="#" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Job Offers</a>
-                <a th:href="@{/login}" class="nav-item nav-link"><i class="fa fa-laptop me-2"></i>Log in</a>
-                <a th:href="@{/register/register_page}" class="nav-item nav-link"><i class="fa fa-laptop me-2"></i>Register</a>
-                <a th:href="@{/employer}" class="nav-item nav-link"><i class="fa fa-file-alt me-2"></i>Employer P</a>
-                <a th:href="@{/candidate}" class="nav-item nav-link"><i class="fa fa-file-alt me-2"></i>Candidate P</a>
+                <a href="#" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Developers</a>
+<!--                <a th:href="@{/login}" class="nav-item nav-link"><i class="fa fa-laptop me-2"></i>Log in</a>-->
+<!--                <a th:href="@{/register/register_page}" class="nav-item nav-link"><i class="fa fa-laptop me-2"></i>Register</a>-->
+<!--                <a th:href="@{/employer}" class="nav-item nav-link"><i class="fa fa-file-alt me-2"></i>Employer P</a>-->
+<!--                <a th:href="@{/candidate}" class="nav-item nav-link"><i class="fa fa-file-alt me-2"></i>Candidate P</a>-->
                 <a href="#" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Statistics</a>
                 <a href="#" class="nav-item nav-link"><i class="fa-regular fa-address-card me-2"></i>About Us</a>
                 <!--                    <div class="nav-item dropdown">-->
@@ -188,8 +189,11 @@
                     </div>
                 </div>
                 <!--  USER NAV MENU - IF IS NOT AUTHENTICATED  -->
-                <a sec:authorize="${!isAuthenticated()}" th:href="@{/login}" class="nav-item nav-link"><i class="fa fa-laptop me-2"></i></span>Log in</a>
-                <a sec:authorize="${!isAuthenticated()}" th:href="@{/register/register_page}" class="nav-item nav-link"><i class="fa fa-laptop me-2"></i>Register</a>
+                <a sec:authorize="${!isAuthenticated()}" th:href="@{/login}" class="nav-item nav-link"><i
+                        class="fa fa-laptop me-2"></i></span>Login</a>
+                <a sec:authorize="${!isAuthenticated()}" th:href="@{/register/register_page}" class="nav-item nav-link"><i
+                        class="fa fa-laptop me-2"></i>Register</a>
+            </div>
         </nav>
         <!-- Navbar End -->
 

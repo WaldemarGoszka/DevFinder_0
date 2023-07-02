@@ -31,8 +31,8 @@ public class EmailVerificationTokenService {
             //TODO zamienić na keys EXPIRED
 
         }
-        user.withIsEnabled(true); //setEnabled(true);
-        userService.save(user);
+        //user.withIsEnabled(true); //setEnabled(true);
+        userService.save(user.withIsEnabled(true));
         return "VALID";
         //TODO zamienić na keys INVALID
     }

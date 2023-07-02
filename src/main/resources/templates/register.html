@@ -51,12 +51,14 @@
                 <!--      PARAM ALERTS       -->
                 <div th:if="${param.success}">
                     <div class="alert alert-info">
-                        You have successfully registered our app! <strong><a th:href="@{/login}"> Now you can Log in here</a></strong>
+                        You have successfully registered our app!
+                        <strong th:if="${!enableEmailVerification}"><a th:href="@{/login}">Click here to Log in</a></strong>
+                        <strong th:if="${enableEmailVerification}">Check your email box</strong>
                     </div>
                 </div>
                 <div th:if="${param.email_already_registered}">
                     <div class="alert alert-info">
-                        There is already an account registered with that email! <strong><a th:href="@{/login}"> You can Log in here</a></strong>
+                        There is already an account registered with that email! <strong><a th:href="@{/login}">Click here to Log in</a></strong>
                     </div>
                 </div>
                 <div th:if="${param.select_role}">

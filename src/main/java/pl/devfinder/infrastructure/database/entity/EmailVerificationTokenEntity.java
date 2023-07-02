@@ -1,10 +1,7 @@
 package pl.devfinder.infrastructure.database.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.OffsetDateTime;
 
@@ -12,6 +9,8 @@ import java.time.OffsetDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = "verificationTokenId")
+@ToString(of = {"verificationTokenId", "token"})
 @Entity
 @Table(name  = "email_verification_token")
 public class EmailVerificationTokenEntity {
@@ -20,7 +19,6 @@ public class EmailVerificationTokenEntity {
     @Column(name = "verification_token_id")
     private Long verificationTokenId;
     @Column(name = "token")
-
     private String token;
     @Column(name = "expiration_time")
 

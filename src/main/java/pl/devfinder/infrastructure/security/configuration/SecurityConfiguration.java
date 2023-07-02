@@ -192,6 +192,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests()
                 .requestMatchers(
                         "/",
+                        "/index",
                         "/login",
                         "/error",
                         "/register/**",
@@ -201,7 +202,6 @@ public class SecurityConfiguration {
                         "/scss/**",
                         "/images/**",
                         "/img/**")
-
                 .permitAll()
                 .requestMatchers("/candidate/**").hasAuthority(Keys.Role.CANDIDATE.getName())
                 .requestMatchers("/employer/**").hasAuthority(Keys.Role.EMPLOYER.getName())

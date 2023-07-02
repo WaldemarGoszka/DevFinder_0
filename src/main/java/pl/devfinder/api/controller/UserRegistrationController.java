@@ -49,6 +49,10 @@ public class UserRegistrationController {
         model.addAttribute("user", new UserDTO());
         model.addAttribute("candidateEnum", Keys.Role.CANDIDATE.getName());
         model.addAttribute("employerEnum", Keys.Role.EMPLOYER.getName());
+        Boolean enableEmailVerification = environment.getProperty("devfinder-conf.enable-email-verification", Boolean.class);
+
+        model.addAttribute("enableEmailVerification", enableEmailVerification);
+
         return "register";
     }
 
@@ -56,6 +60,8 @@ public class UserRegistrationController {
     public String postRegistrationPage(@Valid @ModelAttribute("user") UserDTO userDTO,
                                        BindingResult bindingResult,
                                        Model model, HttpServletRequest request) {
+        Boolean enableEmailVerification = environment.getProperty("devfinder-conf.enable-email-verification", Boolean.class);
+        model.addAttribute("enableEmailVerification", enableEmailVerification);
         try {
             Optional<User> existing = userService.findByEmail(userDTO.getEmail());
             if (existing.isPresent()) {
@@ -86,11 +92,12 @@ public class UserRegistrationController {
 //                model.addAttribute("user", userDTO);
 //                return "register";
 //            }
-            Boolean disableEmailVerification = environment.getProperty("devfinder-conf.disable-email-verification", Boolean.class);
-            UserDTO userDtoOnCondition = userDTO.withIsEnabled(disableEmailVerification);
+
+            UserDTO userDtoOnCondition = userDTO.withIsEnabled(!enableEmailVerification);
             log.info("Trying register user, userDTO: [{}]", userDtoOnCondition);
             User user = userService.save(userMapper.mapFromDTO(userDtoOnCondition));
-            if (disableEmailVerification) {
+            if (Boolean.TRUE.equals(enableEmailVerification)) {
+                log.info("Send verification email to [{}]", userDTO.getEmail());
                 applicationEventPublisher.publishEvent(new RegistrationCompleteEvent(user, Utility.getApplicationUrl(request)));
             }
             log.info("User is registered userDTO: [{}]", userDtoOnCondition);
