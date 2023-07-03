@@ -128,29 +128,31 @@ public class UserRegistrationController {
         }
     }
 
-    @GetMapping("/forgot-password-request")
+    @GetMapping("/forgot_password_form")
     public String forgotPasswordForm() {
-        return "forgot-password-form";
+        return "forgot_password_form";
     }
 
     @PostMapping("/forgot-password")
     public String resetPasswordRequest(HttpServletRequest request, Model model) {
         String email = request.getParameter("email");
+        log.info("Forgot password request from [{}]", email);
         Optional<User> user = userService.findByEmail(email);
         if (user.isEmpty()) {
-            //TODO to przetestować bo zwracało optionala a teraz sprawdzam czy jest null
-            return "redirect:/register/forgot-password-request?not_fond";
+            return "redirect:/register/forgot_password_form?not_fond";
         }
         String resetPasswordToken = Utility.generateUUID();
         resetPasswordTokenService.createPasswordResetTokenForUser(user.get(), resetPasswordToken);
+        log.info("Reset password token created for [{}]", email);
         //send password reset verification email to the user
         String url = Utility.getApplicationUrl(request) + "/register/password-reset-form?token=" + resetPasswordToken;
         try {
+            log.info("Trying send reset password verification email to [{}]", email);
             registrationCompleteEventListener.sendPasswordResetVerificationEmail(url);
         } catch (MessagingException | UnsupportedEncodingException e) {
             model.addAttribute("error", e.getMessage());
         }
-        return "redirect:/register/forgot-password-request?success";
+        return "redirect:/register/forgot_password_form?success";
     }
 
     @GetMapping("/password-reset-form")
@@ -159,7 +161,7 @@ public class UserRegistrationController {
         return "password-reset-form";
     }
 
-    @PostMapping("/reset-password")
+    @PostMapping("/reset_password")
     public String resetPassword(HttpServletRequest request) {
         String theToken = request.getParameter("token");
         String password = request.getParameter("password");
@@ -169,6 +171,7 @@ public class UserRegistrationController {
         }
         Optional<User> user = resetPasswordTokenService.findUserByResetPasswordToken(theToken);
         if (user.isPresent()) {
+            log.info("Trying reset password for [{}]", user.get().getEmail());
             resetPasswordTokenService.resetPassword(user.get(), password);
             return "redirect:/login?reset_success";
         }

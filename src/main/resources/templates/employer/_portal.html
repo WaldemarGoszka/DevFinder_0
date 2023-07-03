@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>DevFinder</title>
+    <title>DevFinder - Employer</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <!-- Favicon -->
@@ -69,14 +69,14 @@
                 <!--                            <a href="element.html" class="dropdown-item">Other Elements</a>-->
                 <!--                        </div>-->
                 <!--                    </div>-->
-                <a href="#" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Job Offers</a>
-                <a href="#" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Developers</a>
-<!--                <a th:href="@{/login}" class="nav-item nav-link"><i class="fa fa-laptop me-2"></i>Log in</a>-->
-<!--                <a th:href="@{/register/register_page}" class="nav-item nav-link"><i class="fa fa-laptop me-2"></i>Register</a>-->
-<!--                <a th:href="@{/employer}" class="nav-item nav-link"><i class="fa fa-file-alt me-2"></i>Employer P</a>-->
-<!--                <a th:href="@{/candidate}" class="nav-item nav-link"><i class="fa fa-file-alt me-2"></i>Candidate P</a>-->
-                <a href="#" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Statistics</a>
-                <a href="#" class="nav-item nav-link"><i class="fa-regular fa-address-card me-2"></i>About Us</a>
+                <a th:href="@{/employer/find_candidate}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Find a candidate</a>
+                <a th:href="@{/employer/post_job}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Post a job</a>
+                <!--                <a th:href="@{/login}" class="nav-item nav-link"><i class="fa fa-laptop me-2"></i>Log in</a>-->
+                <!--                <a th:href="@{/register/register_page}" class="nav-item nav-link"><i class="fa fa-laptop me-2"></i>Register</a>-->
+                <!--                <a th:href="@{/employer}" class="nav-item nav-link"><i class="fa fa-file-alt me-2"></i>Employer P</a>-->
+                <!--                <a th:href="@{/candidate}" class="nav-item nav-link"><i class="fa fa-file-alt me-2"></i>Candidate P</a>-->
+                <a th:href="@{/employer/my_posted_offers}" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>My Posted Offers</a>
+                <a th:href="@{/employer/employee}" class="nav-item nav-link"><i class="fa-regular fa-address-card me-2"></i>My Employee</a>
                 <!--                    <div class="nav-item dropdown">-->
                 <!--                        <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Pages</a>-->
                 <!--                        <div class="dropdown-menu bg-transparent border-0">-->
@@ -183,8 +183,8 @@
                         <!--                        <span class="d-none d-lg-inline-flex">John Doe</span>-->
                     </a>
                     <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
-                        <a th:href="@{/user/my_profile}" class="dropdown-item">My Profile</a>
-                        <a th:href="@{/user/settings}" class="dropdown-item">Settings</a>
+                        <a th:href="@{/user/my_profile}" class="dropdown-item">Company Profile</a>
+                        <a th:href="@{/user/settings}" class="dropdown-item">Account Settings</a>
                         <a th:href="@{/logout}" class="dropdown-item">Log Out</a>
                     </div>
                 </div>
@@ -202,7 +202,7 @@
         <div class="container-fluid pt-4 px-4">
             <div class="row vh-100 bg-secondary rounded align-items-center justify-content-center mx-0">
                 <div class="col-md-6 text-center">
-                    <h3 sec:authorize="${!isAuthenticated()}">Log in for more content</h3>
+                    <h3>Log in for more content</h3>
                 </div>
             </div>
         </div>
