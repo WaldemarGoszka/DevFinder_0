@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.devfinder.business.dao.EmailVerificationTokenDAO;
+import pl.devfinder.business.management.Keys;
 import pl.devfinder.business.management.TokenExpirationTime;
 import pl.devfinder.domain.EmailVerificationToken;
 import pl.devfinder.domain.User;
@@ -21,20 +22,14 @@ public class EmailVerificationTokenService {
         log.info("Trying validate email verification token: [{}]", token);
         Optional<EmailVerificationToken> emailVerificationToken = emailVerificationTokenDAO.findByToken(token);
         if (emailVerificationToken.isEmpty()){
-            return "INVALID";
-            //TODO zamienić na keys INVALID
-
+            return Keys.TokenStatus.INVALID.getName();
         }
         User user = emailVerificationToken.get().getUser();
         if (emailVerificationToken.get().getExpirationTime().isBefore(OffsetDateTime.now())){
-            return "EXPIRED";
-            //TODO zamienić na keys EXPIRED
-
+            return Keys.TokenStatus.EXPIRED.getName();
         }
-        //user.withIsEnabled(true); //setEnabled(true);
         userService.save(user.withIsEnabled(true));
-        return "VALID";
-        //TODO zamienić na keys INVALID
+        return Keys.TokenStatus.VALID.getName();
     }
 
     public void saveVerificationTokenForUser(User user, String token) {

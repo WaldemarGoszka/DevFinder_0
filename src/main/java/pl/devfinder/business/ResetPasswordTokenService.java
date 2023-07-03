@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.devfinder.business.dao.ResetPasswordTokenDAO;
+import pl.devfinder.business.management.Keys;
 import pl.devfinder.business.management.TokenExpirationTime;
 import pl.devfinder.business.management.Utility;
 import pl.devfinder.domain.ResetPasswordToken;
@@ -25,16 +26,13 @@ public class ResetPasswordTokenService {
         log.info("Trying validate reset password token: [{}]", token);
         Optional<ResetPasswordToken> resetPasswordToken = resetPasswordTokenDAO.findByToken(token);
         if (resetPasswordToken.isEmpty()){
-            return "invalid";
-            //TODO zamienić na keys INVALID
+            return Keys.TokenStatus.INVALID.getName();
         }
         Calendar calendar = Calendar.getInstance();
         if (resetPasswordToken.get().getExpirationTime().isBefore(OffsetDateTime.now())){
-            return "expired";
-            //TODO zamienić na keys INVALID
+            return Keys.TokenStatus.EXPIRED.getName();
         }
-        return "valid";
-        //TODO zamienić na keys INVALID
+        return Keys.TokenStatus.VALID.getName();
     }
 
     public Optional<User> findUserByResetPasswordToken(String token) {
@@ -47,8 +45,8 @@ public class ResetPasswordTokenService {
 
     public void resetPassword(User user, String newPassword) {
         log.info("Trying reset password for user: [{}]", user);
-        user.withPassword(Utility.encodePassword(newPassword));
-        userService.save(user);
+        User userWithNewPassword = user.withPassword(Utility.encodePassword(newPassword));
+        userService.save(userWithNewPassword);
     }
     public void createPasswordResetTokenForUser(User user, String token) {
         log.info("Trying create reset password token for user: [{}]", user);

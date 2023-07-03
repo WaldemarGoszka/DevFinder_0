@@ -10,8 +10,9 @@ import pl.devfinder.infrastructure.database.entity.ResetPasswordTokenEntity;
 public interface ResetPasswordTokenMapper {
 
     ResetPasswordTokenEntity mapToEntity(ResetPasswordToken resetPasswordToken);
-//    @Mapping(target = "user", ignore = true)
-    @Mapping(target = "user.role", ignore = true)
+
+    @Mapping(source = "user.roleId", target = "user.role")
+    @Mapping(target = "user.role.userId", ignore = true)
     @Mapping(target = "user.emailVerificationToken.user", ignore = true)
     @Mapping(target = "user.resetPasswordTokenEntity.user", ignore = true)
     ResetPasswordToken mapFromEntity(ResetPasswordTokenEntity resetPasswordTokenEntity);

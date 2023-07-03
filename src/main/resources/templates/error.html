@@ -54,17 +54,17 @@
 
                         <!--      PARAM ALERTS       -->
 
-                        <div th:if="${param.invalid}" class="col-sm-8">
+                        <div th:if="${param.invalid}">
                             <p class="alert alert-danger">Invalid verification token</p>
                         </div>
 
-                        <div th:if="${param.expired}" class="col-sm-8">
+                        <div th:if="${param.expired}">
                             <p class="alert alert-info">This verification link has already expired.</p>
                         </div>
-                        <div th:if="${param.invalid_token}" class="col-sm-8">
+                        <div th:if="${param.invalid_token}">
                             <p class="alert alert-info">Invalid reset password token</p>
                         </div>
-                        <div th:if="${param.not_found}" class="col-sm-8">
+                        <div th:if="${param.not_found}">
                             <p class="alert alert-info">Not found reset password token.</p>
                         </div>
                         <!--      PARAM ALERTS ENDS       -->
