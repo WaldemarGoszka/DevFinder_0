@@ -14,9 +14,12 @@ import pl.devfinder.api.dto.mapper.EmployerRowMapper;
 import pl.devfinder.api.dto.mapper.OfferRowMapper;
 import pl.devfinder.business.EmployerService;
 import pl.devfinder.business.OfferService;
+import pl.devfinder.business.UserService;
 import pl.devfinder.business.management.Keys;
+import pl.devfinder.domain.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
@@ -37,6 +40,7 @@ public class CandidateController {
     private final EmployerRowMapper employerRowMapper;
     private final OfferService offerService;
     private final OfferRowMapper offerRowMapper;
+    private final UserService userService;
 
     @GetMapping()
     public String homePage(Model model) {
@@ -56,13 +60,25 @@ public class CandidateController {
     }
 
     @GetMapping(value = CANDIDATE_PROFILE)
-    public String getProfile(Model model) {
+    public String getProfile(Model model, Authentication authentication) {
+        if(authentication != null){
+            Optional<User> user = userService.findByEmail(authentication.getName());
+            if(user.isPresent()){
+                model.addAttribute("user", user.get());
+            }
+        }
 //
         return "candidate/profile";
     }
 
     @GetMapping(value = EMPLOYERS_LIST)
-    public String getEmployersList(Model model) {
+    public String getEmployersList(Model model, Authentication authentication) {
+        if(authentication != null){
+            Optional<User> user = userService.findByEmail(authentication.getName());
+            if(user.isPresent()){
+                model.addAttribute("user", user.get());
+            }
+        }
         List<EmployerRowDTO> allEmployers = employerService.findAllEmployers().stream()
                 .map(employerRowMapper::map)
                 .toList();
@@ -72,12 +88,18 @@ public class CandidateController {
     }
 
     @GetMapping(value = OFFERS_LIST)
-    public String getOffersList(Model model) {
+    public String getOffersList(Model model, Authentication authentication) {
+        if(authentication != null){
+            Optional<User> user = userService.findByEmail(authentication.getName());
+            if(user.isPresent()){
+                model.addAttribute("user", user.get());
+            }
+        }
         List<OfferRowDTO> allOffers = offerService.findAllByState(Keys.OfferState.OPEN).stream()
                 .map(offerRowMapper::map)
                 .toList();
         model.addAttribute("allOffersDTOs", allOffers);
-        return "candidate/offers";
+        return "candidate/_offers";
     }
 
 }

@@ -192,7 +192,6 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests()
                 .requestMatchers(
                         "/",
-                        "/index",
                         "/login",
                         "/error",
                         "/register/**",
@@ -211,7 +210,7 @@ public class SecurityConfiguration {
                 .formLogin()
                 .loginPage("/login")
                 .usernameParameter("email")
-                .defaultSuccessUrl("/index")
+                .defaultSuccessUrl("/")
                 .failureUrl("/login?error")
                 .permitAll().and()
                 .logout()
