@@ -15,6 +15,7 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 public class OfferRowDTO {
     String title;
+    String offerUUId;
     String remoteWorkFormated;
     String experienceLevel;
     String salaryRange;

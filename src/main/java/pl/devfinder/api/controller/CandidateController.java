@@ -1,9 +1,7 @@
 package pl.devfinder.api.controller;
 
 import lombok.AllArgsConstructor;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +27,7 @@ public class CandidateController {
     public static final String CANDIDATE_PROFILE = "/profile";
     public static final String CANDIDATE_EDIT_PROFILE = "/edit_profile";
     public static final String OFFERS_LIST = "/offers";
-    public static final String EMPLOYERS_LIST = "/employers";
+    public static final String EMPLOYERS = "/employers";
     public static final String MY_EMPLOYER = "/my_employer";
     public static final String CANDIDATE_SETTINGS = "/settings";
     public static final String CANDIDATE_MATCHED_OFFERS = "/matched_offers";
@@ -71,7 +69,7 @@ public class CandidateController {
         return "candidate/profile";
     }
 
-    @GetMapping(value = EMPLOYERS_LIST)
+    @GetMapping(value = EMPLOYERS)
     public String getEmployersList(Model model, Authentication authentication) {
         if(authentication != null){
             Optional<User> user = userService.findByEmail(authentication.getName());
@@ -84,7 +82,7 @@ public class CandidateController {
                 .toList();
 //todo przyciks Details odnoszący się do profilu firmy
         model.addAttribute("allEmployersDTOs", allEmployers);
-        return "candidate/find_employer";
+        return "candidate/employers";
     }
 
     @GetMapping(value = OFFERS_LIST)
@@ -99,7 +97,7 @@ public class CandidateController {
                 .map(offerRowMapper::map)
                 .toList();
         model.addAttribute("allOffersDTOs", allOffers);
-        return "candidate/_offers";
+        return "candidate/offers";
     }
 
 }

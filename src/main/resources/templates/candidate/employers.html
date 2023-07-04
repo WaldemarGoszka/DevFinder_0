@@ -3,7 +3,8 @@
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head>
-    <title>DevFinder</title>
+    <title>DevFinder - Candidate - Employers</title>
+    <link href="../img/favicon.ico" rel="icon">
     <div th:replace="~{fragments :: head_style_}"></div>
 </head>
 
@@ -31,30 +32,27 @@
             <div class="row g-4">
                 <div class="col-12">
                     <div class="bg-secondary rounded h-100 p-4">
-                        <h6 class="mb-4">Actual Offers</h6>
+                        <h6 class="mb-4">Employers</h6>
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
                                 <tr>
-
-                                    <th scope="col">Title</th>
-                                    <th scope="col">Experience Level</th>
-                                    <th scope="col">Employer </th>
+                                    <th scope="col">Logo</th>
+                                    <th scope="col">Compamy Name</th>
+                                    <th scope="col">Website</th>
+                                    <th scope="col">Number Of Employees</th>
                                     <th scope="col">City</th>
-                                    <th scope="col">Remote Work</th>
-                                    <th scope="col">Salary</th>
-                                    <th scope="col">Days Since Created</th>
+                                    <th scope="col">Number Of Job Offers</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="offer : ${allOffersDTOs}">
-                                    <td th:text="${offer.getTitle()}"></td>
-                                    <td th:text="${offer.getExperienceLevel()}"></td>
-                                    <td th:text="${offer.getEmployerId().getCompanyName()}"></td>
-                                    <td th:text="${offer.getCityId().getCityName()}"></td>
-                                    <td th:text="${offer.getRemoteWorkFormated()}"></td>
-                                    <td th:text="${offer.getSalaryRange()}"></td>
-                                    <td th:text="${offer.getDaysSinceCreated()} + ' days ago'"></td>
+                                <tr th:each="employer : ${allEmployersDTOs}">
+                                    <td th:text="${employer.getLogoFile()}"></td>
+                                    <td th:text="${employer.getCompanyName()}"></td>
+                                    <td th:text="${employer.getWebsite()}"></td>
+                                    <td th:text="${employer.getNumberOfEmployees()}"></td>
+                                    <td th:text="${employer.getCityId().getCityName()}"></td>
+                                    <td th:text="${employer.getNumberOfAvailableOffers()}"></td>
                                 </tr>
                                 </tbody>
                             </table>

@@ -28,11 +28,6 @@ public class IndexController {
 //            String constantValue = userDetails.getUsername();
 //
 //        }
-        System.out.println("hey");
-        System.out.println("hey");
-        System.out.println("hey");
-
-        System.out.println("hey");
         if(authentication != null){
             Optional<User> user = userService.findByEmail(authentication.getName());
             if(user.isPresent()){
