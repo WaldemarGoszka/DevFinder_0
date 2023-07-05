@@ -13,6 +13,6 @@ public class Skill {
     Long skillId;
     String skillName;
     Set<CandidateSkill> candidateSkills;
-    Set<OfferSkill> offerSkills;
+    Set<OfferSkills> offerSkills;
 
 }

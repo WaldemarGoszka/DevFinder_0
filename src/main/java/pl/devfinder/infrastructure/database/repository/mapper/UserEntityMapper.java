@@ -17,11 +17,8 @@ import java.util.stream.Collectors;
 public interface UserEntityMapper {
     @Mapping(target = "roleId.userId", ignore = true)
     @Mapping(source = "roleId", target = "role", qualifiedByName = "mapUserRoleFromEntity")
-//    @Mapping(target = "emailVerificationToken", ignore = true)
-//    @Mapping(target = "resetPasswordTokenEntity", ignore = true)
     User mapFromEntity(UserEntity userEntity);
     @Named(value = "mapUserRoleFromEntity")
-   // @Mapping(target = "userId", ignore = true)
     default Role mapUserRoleFromEntity(RoleEntity roleEntity){
         return mapFromEntity(roleEntity);
     }
@@ -35,7 +32,6 @@ public interface UserEntityMapper {
     default RoleEntity mapUserRole(Role role) {
         return mapToEntity(role);
     }
-    //@Mapping(target = "userId", ignore = true)
     RoleEntity mapToEntity(Role role);
 
 }

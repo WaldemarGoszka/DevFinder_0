@@ -54,13 +54,13 @@
                                     <td th:text="${offer.getExperienceLevel()}"></td>
                                     <td th:text="${offer.getEmployerId().getCompanyName()}"></td>
                                     <td th:text="${offer.getCityId().getCityName()}"></td>
-                                    <td th:text="${offer.getRemoteWorkFormated()}"></td>
+                                    <td th:text="${offer.getRemoteWorkFormatted()}"></td>
                                     <td th:text="${offer.getSalaryRange()}"></td>
                                     <td th:text="${offer.getDaysSinceCreated()} + ' days ago'"></td>
                                     <td><form
                                             action="#"
-                                            th:action="@{candidate/offers/{offerId}(offerId=${offer.getOfferUUId})}"
-                                            class="btn btn-sm btn-primary" method="GET">Details</form></td>
+                                            th:action="@{candidate/offer/{offerId}(offerId=${offer.getOfferId})}"
+                                            class="btn btn-sm btn-primary" method="GET" type="submit">Details</form></td>
                                 </tr>
                                 </tbody>
                             </table>

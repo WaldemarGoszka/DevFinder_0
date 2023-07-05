@@ -10,6 +10,7 @@ import pl.devfinder.infrastructure.database.repository.jpa.OfferJpaRepository;
 import pl.devfinder.infrastructure.database.repository.mapper.OfferEntityMapper;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
@@ -30,7 +31,10 @@ public class OfferRepository implements OfferDAO {
         return offerJpaRepository.getNumberOfOffersByEmployerAndByState(employerId, offerState.getState());
     }
 
-
+    @Override
+    public Optional<Offer> findById(Long offerId) {
+        return offerJpaRepository.findById(offerId).map(offerEntityMapper::mapFromEntity);
+    }
 
 
 }

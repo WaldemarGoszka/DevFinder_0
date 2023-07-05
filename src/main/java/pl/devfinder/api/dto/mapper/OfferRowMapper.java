@@ -19,8 +19,9 @@ public abstract class OfferRowMapper {
 
         OfferRowDTO.OfferRowDTOBuilder offerRowDTO = OfferRowDTO.builder();
 
+        offerRowDTO.offerId(offer.getOfferId());
         offerRowDTO.title( offer.getTitle() );
-        offerRowDTO.remoteWorkFormated( offerService.formatRemoteWork(offer.getRemoteWork()) );
+        offerRowDTO.remoteWorkFormatted( offerService.formatRemoteWork(offer.getRemoteWork()) );
         offerRowDTO.experienceLevel( offer.getExperienceLevel() );
         offerRowDTO.salaryRange(offerService.formatSalaryRange(offer.getSalaryMin(), offer.getSalaryMax()) );
         offerRowDTO.employerId( offer.getEmployerId() );

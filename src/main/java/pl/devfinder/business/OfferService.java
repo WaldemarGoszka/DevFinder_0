@@ -5,9 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.devfinder.api.dto.OfferDetailsDTO;
 import pl.devfinder.business.dao.OfferDAO;
 import pl.devfinder.business.management.Keys;
 import pl.devfinder.domain.Offer;
+import pl.devfinder.domain.exception.NotFoundException;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -45,5 +47,10 @@ public class OfferService {
             return "No";
         }
         return String.valueOf(remote) + " % time";
+    }
+
+    public Offer findById(Long offerId) {
+        log.info("Trying find offerById, id: [{}]", offerId);
+    return offerDAO.findById(offerId).orElseThrow(() -> new NotFoundException("Could not find user by userName: [%s]".formatted(offerId)));
     }
 }

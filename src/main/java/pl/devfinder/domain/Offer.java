@@ -28,6 +28,6 @@ public class Offer {
     String status;
     Employer employerId;
     City cityId;
-    Set<OfferSkill> offerSkills;
+    Set<OfferSkills> offerSkills;
 
 }

@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @EqualsAndHashCode(of = "offerSkillId")
 @ToString(of = {"offerSkillId", "offerId", "skillId"})
-public class OfferSkill {
+public class OfferSkills {
     Long offerSkillId;
     Offer offerId;
     Skill skillId;

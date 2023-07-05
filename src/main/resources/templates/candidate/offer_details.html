@@ -5,7 +5,7 @@
 <head>
     <title>DevFinder - Candidate - Offers</title>
     <link href="../img/favicon.ico" rel="icon">
-    <div th:replace="~{fragments :: head_style_}"></div>
+    <div th:replace="~{fragments :: head_style__}"></div>
 </head>
 
 <body>
@@ -26,7 +26,6 @@
         <div th:replace="~{fragments :: navbar}"></div>
         <!-- Navbar End -->
 
-
         <!-- Content Side Start -->
         <div class="container-fluid pt-4 px-4">
             <div class="row g-4">
@@ -34,8 +33,8 @@
                     <div class="bg-secondary rounded h-100 p-4">
                         <h6 class="mb-4">Description List</h6>
                         <dl class="row mb-0">
-                            <dt class="col-sm-4">Description lists</dt>
-                            <dd class="col-sm-8">A description list is perfect for defining terms.</dd>
+                            <dt class="col-sm-4">Offer Details</dt>
+                            <dd th:text="${offerDetailsDTO}"class="col-sm-8"></dd>
 
                             <dt class="col-sm-4">Term</dt>
                             <dd class="col-sm-8">Definition for the term.</dd>
@@ -74,7 +73,7 @@
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 </div>
 
-<div th:replace="~{fragments :: js_}"></div>
+<div th:replace="~{fragments :: js__}"></div>
 </body>
 
 </html>
