@@ -5,6 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.devfinder.api.dto.OfferRowDTO;
 import pl.devfinder.business.OfferService;
 import pl.devfinder.domain.Offer;
+import pl.devfinder.domain.OfferSkills;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Mapper(componentModel = "spring")
 
@@ -27,7 +31,10 @@ public abstract class OfferRowMapper {
         offerRowDTO.employerId( offer.getEmployerId() );
         offerRowDTO.cityId( offer.getCityId() );
         offerRowDTO.daysSinceCreated(offerService.getDaysSinceDate(offer.getCreatedAt()));
-
+        Set<OfferSkills> set = offer.getOfferSkills();
+        if ( set != null ) {
+            offerRowDTO.offerSkills( new LinkedHashSet<OfferSkills>( set ) );
+        }
         return offerRowDTO.build();
     }
 }

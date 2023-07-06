@@ -37,10 +37,10 @@
                             <table class="table">
                                 <thead>
                                 <tr>
-
                                     <th scope="col">Title</th>
                                     <th scope="col">Experience Level</th>
-                                    <th scope="col">Employer </th>
+                                    <th scope="col">Tech Stack</th>
+                                    <th scope="col">Employer</th>
                                     <th scope="col">City</th>
                                     <th scope="col">Remote Work</th>
                                     <th scope="col">Salary</th>
@@ -52,6 +52,12 @@
                                 <tr th:each="offer : ${allOffersDTOs}">
                                     <td th:text="${offer.getTitle()}"></td>
                                     <td th:text="${offer.getExperienceLevel()}"></td>
+                                    <td>
+                                    <span th:each="skill : ${offer.offerSkills}">
+                                        <span th:text="${skill.skillId.skillName}"></span>
+                                        <br/>
+                                    </span>
+                                    </td>
                                     <td th:text="${offer.getEmployerId().getCompanyName()}"></td>
                                     <td th:text="${offer.getCityId().getCityName()}"></td>
                                     <td th:text="${offer.getRemoteWorkFormatted()}"></td>
@@ -59,8 +65,10 @@
                                     <td th:text="${offer.getDaysSinceCreated()} + ' days ago'"></td>
                                     <td><form
                                             action="#"
-                                            th:action="@{candidate/offer/{offerId}(offerId=${offer.getOfferId})}"
-                                            class="btn btn-sm btn-primary" method="GET" type="submit">Details</form></td>
+                                            th:action="@{offer/{offerId}(offerId=${offer.getOfferId})}"
+                                            method="GET">
+                                        <button class="btn btn-sm btn-primary" type="submit">Details</button>
+                                    </form></td>
                                 </tr>
                                 </tbody>
                             </table>

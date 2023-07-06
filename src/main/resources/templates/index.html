@@ -28,21 +28,38 @@
         <div class="container-fluid pt-4 px-4">
             <div class="row vh-100 bg-secondary rounded align-items-center justify-content-center mx-0">
                 <div class="col-md-6 text-center">
-                    <h3 sec:authorize="${!isAuthenticated()}">Log in for morffffe content</h3>
+                    <h3 sec:authorize="${!isAuthenticated()}">Log in for more content</h3>
                     <h3 sec:authorize="${isAuthenticated()}">Instructions for users</h3>
+                    <!--                    TODO DELETE THIS IN PRODUCTION-->
+                    <br>
+                    <div>Candidate<br>
+                        <a th:href="@{/candidate/offers}"><i></i>Find an Offers</a><br>
+                        <a th:href="@{/candidate/employers}"><i></i>Find an Employer</a><br>
+                        <a th:href="@{/candidate/applications}"><i></i>Your applications</a><br>
+                        <a th:href="@{/candidate/my_employer}"><i></i>My Employer</a><br>
+                        <br>
+                        Employer<br>
+                        <a th:href="@{/employer/find_candidate}"><i></i>Find a candidate</a><br>
+                        <a th:href="@{/employer/post_job}"><i></i>Post a job</a><br>
+                        <a th:href="@{/employer/my_posted_offers}"><i></i>My Posted Offers</a><br>
+                        <a th:href="@{/employer/employee}"><i></i>My Employee</a><br>
+                        <!--                       TODO DELETE THIS IN PRODUCTION -->
+                    </div>
                 </div>
+
             </div>
         </div>
-        <!-- Content Side End -->
-
-        <!-- Footer Start -->
-        <div th:replace="~{fragments :: footer}"></div>
-        <!-- Footer End -->
     </div>
-    <!-- Content End -->
+    <!-- Content Side End -->
 
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <!-- Footer Start -->
+    <div th:replace="~{fragments :: footer}"></div>
+    <!-- Footer End -->
+</div>
+<!-- Content End -->
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 </div>
 
 <div th:replace="~{fragments :: js}"></div>

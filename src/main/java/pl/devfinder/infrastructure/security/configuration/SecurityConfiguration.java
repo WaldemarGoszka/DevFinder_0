@@ -150,6 +150,7 @@
 package pl.devfinder.infrastructure.security.configuration;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -187,6 +188,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
+    @ConditionalOnProperty(value = "spring.security.enabled", havingValue = "true", matchIfMissing = true)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
                 .authorizeHttpRequests()
@@ -222,14 +224,13 @@ public class SecurityConfiguration {
                 .build();
     }
 
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        return (web) ->
-//                web.ignoring()
-////                        .requestMatchers("/js/**", "/css/**", "/lib/**", "/scss/**", "/images/**");
-//                        .requestMatchers("/*", "/js/**", "/css/**", "/lib/**", "/scss/**", "/images/**", "/img/**",
-//                                "/register/**", "/login/**", "/login");
-//    }
+    @Bean
+    @ConditionalOnProperty(value = "spring.security.enabled", havingValue = "false")
+    public SecurityFilterChain securityDisabled(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests()
+                .anyRequest().permitAll();
+        return http.build();
+    }
 
     @Bean
     public InMemoryUserDetailsManager userDetailsManager() {

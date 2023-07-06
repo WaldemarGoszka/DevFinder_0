@@ -29,3 +29,11 @@ https://freefavicon.com/freefavicons/business/iconinfo/business-man-avatar-vecto
 
 Job boards:
 
+To enable security - change value in application.yaml: 
+spring:
+    security:
+        enabled: false
+
+To enable email validation after registration - change value in application.yaml
+devfinder-conf:
+    enable-email-verification: true

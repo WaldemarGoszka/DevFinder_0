@@ -7,6 +7,8 @@ server:
     context-path: /devfinder
 
 spring:
+  security:
+    enabled: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: org.postgresql.Driver
