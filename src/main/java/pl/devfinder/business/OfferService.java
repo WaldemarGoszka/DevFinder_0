@@ -30,7 +30,7 @@ public class OfferService {
     @Transactional
     public List<Offer> findAllByState(Keys.OfferState state) {
         List<Offer> allOffers = offerDAO.findAllByState(state);
-        log.info("Count Offers: [{}]", allOffers.size());
+        log.info("Offers ammount: [{}]", allOffers.size());
         return allOffers;
     }
 

@@ -18,7 +18,7 @@ public class CandidateService {
 
     public List<Candidate> findAllByState(Keys.CandidateState state) {
         List<Candidate> allAvailableCandidates = candidateDAO.findAllByState(state);
-        log.info("Available Candidate count: [{}]", allAvailableCandidates.size());
+        log.info("Available Candidate ammount: [{}]", allAvailableCandidates.size());
         return allAvailableCandidates;
     }
 

@@ -21,7 +21,7 @@ public class EmployerService {
     @Transactional
     public List<Employer> findAllEmployers() {
         List<Employer> allEmployers = employerDAO.findAll();
-        log.info("Count Employers: [{}]", allEmployers.size());
+        log.info("Employers ammount: [{}]", allEmployers.size());
         return allEmployers;
     }
 

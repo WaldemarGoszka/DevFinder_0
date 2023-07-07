@@ -22,9 +22,6 @@ public interface OfferEntityMapper {
     @Mapping(target = "cityId.candidateDesiredJobCities", ignore = true)
     @Mapping(target = "cityId.candidateResidenceCities", ignore = true)
     @Mapping(target = "employerId.cityId", ignore = true)
-//    @Mapping(target = "offerSkills.offerId", ignore = true)
-//    @Mapping(target = "offerSkills.skillId.candidateSkills", ignore = true)
-//    @Mapping(target = "offerSkills.skillId.offerSkills", ignore = true)
     @Mapping(source = "offerSkills", target = "offerSkills", qualifiedByName = "mapOfferSkills")
     Offer mapFromEntity(OfferEntity offerEntity);
 
