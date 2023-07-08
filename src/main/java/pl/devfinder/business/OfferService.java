@@ -3,6 +3,9 @@ package pl.devfinder.business;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.devfinder.api.dto.OfferDetailsDTO;
@@ -22,9 +25,9 @@ import java.util.List;
 public class OfferService {
     private final OfferDAO offerDAO;
 
-@Transactional
+    @Transactional
     public Long getNumberOfOffersByEmployerAndByState(Long employerId, Keys.OfferState state) {
-        return offerDAO.getNumberOfOffersByEmployerAndByState (employerId ,state);
+        return offerDAO.getNumberOfOffersByEmployerAndByState(employerId, state);
     }
 
     @Transactional
@@ -42,8 +45,9 @@ public class OfferService {
     public String formatSalaryRange(BigDecimal salaryMin, BigDecimal salaryMax) {
         return String.valueOf(salaryMin.toBigInteger()) + " - " + String.valueOf(salaryMax.toBigInteger());
     }
+
     public String formatRemoteWork(Integer remote) {
-        if(remote == null || remote == 0) {
+        if (remote == null || remote == 0) {
             return "No";
         }
         return String.valueOf(remote) + " % time";
@@ -51,6 +55,13 @@ public class OfferService {
 
     public Offer findById(Long offerId) {
         log.info("Trying find offerById, id: [{}]", offerId);
-    return offerDAO.findById(offerId).orElseThrow(() -> new NotFoundException("Could not find user by userName: [%s]".formatted(offerId)));
+        return offerDAO.findById(offerId).orElseThrow(() -> new NotFoundException("Could not find user by userName: [%s]".formatted(offerId)));
+    }
+
+    Page<Offer> findAllByStatePaginated(Integer pageNumber, Integer pageSize, Keys.OfferState state) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+//        List<Offer> allOffers = offerDAO.findAllByState(state);
+//        log.info("Offers ammount: [{}]", allOffers.size());
+        return offerDAO.findAllByState(pageable,state);
     }
 }

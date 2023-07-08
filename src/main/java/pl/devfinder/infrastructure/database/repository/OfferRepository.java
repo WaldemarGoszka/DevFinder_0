@@ -2,6 +2,8 @@ package pl.devfinder.infrastructure.database.repository;
 
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import pl.devfinder.business.dao.OfferDAO;
 import pl.devfinder.business.management.Keys;
@@ -27,6 +29,12 @@ public class OfferRepository implements OfferDAO {
     }
 
     @Override
+    public Page<Offer> findAllByState(Pageable pageable, Keys.OfferState state) {
+        return offerJpaRepository.findAllByState(pageable,state.getState()).stream()
+                .map(offerEntityMapper::mapFromEntity).;
+    }
+
+    @Override
     public Long getNumberOfOffersByEmployerAndByState(Long employerId, Keys.OfferState offerState) {
         return offerJpaRepository.getNumberOfOffersByEmployerAndByState(employerId, offerState.getState());
     }
@@ -34,6 +42,11 @@ public class OfferRepository implements OfferDAO {
     @Override
     public Optional<Offer> findById(Long offerId) {
         return offerJpaRepository.findById(offerId).map(offerEntityMapper::mapFromEntity);
+    }
+
+    @Override
+    public Page<Offer> findAllByStatePaginated(Integer pageNumber, Integer pageSize, Keys.OfferState state) {
+        return offerJpaRepository.findAll();
     }
 
 

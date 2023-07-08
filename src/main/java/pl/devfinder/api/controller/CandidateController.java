@@ -18,10 +18,8 @@ import pl.devfinder.business.OfferService;
 import pl.devfinder.business.UserService;
 import pl.devfinder.business.management.Keys;
 import pl.devfinder.business.management.Utility;
-import pl.devfinder.domain.User;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
@@ -91,6 +89,7 @@ public class CandidateController {
                 .map(offerRowMapper::map)
                 .toList();
         model.addAttribute("allOffersDTOs", allOffers);
+
         return "candidate/offers";
     }
     @GetMapping(value = OFFER_DETAILS)
