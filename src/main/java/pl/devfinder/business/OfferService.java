@@ -25,6 +25,12 @@ import java.util.List;
 public class OfferService {
     private final OfferDAO offerDAO;
 
+
+    public Page<Employee> getEmployees(EmployeePage employeePage,
+                                       EmployeeSearchCriteria employeeSearchCriteria){
+        return employeeCriteriaRepository.findAllWithFilters(employeePage, employeeSearchCriteria);
+    }
+
     @Transactional
     public Long getNumberOfOffersByEmployerAndByState(Long employerId, Keys.OfferState state) {
         return offerDAO.getNumberOfOffersByEmployerAndByState(employerId, state);
@@ -58,10 +64,9 @@ public class OfferService {
         return offerDAO.findById(offerId).orElseThrow(() -> new NotFoundException("Could not find user by userName: [%s]".formatted(offerId)));
     }
 
-    Page<Offer> findAllByStatePaginated(Integer pageNumber, Integer pageSize, Keys.OfferState state) {
-        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-//        List<Offer> allOffers = offerDAO.findAllByState(state);
-//        log.info("Offers ammount: [{}]", allOffers.size());
+    public Page<Offer> findAllByStatePaginated(Integer pageNumber, Integer pageSize, Keys.OfferState state) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize).;
+        log.info("Offers paginated pageNumber: [{}]", pageNumber);
         return offerDAO.findAllByState(pageable,state);
     }
 }

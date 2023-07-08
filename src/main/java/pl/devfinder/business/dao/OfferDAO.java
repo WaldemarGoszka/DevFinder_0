@@ -15,6 +15,6 @@ public interface OfferDAO {
     Long getNumberOfOffersByEmployerAndByState(Long employerId, Keys.OfferState state);
 
     Optional<Offer> findById(Long offerId);
-    Page<Offer> findAllByStatePaginated(Integer pageNumber, Integer pageSize, Keys.OfferState state);
+//    Page<Offer> findAllByStatePaginated(Integer pageNumber, Integer pageSize, Keys.OfferState state);
 
 }

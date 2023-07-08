@@ -30,8 +30,7 @@ public class OfferRepository implements OfferDAO {
 
     @Override
     public Page<Offer> findAllByState(Pageable pageable, Keys.OfferState state) {
-        return offerJpaRepository.findAllByState(pageable,state.getState()).stream()
-                .map(offerEntityMapper::mapFromEntity).;
+        return offerJpaRepository.findAllByState(pageable,state.getState()).map(offerEntityMapper::mapFromEntity);
     }
 
     @Override
@@ -44,10 +43,10 @@ public class OfferRepository implements OfferDAO {
         return offerJpaRepository.findById(offerId).map(offerEntityMapper::mapFromEntity);
     }
 
-    @Override
-    public Page<Offer> findAllByStatePaginated(Integer pageNumber, Integer pageSize, Keys.OfferState state) {
-        return offerJpaRepository.findAll();
-    }
+//    @Override
+//    public Page<Offer> findAllByStatePaginated(Integer pageNumber, Integer pageSize, Keys.OfferState state) {
+//        return offerJpaRepository.findAll();
+//    }
 
 
 }
