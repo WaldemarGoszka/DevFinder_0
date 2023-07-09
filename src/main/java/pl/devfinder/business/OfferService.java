@@ -12,7 +12,11 @@ import pl.devfinder.api.dto.OfferDetailsDTO;
 import pl.devfinder.business.dao.OfferDAO;
 import pl.devfinder.business.management.Keys;
 import pl.devfinder.domain.Offer;
+import pl.devfinder.domain.OfferPage;
+import pl.devfinder.domain.OfferSearchCriteria;
 import pl.devfinder.domain.exception.NotFoundException;
+import pl.devfinder.infrastructure.database.entity.OfferEntity;
+import pl.devfinder.infrastructure.database.repository.OfferCriteriaRepository;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -24,11 +28,12 @@ import java.util.List;
 @AllArgsConstructor
 public class OfferService {
     private final OfferDAO offerDAO;
+    private final OfferCriteriaRepository offerCriteriaRepository;
 
 
-    public Page<Employee> getEmployees(EmployeePage employeePage,
-                                       EmployeeSearchCriteria employeeSearchCriteria){
-        return employeeCriteriaRepository.findAllWithFilters(employeePage, employeeSearchCriteria);
+    public Page<OfferEntity> getOffersFiltering(OfferPage offerPage,
+                                          OfferSearchCriteria offerSearchCriteria){
+        return offerCriteriaRepository.findAllWithFilters(offerPage, offerSearchCriteria);
     }
 
     @Transactional
@@ -39,7 +44,7 @@ public class OfferService {
     @Transactional
     public List<Offer> findAllByState(Keys.OfferState state) {
         List<Offer> allOffers = offerDAO.findAllByState(state);
-        log.info("Offers ammount: [{}]", allOffers.size());
+        log.info("Offers amount: [{}]", allOffers.size());
         return allOffers;
     }
 
@@ -65,8 +70,9 @@ public class OfferService {
     }
 
     public Page<Offer> findAllByStatePaginated(Integer pageNumber, Integer pageSize, Keys.OfferState state) {
-        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize).;
-        log.info("Offers paginated pageNumber: [{}]", pageNumber);
-        return offerDAO.findAllByState(pageable,state);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<Offer> all = offerDAO.findAllByState(state, pageable);
+        log.info("Offers paginated pageNumber: [{}], page size [{}], totalPages: [{}],  total elements: [{}]", pageNumber,pageSize,all.getTotalPages(), all.getTotalElements());
+        return all;
     }
 }

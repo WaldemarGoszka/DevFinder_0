@@ -5,11 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import pl.devfinder.api.dto.EmployerRowDTO;
 import pl.devfinder.api.dto.OfferDetailsDTO;
 import pl.devfinder.api.dto.OfferRowDTO;
@@ -33,7 +29,7 @@ public class CandidateController {
 
     public static final String CANDIDATE_PROFILE = "/profile";
     public static final String CANDIDATE_EDIT_PROFILE = "/edit_profile";
-    public static final String OFFERS_LIST = "/offers/{pageNumber}";
+    public static final String OFFERS_LIST = "/offers";
     public static final String OFFER_DETAILS = "/offer/{offerId}";
     public static final String EMPLOYERS = "/employers";
     public static final String MY_EMPLOYER = "/my_employer";
@@ -69,14 +65,14 @@ public class CandidateController {
 
     @GetMapping(value = CANDIDATE_PROFILE)
     public String getProfile(Model model, Authentication authentication) {
-        Utility.getUserToPage(authentication, userService, model);
+        Utility.putUserDataToModel(authentication, userService, model);
 //
         return "candidate/profile";
     }
 
     @GetMapping(value = EMPLOYERS)
     public String getEmployersList(Model model, Authentication authentication) {
-        Utility.getUserToPage(authentication, userService, model);
+        Utility.putUserDataToModel(authentication, userService, model);
 
         List<EmployerRowDTO> allEmployers = employerService.findAllEmployers().stream()
                 .map(employerRowMapper::map)
@@ -88,41 +84,51 @@ public class CandidateController {
 
     @GetMapping(value = OFFERS_LIST)
     public String getOffersList(
-            @PathVariable(value = "pageNumber") Integer pageNumber,
-            @RequestParam MultiValueMap<String, String> filters,
-//            @RequestParam OfferPage offerPage,
-//            @RequestParam OfferSearchCriteria offerSearchCriteria,
+//            @PathVariable(value = "pageNumber") Integer pageNumber,
+            @ModelAttribute OfferSearchCriteria offerSearchCriteria,
+            @ModelAttribute OfferPage offerPage,
             Model model,
             Authentication authentication) {
+        Utility.putUserDataToModel(authentication, userService, model);
 
+        System.out.println("START #############################");
+//        System.out.println("PAGENUMBER: " + pageNumber);
         System.out.println("Filters:");
-        filters.get("filter").forEach(System.out::println);
+        System.out.println(offerSearchCriteria.getIsExperienceLevelIsJunior());
+        System.out.println(offerSearchCriteria.getIsExperienceLevelIsSenior());
+        System.out.println(offerSearchCriteria.getRemoteWork());
+        System.out.println("---");
+        System.out.println(offerPage.getPageNumber());
+        System.out.println(offerPage.getPageSize());
+        System.out.println(offerPage.getSortDirection());
+        System.out.println(offerPage.getSortBy());
+        System.out.println("END #############################");
 
-        Utility.getUserToPage(authentication, userService, model);
-        int pageSize = 5;
-        Page<OfferRowDTO> page = offerService.findAllByStatePaginated(pageNumber,pageSize,Keys.OfferState.OPEN).map(offerRowMapper::map);
-        List<OfferRowDTO> content = page.getContent();
+        Page<OfferRowDTO> page = offerService.findAllByStatePaginated(offerPage.getPageNumber(), offerPage.getPageSize(), Keys.OfferState.OPEN).map(offerRowMapper::map);
+        List<OfferRowDTO> allOffers = page.getContent();
 
-        model.addAttribute("currentPage", pageNumber);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalItems", page.getTotalElements());
+//        model.addAttribute("currentPage", pageNumber);
+//        model.addAttribute("totalPages", page.getTotalPages());
+//        model.addAttribute("totalItems", page.getTotalElements());
+//
+//        model.addAttribute("sortField", sortField);
+//        model.addAttribute("sortDir", sortDir);
+//        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+//
+//        model.addAttribute("listEmployees", listEmployees);
 
-        model.addAttribute("sortField", sortField);
-        model.addAttribute("sortDir", sortDir);
-        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
-
-        model.addAttribute("listEmployees", listEmployees);
 
 //        List<OfferRowDTO> allOffers = offerService.findAllByState(Keys.OfferState.OPEN).stream()
 //                .map(offerRowMapper::map)
 //                .toList();
-//        model.addAttribute("allOffersDTOs", allOffers);
+        model.addAttribute("allOffersDTOs", allOffers);
 
         return "candidate/offers";
     }
+
     @GetMapping(value = OFFER_DETAILS)
     public String getOfferDetails(@PathVariable Long offerId, Model model, Authentication authentication) {
-        Utility.getUserToPage(authentication, userService, model);
+        Utility.putUserDataToModel(authentication, userService, model);
         OfferDetailsDTO offerDetailsDTO = offerDetailsMapper.map(offerService.findById(offerId));
         model.addAttribute("offerDetailsDTO", offerDetailsDTO);
         return "candidate/offer_details";

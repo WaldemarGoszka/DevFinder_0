@@ -2,88 +2,97 @@ package pl.devfinder.infrastructure.database.repository;
 
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Repository;
-import pl.devfinder.business.dao.OfferDAO;
 import pl.devfinder.business.management.Keys;
-import pl.devfinder.domain.Offer;
-import pl.devfinder.infrastructure.database.repository.jpa.OfferJpaRepository;
-import pl.devfinder.infrastructure.database.repository.mapper.OfferEntityMapper;
+import pl.devfinder.domain.OfferPage;
+import pl.devfinder.domain.OfferSearchCriteria;
+import pl.devfinder.infrastructure.database.entity.OfferEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Repository
 
-public class OfferCriteriaRepository  {
+public class OfferCriteriaRepository {
 
     private final EntityManager entityManager;
     private final CriteriaBuilder criteriaBuilder;
 
-    public EmployeeCriteriaRepository(EntityManager entityManager) {
+    public OfferCriteriaRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
         this.criteriaBuilder = entityManager.getCriteriaBuilder();
     }
 
-    public Page<Employee> findAllWithFilters(EmployeePage employeePage,
-                                             EmployeeSearchCriteria employeeSearchCriteria){
-        CriteriaQuery<Employee> criteriaQuery = criteriaBuilder.createQuery(Employee.class);
-        Root<Employee> employeeRoot = criteriaQuery.from(Employee.class);
-        Predicate predicate = getPredicate(employeeSearchCriteria, employeeRoot);
+
+    public Page<OfferEntity> findAllWithFilters(OfferPage offerPage,
+                                                OfferSearchCriteria offerSearchCriteria) {
+        CriteriaQuery<OfferEntity> criteriaQuery = criteriaBuilder.createQuery(OfferEntity.class);
+        Root<OfferEntity> offerEntityRoot = criteriaQuery.from(OfferEntity.class);
+        Predicate predicate = getPredicate(offerSearchCriteria, offerEntityRoot);
         criteriaQuery.where(predicate);
-        setOrder(employeePage, criteriaQuery, employeeRoot);
+        setOrder(offerPage, criteriaQuery, offerEntityRoot);
 
-        TypedQuery<Employee> typedQuery = entityManager.createQuery(criteriaQuery);
-        typedQuery.setFirstResult(employeePage.getPageNumber() * employeePage.getPageSize());
-        typedQuery.setMaxResults(employeePage.getPageSize());
+        TypedQuery<OfferEntity> typedQuery = entityManager.createQuery(criteriaQuery);
+        typedQuery.setFirstResult(offerPage.getPageNumber() * offerPage.getPageSize());
+        typedQuery.setMaxResults(offerPage.getPageSize());
 
-        Pageable pageable = getPageable(employeePage);
+        Pageable pageable = getPageable(offerPage);
 
-        long employeesCount = getEmployeesCount(predicate);
+        long offerCount = getOfferCount(predicate);
 
-        return new PageImpl<>(typedQuery.getResultList(), pageable, employeesCount);
+        return new PageImpl<>(typedQuery.getResultList(), pageable, offerCount);
     }
 
-    private Predicate getPredicate(EmployeeSearchCriteria employeeSearchCriteria,
-                                   Root<Employee> employeeRoot) {
+    private Predicate getPredicate(OfferSearchCriteria offerSearchCriteria,
+                                   Root<OfferEntity> offerRoot) {
         List<Predicate> predicates = new ArrayList<>();
-        if(Objects.nonNull(employeeSearchCriteria.getFirstName())){
+        if (Objects.nonNull(offerSearchCriteria.getIsExperienceLevelIsJunior())) {
             predicates.add(
-                    criteriaBuilder.like(employeeRoot.get("firstName"),
-                            "%" + employeeSearchCriteria.getFirstName() + "%")
+                    criteriaBuilder.like(offerRoot.get("experienceLevel"),
+                            Keys.Experience.JUNIOR.getLevel())
             );
         }
-        if(Objects.nonNull(employeeSearchCriteria.getLastName())){
+        if (Objects.nonNull(offerSearchCriteria.getIsExperienceLevelIsMid())) {
             predicates.add(
-                    criteriaBuilder.like(employeeRoot.get("lastName"),
-                            "%" + employeeSearchCriteria.getLastName() + "%")
+                    criteriaBuilder.like(offerRoot.get("experienceLevel"),
+                            Keys.Experience.MID.getLevel())
             );
         }
+        if (Objects.nonNull(offerSearchCriteria.getIsExperienceLevelIsSenior())) {
+            predicates.add(
+                    criteriaBuilder.like(offerRoot.get("experienceLevel"),
+                            Keys.Experience.SENIOR.getLevel())
+            );
+        }
+
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 
-    private void setOrder(EmployeePage employeePage,
-                          CriteriaQuery<Employee> criteriaQuery,
-                          Root<Employee> employeeRoot) {
-        if(employeePage.getSortDirection().equals(Sort.Direction.ASC)){
-            criteriaQuery.orderBy(criteriaBuilder.asc(employeeRoot.get(employeePage.getSortBy())));
+    private void setOrder(OfferPage offerPage,
+                          CriteriaQuery<OfferEntity> criteriaQuery,
+                          Root<OfferEntity> offerEntityRoot) {
+        if (offerPage.getSortDirection().equals(Sort.Direction.ASC)) {
+            criteriaQuery.orderBy(criteriaBuilder.asc(offerEntityRoot.get(offerPage.getSortBy())));
         } else {
-            criteriaQuery.orderBy(criteriaBuilder.desc(employeeRoot.get(employeePage.getSortBy())));
+            criteriaQuery.orderBy(criteriaBuilder.desc(offerEntityRoot.get(offerPage.getSortBy())));
         }
     }
 
-    private Pageable getPageable(EmployeePage employeePage) {
-        Sort sort = Sort.by(employeePage.getSortDirection(), employeePage.getSortBy());
-        return PageRequest.of(employeePage.getPageNumber(),employeePage.getPageSize(), sort);
+    private Pageable getPageable(OfferPage offerPage) {
+        Sort sort = Sort.by(offerPage.getSortDirection(), offerPage.getSortBy());
+        return PageRequest.of(offerPage.getPageNumber(), offerPage.getPageSize(), sort);
     }
 
-    private long getEmployeesCount(Predicate predicate) {
+    private long getOfferCount(Predicate predicate) {
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-        Root<Employee> countRoot = countQuery.from(Employee.class);
+        Root<OfferEntity> countRoot = countQuery.from(OfferEntity.class);
         countQuery.select(criteriaBuilder.count(countRoot)).where(predicate);
         return entityManager.createQuery(countQuery).getSingleResult();
     }

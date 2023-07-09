@@ -1,12 +1,19 @@
 package pl.devfinder.domain;
 
-import lombok.Data;
+import lombok.*;
 import org.springframework.data.domain.Sort;
+
 @Data
 public class OfferPage {
-    private int pageNumber = 0;
-    private int pageSize = 10;
-    private Sort.Direction sortDirection = Sort.Direction.ASC;
-    private String sortBy = "lastName";
+    Integer pageNumber = 0;
+    Integer pageSize = 3;
+    Sort.Direction sortDirection = Sort.Direction.ASC;
+    String sortBy = "title";
 
+//    public OfferPage() {
+//        this.pageNumber = 1;
+//        this.pageSize = 10;
+//        this.sortDirection = Sort.Direction.ASC;
+//        this.sortBy = "title";
+//    }
 }

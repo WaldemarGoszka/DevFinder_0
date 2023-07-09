@@ -28,7 +28,7 @@ public final class Utility {
 
     }
 
-    public static Optional<User> getUserToPage(Authentication authentication, UserService userService, Model model) {
+    public static Optional<User> putUserDataToModel(Authentication authentication, UserService userService, Model model) {
         if(authentication != null){
             Optional<User> user = userService.findByEmail(authentication.getName());
             if(user.isPresent()){

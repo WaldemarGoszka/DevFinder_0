@@ -29,8 +29,8 @@ public class OfferRepository implements OfferDAO {
     }
 
     @Override
-    public Page<Offer> findAllByState(Pageable pageable, Keys.OfferState state) {
-        return offerJpaRepository.findAllByState(pageable,state.getState()).map(offerEntityMapper::mapFromEntity);
+    public Page<Offer> findAllByState(Keys.OfferState state, Pageable pageable) {
+        return offerJpaRepository.findAllByState(state.getState(),pageable).map(offerEntityMapper::mapFromEntity);
     }
 
     @Override

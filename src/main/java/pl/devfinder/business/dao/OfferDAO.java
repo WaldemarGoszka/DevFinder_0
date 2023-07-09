@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface OfferDAO {
     List<Offer> findAllByState(Keys.OfferState state);
-    Page<Offer> findAllByState(Pageable pageable, Keys.OfferState state);
+    Page<Offer> findAllByState(Keys.OfferState state, Pageable pageable);
     Long getNumberOfOffersByEmployerAndByState(Long employerId, Keys.OfferState state);
 
     Optional<Offer> findById(Long offerId);

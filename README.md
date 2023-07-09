@@ -37,3 +37,12 @@ spring:
 To enable email validation after registration - change value in application.yaml
 devfinder-conf:
     enable-email-verification: true
+
+Działanie filtrów, paginacji i sortoania:
+OfferCriteriaRepository - przetrzymuje odczyt czyli metody sortowania, paginacji i filtrowania. Definiujemy w niej
+predykaty które są użyte przez Criteria API. Predykat są opcjonalne więc musimy sprawdzić czy nie są nullem
+OfferRepository - przetrzymuje zapis, usuwanie i aktualizacje
+OfferPage - przetrzymuje domyślne wartości paginacji i sortowania aby zbudować obiekt Pageable i Sort
+OfferSearchCriteria - przerzymuje możliwości sortowania i filtrowania po  danych polach
+
+http://localhost:8190/devfinder/candidate/offers/1?IsExperienceLevelIsJunior=true&IsExperienceLevelIsSenior=false&remoteWork=5
