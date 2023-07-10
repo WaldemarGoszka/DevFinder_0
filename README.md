@@ -38,6 +38,14 @@ To enable email validation after registration - change value in application.yaml
 devfinder-conf:
     enable-email-verification: true
 
+Select2:
+https://select2.github.io/select2-bootstrap-theme/4.0.3.html
+https://select2.org/
+https://select2.github.io/select2/
+https://github.com/select2/select2
+
+https://preview.keenthemes.com/html/craft/docs/forms/select2
+
 Działanie filtrów, paginacji i sortoania:
 OfferCriteriaRepository - przetrzymuje odczyt czyli metody sortowania, paginacji i filtrowania. Definiujemy w niej
 predykaty które są użyte przez Criteria API. Predykat są opcjonalne więc musimy sprawdzić czy nie są nullem

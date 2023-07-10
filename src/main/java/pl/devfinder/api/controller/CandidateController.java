@@ -2,6 +2,7 @@ package pl.devfinder.api.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +30,7 @@ public class CandidateController {
 
     public static final String CANDIDATE_PROFILE = "/profile";
     public static final String CANDIDATE_EDIT_PROFILE = "/edit_profile";
+    public static final String PAGE_NO_1 = "?pageNumber=1";
     public static final String OFFERS_LIST = "/offers";
     public static final String OFFER_DETAILS = "/offer/{offerId}";
     public static final String EMPLOYERS = "/employers";
@@ -82,7 +84,12 @@ public class CandidateController {
         return "candidate/employers";
     }
 
-    @GetMapping(value = OFFERS_LIST)
+//    @GetMapping(value = OFFERS_LIST)
+//    public String redirectOffersList() {
+//        return "redirect:" + OFFERS_LIST + PAGE_NO_1;
+//    }
+
+    @GetMapping(value = OFFERS_LIST)// + PAGE_NO_1)
     public String getOffersList(
 //            @PathVariable(value = "pageNumber") Integer pageNumber,
             @ModelAttribute OfferSearchCriteria offerSearchCriteria,
@@ -107,13 +114,14 @@ public class CandidateController {
         Page<OfferRowDTO> page = offerService.findAllByStatePaginated(offerPage.getPageNumber(), offerPage.getPageSize(), Keys.OfferState.OPEN).map(offerRowMapper::map);
         List<OfferRowDTO> allOffers = page.getContent();
 
-//        model.addAttribute("currentPage", pageNumber);
-//        model.addAttribute("totalPages", page.getTotalPages());
-//        model.addAttribute("totalItems", page.getTotalElements());
-//
-//        model.addAttribute("sortField", sortField);
-//        model.addAttribute("sortDir", sortDir);
-//        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+        model.addAttribute("pageNumber", offerPage.getPageNumber());
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+
+        model.addAttribute("sortBy", offerPage.getSortBy());
+        model.addAttribute("sortDirection", offerPage.getSortDirection());
+        model.addAttribute("reverseSortDirection", offerPage.getSortDirection()
+                .equals(Sort.Direction.ASC) ? Sort.Direction.DESC : Sort.Direction.ASC);
 //
 //        model.addAttribute("listEmployees", listEmployees);
 
