@@ -70,7 +70,7 @@ public class OfferService {
     }
 
     public Page<Offer> findAllByStatePaginated(Integer pageNumber, Integer pageSize, Keys.OfferState state) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
         Page<Offer> all = offerDAO.findAllByState(state, pageable);
         log.info("Offers paginated pageNumber: [{}], page size [{}], totalPages: [{}],  total elements: [{}]", pageNumber,pageSize,all.getTotalPages(), all.getTotalElements());
         return all;

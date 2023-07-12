@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org/"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+>
 
 <head>
     <title>DevFinder - Candidate - Offers</title>
@@ -149,31 +149,26 @@
                             <span th:unless="${pageNumber != i}">[[${i}]]</span>
                         </span>
 
-                        <a th:if="${pageNumber < totalPages}"
-                           th:href="@{'?pageNumber=' + ${pageNumber + 1}+ '&sortBy=' + ${sortBy} + '&sortDirection=' + ${sortDirection}}">Next</a>
-                        <span th:unless="${pageNumber < totalPages}">Next</span>
-                        <a th:if="${pageNumber < totalPages}"
-                           th:href="@{'?pageNumber=' + ${totalPages}+ '&sortBy=' + ${sortBy} + '&sortDirection=' + ${sortDirection}}">Last</a>
-                        <span th:unless="${pageNumber < totalPages}">Last</span>
+                                                <a th:if="${pageNumber < totalPages}"
+                                                   th:href="@{'?pageNumber=' + ${pageNumber + 1}+ '&sortBy=' + ${sortBy} + '&sortDirection=' + ${sortDirection}}">Next</a>
+                                                <span th:unless="${pageNumber < totalPages}">Next</span>
+                        <!--                        <a th:if="${pageNumber < totalPages}"-->
+                        <!--                           th:href="@{'?pageNumber=' + ${totalPages}+ '&sortBy=' + ${sortBy} + '&sortDirection=' + ${sortDirection}}">Last</a>-->
+                        <!--                        <span th:unless="${pageNumber < totalPages}">Last</span>-->
 
 
                         <div class="btn-toolbar" role="toolbar">
-                            <div class="btn-group me-2" role="group" aria-label="First group">
+                            <div class="btn-group me-2" role="group">
                                 <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-
-                                <button th:class="${pageNumber != i} ? 'btn btn-primary' : 'btn btn-info'" type="button"
-                                        >[[${i}]]
-                                </button>
+                                    <a th:if="${pageNumber != i}"
+                                       th:href="@{'?pageNumber=' + ${i}+ '&sortBy=' + ${sortBy} + '&sortDirection=' + ${sortDirection}}">
+                                        <button th:class="${pageNumber != i} ? 'btn btn-primary' : ''"
+                                                type="button">[[${i}]]</button></a>
+                                        <span th:if="${pageNumber == i}"><button  class="btn btn-secondary" type="button">[[${i}]]</button></span>
                                 </span>
-
-                            </div>
-                            <div class="btn-group me-2" role="group" aria-label="Second group">
-                                <button type="button" class="btn btn-secondary">5</button>
-                                <button type="button" class="btn btn-secondary">6</button>
-                                <button type="button" class="btn btn-secondary">7</button>
-                            </div>
-                            <div class="btn-group" role="group" aria-label="Third group">
-                                <button type="button" class="btn btn-info">8</button>
+                                <a th:if="${pageNumber < totalPages}"
+                                   th:href="@{'?pageNumber=' + ${pageNumber + 1}+ '&sortBy=' + ${sortBy} + '&sortDirection=' + ${sortDirection}}"><button  class="btn btn-primary" type="button">Next</button></a>
+                                <span th:if="${pageNumber < totalPages}" th:unless="${pageNumber < totalPages}">Next</span>
                             </div>
                         </div>
                         <!--                        End Page Numbers Bar-->
@@ -250,16 +245,9 @@
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 </div>
 <script>
-$(document).ready(function() {
-    $('.select2-js').select2();
-});
-
-
-
-
-
-
-
+    $(document).ready(function () {
+        $('.select2-js').select2();
+    });
 
 
 </script>
