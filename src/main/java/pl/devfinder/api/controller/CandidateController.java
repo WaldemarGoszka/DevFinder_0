@@ -7,15 +7,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import pl.devfinder.api.dto.EmployerRowDTO;
-import pl.devfinder.api.dto.OfferDetailsDTO;
-import pl.devfinder.api.dto.OfferRowDTO;
-import pl.devfinder.api.dto.mapper.EmployerRowMapper;
-import pl.devfinder.api.dto.mapper.OfferDetailsMapper;
-import pl.devfinder.api.dto.mapper.OfferRowMapper;
-import pl.devfinder.business.EmployerService;
-import pl.devfinder.business.OfferService;
-import pl.devfinder.business.UserService;
+import pl.devfinder.api.dto.*;
+import pl.devfinder.api.dto.mapper.*;
+import pl.devfinder.business.*;
 import pl.devfinder.business.management.Keys;
 import pl.devfinder.business.management.Utility;
 import pl.devfinder.domain.OfferPage;
@@ -46,6 +40,10 @@ public class CandidateController {
     private final OfferRowMapper offerRowMapper;
     private final OfferDetailsMapper offerDetailsMapper;
     private final UserService userService;
+    private final CityService cityService;
+    private final CityMapper cityMapper;
+    private final SkillService skillService;
+    private final SkillMapper skillMapper;
 
 
     @GetMapping()
@@ -101,17 +99,12 @@ public class CandidateController {
         System.out.println("START #############################");
 //        System.out.println("PAGENUMBER: " + pageNumber);
         System.out.println("Filters:");
-        System.out.println(offerSearchCriteria.getIsExperienceLevelIsJunior());
-        System.out.println(offerSearchCriteria.getIsExperienceLevelIsSenior());
         System.out.println(offerSearchCriteria.getRemoteWork());
         System.out.println("---");
-        System.out.println(offerPage.getPageNumber());
-        System.out.println(offerPage.getPageSize());
-        System.out.println(offerPage.getSortDirection());
-        System.out.println(offerPage.getSortBy());
+        System.out.println(offerSearchCriteria.getExperienceLevels());
         System.out.println("END #############################");
 
-        Page<OfferRowDTO> page = offerService.findAllByStatePaginated(offerPage.getPageNumber(), offerPage.getPageSize(), Keys.OfferState.OPEN).map(offerRowMapper::map);
+        Page<OfferRowDTO> page = offerService.findAllByStatePaginated(offerPage, offerSearchCriteria, Keys.OfferState.OPEN).map(offerRowMapper::map);
         List<OfferRowDTO> allOffers = page.getContent();
 
         model.addAttribute("pageNumber", offerPage.getPageNumber());
@@ -129,7 +122,11 @@ public class CandidateController {
 //        List<OfferRowDTO> allOffers = offerService.findAllByState(Keys.OfferState.OPEN).stream()
 //                .map(offerRowMapper::map)
 //                .toList();
+        List<SkillDTO> allSkills= skillService.findAll().stream().map(skillMapper::map).toList();
+        List<CityDTO> allCity = cityService.findAll().stream().map(cityMapper::map).toList();
         model.addAttribute("allOffersDTOs", allOffers);
+        model.addAttribute("allSkillsDTOs", allSkills);
+        model.addAttribute("allCityDTOs", allCity);
 
         return "candidate/offers";
     }

@@ -53,24 +53,24 @@ public class OfferCriteriaRepository {
     private Predicate getPredicate(OfferSearchCriteria offerSearchCriteria,
                                    Root<OfferEntity> offerRoot) {
         List<Predicate> predicates = new ArrayList<>();
-        if (Objects.nonNull(offerSearchCriteria.getIsExperienceLevelIsJunior())) {
-            predicates.add(
-                    criteriaBuilder.like(offerRoot.get("experienceLevel"),
-                            Keys.Experience.JUNIOR.getLevel())
-            );
-        }
-        if (Objects.nonNull(offerSearchCriteria.getIsExperienceLevelIsMid())) {
-            predicates.add(
-                    criteriaBuilder.like(offerRoot.get("experienceLevel"),
-                            Keys.Experience.MID.getLevel())
-            );
-        }
-        if (Objects.nonNull(offerSearchCriteria.getIsExperienceLevelIsSenior())) {
-            predicates.add(
-                    criteriaBuilder.like(offerRoot.get("experienceLevel"),
-                            Keys.Experience.SENIOR.getLevel())
-            );
-        }
+//        if (Objects.nonNull(offerSearchCriteria.getIsExperienceLevelIsJunior())) {
+//            predicates.add(
+//                    criteriaBuilder.like(offerRoot.get("experienceLevel"),
+//                            Keys.Experience.JUNIOR.getLevel())
+//            );
+//        }
+//        if (Objects.nonNull(offerSearchCriteria.getIsExperienceLevelIsMid())) {
+//            predicates.add(
+//                    criteriaBuilder.like(offerRoot.get("experienceLevel"),
+//                            Keys.Experience.MID.getLevel())
+//            );
+//        }
+//        if (Objects.nonNull(offerSearchCriteria.getIsExperienceLevelIsSenior())) {
+//            predicates.add(
+//                    criteriaBuilder.like(offerRoot.get("experienceLevel"),
+//                            Keys.Experience.SENIOR.getLevel())
+//            );
+//        }
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }

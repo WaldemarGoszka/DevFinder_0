@@ -7,24 +7,21 @@ import lombok.With;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Builder
 @Data
 @With
 public class OfferSearchCriteria {
+    List<String> experienceLevels;
 
     Integer remoteWork;
-    Boolean IsExperienceLevelIsJunior;
-    Boolean IsExperienceLevelIsMid;
-    Boolean IsExperienceLevelIsSenior;
-    Integer yearsOfExperience;
+//    Integer yearsOfExperience;
     BigDecimal salaryMin;
-    BigDecimal salaryMax;
-    OffsetDateTime createdAt;
+//    BigDecimal salaryMax;
     String status;
-    Employer employerId;
-    City cityId;
-    Set<OfferSkills> offerSkills;
+    String city;
+    Set<String> skills;
 
 }

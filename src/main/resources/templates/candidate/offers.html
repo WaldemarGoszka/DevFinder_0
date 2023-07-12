@@ -6,6 +6,7 @@
     <title>DevFinder - Candidate - Offers</title>
     <link href="../img/favicon.ico" rel="icon">
     <div th:replace="~{fragments :: head_style_}"></div>
+
 </head>
 
 <body>
@@ -35,6 +36,11 @@
                     <div class="bg-secondary rounded h-100 p-4">
                         <div class="accordion" id="accordionExample">
                             <div class="accordion-item bg-transparent">
+                                                                <form
+                                                                        action="#"
+                                                                        method="GET"
+                                                                        th:object="${offerSearchCriteria}"
+                                                                >
                                 <h2 class="accordion-header" id="headingTwo">
                                     <button class="accordion-button collapsed" type="button"
                                             data-bs-toggle="collapse" data-bs-target="#collapseTwo"
@@ -48,40 +54,48 @@
                                         <div class="mb-4">
                                             <h6 class="mb-3">Experience Level</h6>
                                             <div class="btn-group mb3" role="group">
-                                                <input type="checkbox" class="btn-check" id="expJunior"
-                                                       autocomplete="on">
+                                                <input type="checkbox" class="btn-check" id="expJunior" th:value="JUNIOR"
+                                                       th:name="experienceLevels" autocomplete="on">
                                                 <label class="btn btn-outline-light" for="expJunior">Junior</label>
-                                                <input type="checkbox" class="btn-check" id="expMid"
+                                                <input type="checkbox" class="btn-check" id="expMid" th:value="MID"
+                                                       th:name="experienceLevels"
                                                        autocomplete="on">
                                                 <label class="btn btn-outline-light" for="expMid">Mid</label>
-                                                <input type="checkbox" class="btn-check" id="expSenior"
+                                                <input type="checkbox" class="btn-check" id="expSenior" th:value="SENIOR"
+                                                       th:name="experienceLevels"
                                                        autocomplete="on">
                                                 <label class="btn btn-outline-light" for="expSenior">Senior</label>
                                             </div>
                                         </div>
                                         <div class="mb-4">
-
-                                            <!--                                            <select id="mySelect2" th:field="*{myField}" class="select2">-->
-                                            <!--                                                <option th:each="option : ${options}" th:value="${option.value}" th:text="${option.label}"></option>-->
-                                            <!--                                            </select>-->
-
-
                                             <h6 class="mb-3">Tech Stack (you can choose many)</h6>
-                                            <select class="select2-js" id="select2-js" name="states[]"
-                                                    multiple="multiple">
-                                                <!--                                                <option selected>Open this select menu</option>-->
-                                                <option value="1">One</option>
-                                                <option value="2">Two</option>
-                                                <option value="3">Three</option>
-                                            </select>
+                                            <div class="m-n2">
+                                                <span th:each="skill : ${allSkillsDTOs}">
+                                                    <input type="checkbox"
+                                                           th:value="${skill.skillName}"
+                                                           th:id="${skill.skillId}"
+                                                           th:name="skills"
+                                                           th:checked="${offerSearchCriteria.skills.contains(skill.skillName)}"
+                                                           class="btn-check"
+                                                           autocomplete="on">
+                                                    <label type="checkbox"
+                                                           class="btn btn-outline-light m-2"
+                                                           th:for="${skill.skillId}"
+                                                           th:text="${skill.skillName}"
+                                                    ></label>
+                                                </span>
+                                            </div>
                                         </div>
                                         <div class="mb-4">
-                                            <h6 class="mb-3">City (you can choose many)</h6>
-                                            <select class="form-select mb-3" aria-label="selectCity">
-                                                <!--                                                <option selected>Open this select menu</option>-->
-                                                <option value="1">One</option>
-                                                <option value="2">Two</option>
-                                                <option value="3">Three</option>
+                                            <h6 class="mb-3">City</h6>
+                                            <select class="form-select select2 mb-3" aria-label="selectCity">
+                                                <option selected>Select a City</option>
+                                                <option th:each="city : ${allCityDTOs}"
+                                                        th:value="${city.cityName}"
+                                                        th:text="${city.cityName}">
+                                                    th:name="city"
+
+                                                </option>
                                             </select>
                                         </div>
                                         <div class="mb-4">
@@ -120,17 +134,13 @@
                                                        placeholder="0">
                                                 <label for="minAmount">Min amount</label>
                                             </div>
-                                            <div class="form-floating mb-3">
-                                                <input type="number" class="form-control" id="maxAmount"
-                                                       placeholder="100000">
-                                                <label for="maxAmount">Max amount: </label>
-                                            </div>
                                         </div>
                                         <div class="m-n2 mt-4">
-                                            <button class="btn btn-info w-100 m-2" type="button">Search</button>
+                                            <button class="btn btn-info w-100 m-2" type="submit">Search</button>
                                         </div>
                                     </div>
                                 </div>
+                                                                </form>
                             </div>
                         </div>
                     </div>
@@ -139,63 +149,77 @@
                 <!--            table-->
                 <div class="col-sm-12 col-xl-12">
                     <div class="bg-secondary rounded h-100 p-4">
-                        <h6 class="mb-4">Actual Offers</h6>
+                        <h6 class="mb-4">Current job offers (total [[${totalItems}]])</h6>
                         <!--                        Start Page Numbers Bar-->
-                        <span th:if="${totalPages > 1}"> Total offers: [[${totalItems}]]</span>
+                        <!--                        <span th:if="${totalPages > 1}"> Total offers: [[${totalItems}]]</span>-->
 
-                        <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-                                    <a th:if="${pageNumber != i}"
-                                       th:href="@{'?pageNumber=' + ${i}+ '&sortBy=' + ${sortBy} + '&sortDirection=' + ${sortDirection}}">[[${i}]]</a>
-                            <span th:unless="${pageNumber != i}">[[${i}]]</span>
-                        </span>
+                        <!--                        <span th:each="i: ${#numbers.sequence(1, totalPages)}">-->
+                        <!--                                    <a th:if="${pageNumber != i}"-->
+                        <!--                                       th:href="@{'?pageNumber=' + ${i}+ '&sortBy=' + ${sortBy} + '&sortDirection=' + ${sortDirection}}">[[${i}]]</a>-->
+                        <!--                            <span th:unless="${pageNumber != i}">[[${i}]]</span>-->
+                        <!--                        </span>-->
 
-                                                <a th:if="${pageNumber < totalPages}"
-                                                   th:href="@{'?pageNumber=' + ${pageNumber + 1}+ '&sortBy=' + ${sortBy} + '&sortDirection=' + ${sortDirection}}">Next</a>
-                                                <span th:unless="${pageNumber < totalPages}">Next</span>
+                        <!--                                                <a th:if="${pageNumber < totalPages}"-->
+                        <!--                                                   th:href="@{'?pageNumber=' + ${pageNumber + 1}+ '&sortBy=' + ${sortBy} + '&sortDirection=' + ${sortDirection}}">Next</a>-->
+                        <!--                                                <span th:unless="${pageNumber < totalPages}">Next</span>-->
                         <!--                        <a th:if="${pageNumber < totalPages}"-->
                         <!--                           th:href="@{'?pageNumber=' + ${totalPages}+ '&sortBy=' + ${sortBy} + '&sortDirection=' + ${sortDirection}}">Last</a>-->
                         <!--                        <span th:unless="${pageNumber < totalPages}">Last</span>-->
 
 
-                        <div class="btn-toolbar" role="toolbar">
-                            <div class="btn-group me-2" role="group">
+                        <div class="btn-toolbar justify-content-between" role="toolbar">
+                            <a th:if="${pageNumber != 1}"
+                               th:href="@{'?pageNumber=' + ${pageNumber - 1}+ '&sortBy=' + ${sortBy} + '&sortDirection=' + ${sortDirection}}">
+                                <button class="btn btn-outline-primary ml-3" type="button">Previous</button>
+                            </a>
+                            <button th:unless="${pageNumber != 1}" class="btn btn-outline-link ml-3" type="button">
+                                Previous
+                            </button>
+                            <div class="btn-group me-2 " role="group">
                                 <span th:each="i: ${#numbers.sequence(1, totalPages)}">
                                     <a th:if="${pageNumber != i}"
                                        th:href="@{'?pageNumber=' + ${i}+ '&sortBy=' + ${sortBy} + '&sortDirection=' + ${sortDirection}}">
-                                        <button th:class="${pageNumber != i} ? 'btn btn-primary' : ''"
+                                        <button th:class="${pageNumber != i} ? 'btn btn-secondary' : ''"
                                                 type="button">[[${i}]]</button></a>
-                                        <span th:if="${pageNumber == i}"><button  class="btn btn-secondary" type="button">[[${i}]]</button></span>
+                                        <span th:if="${pageNumber == i}"><button class="btn btn-primary" type="button">[[${i}]]</button></span>
                                 </span>
-                                <a th:if="${pageNumber < totalPages}"
-                                   th:href="@{'?pageNumber=' + ${pageNumber + 1}+ '&sortBy=' + ${sortBy} + '&sortDirection=' + ${sortDirection}}"><button  class="btn btn-primary" type="button">Next</button></a>
-                                <span th:if="${pageNumber < totalPages}" th:unless="${pageNumber < totalPages}">Next</span>
                             </div>
+                            <a th:if="${pageNumber < totalPages}"
+                               th:href="@{'?pageNumber=' + ${pageNumber + 1}+ '&sortBy=' + ${sortBy} + '&sortDirection=' + ${sortDirection}}">
+                                <button class="btn btn-outline-primary ml-3" type="button">Next</button>
+                            </a>
+                            <button th:unless="${pageNumber < totalPages}" class="btn btn-outline-link ml-3"
+                                    type="button">Next
+                            </button>
                         </div>
                         <!--                        End Page Numbers Bar-->
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
                                 <tr>
-                                    <th th:href="@{'?pageNumber=' + ${pageNumber} + '&sortBy=firstName&sortDirection=' + ${reverseSortDirection}}"
-                                        scope="col">Title
+                                    <th scope="col"><a
+                                            th:href="@{'?pageNumber=' + ${pageNumber} + '&sortBy=title&sortDirection=' + ${reverseSortDirection}}">Title</a>
                                     </th>
-                                    <th th:href="@{'?pageNumber=' + ${pageNumber} + '&sortBy=firstName&sortDirection=' + ${reverseSortDirection}}"
-                                        scope="col">Experience Level
+                                    <th scope="col"><a
+                                            th:href="@{'?pageNumber=' + ${pageNumber} + '&sortBy=experienceLevel&sortDirection=' + ${reverseSortDirection}}">Exp.
+                                        Level</a>
                                     </th>
                                     <th scope="col">Tech Stack</th>
-                                    <th th:href="@{'?pageNumber=' + ${pageNumber} + '&sortBy=firstName&sortDirection=' + ${reverseSortDirection}}"
-                                        scope="col">Employer
+                                    <th scope="col"><a
+                                            th:href="@{'?pageNumber=' + ${pageNumber} + '&sortBy=employerId.companyName&sortDirection=' + ${reverseSortDirection}}">Employer</a>
                                     </th>
-                                    <th th:href="@{'?pageNumber=' + ${pageNumber} + '&sortBy=firstName&sortDirection=' + ${reverseSortDirection}}"
-                                        scope="col">City
+                                    <th scope="col"><a
+                                            th:href="@{'?pageNumber=' + ${pageNumber} + '&sortBy=cityId.cityName&sortDirection=' + ${reverseSortDirection}}">City</a>
                                     </th>
-                                    <th scope="col">Remote Work
+                                    <th scope="col"><a
+                                            th:href="@{'?pageNumber=' + ${pageNumber} + '&sortBy=remoteWork&sortDirection=' + ${reverseSortDirection}}">Remote</a>
                                     </th>
-                                    <th th:href="@{'?pageNumber=' + ${pageNumber} + '&sortBy=firstName&sortDirection=' + ${reverseSortDirection}}"
-                                        scope="col">Salary
+                                    <th scope="col"><a
+                                            th:href="@{'?pageNumber=' + ${pageNumber} + '&sortBy=salaryMin&sortDirection=' + ${reverseSortDirection}}">Salary</a>
                                     </th>
-                                    <th th:href="@{'?pageNumber=' + ${pageNumber} + '&sortBy=firstName&sortDirection=' + ${reverseSortDirection}}"
-                                        scope="col">Days Since Created
+                                    <th scope="col"><a
+                                            th:href="@{'?pageNumber=' + ${pageNumber} + '&sortBy=createdAt&sortDirection=' + ${reverseSortDirection}}">Days
+                                        Since Created</a>
                                     </th>
                                     <th></th>
                                 </tr>
@@ -244,13 +268,6 @@
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 </div>
-<script>
-    $(document).ready(function () {
-        $('.select2-js').select2();
-    });
-
-
-</script>
 <div th:replace="~{fragments :: js_}"></div>
 </body>
 

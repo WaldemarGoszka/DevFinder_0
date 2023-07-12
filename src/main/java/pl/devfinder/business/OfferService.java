@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.devfinder.api.dto.OfferDetailsDTO;
@@ -66,13 +67,18 @@ public class OfferService {
 
     public Offer findById(Long offerId) {
         log.info("Trying find offerById, id: [{}]", offerId);
-        return offerDAO.findById(offerId).orElseThrow(() -> new NotFoundException("Could not find user by userName: [%s]".formatted(offerId)));
+        return offerDAO.findById(offerId).orElseThrow(() -> new NotFoundException(
+                "Could not find user by userName: [%s]".formatted(offerId)));
     }
 
-    public Page<Offer> findAllByStatePaginated(Integer pageNumber, Integer pageSize, Keys.OfferState state) {
-        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+    public Page<Offer> findAllByStatePaginated(OfferPage offerPage,
+                                               OfferSearchCriteria offerSearchCriteria,
+                                               Keys.OfferState state) {
+        Sort sort = Sort.by(offerPage.getSortDirection(),offerPage.getSortBy());
+        Pageable pageable = PageRequest.of(offerPage.getPageNumber()-1, offerPage.getPageSize(),sort);
         Page<Offer> all = offerDAO.findAllByState(state, pageable);
-        log.info("Offers paginated pageNumber: [{}], page size [{}], totalPages: [{}],  total elements: [{}]", pageNumber,pageSize,all.getTotalPages(), all.getTotalElements());
+        log.info("Offers paginated pageNumber: [{}], page size [{}], totalPages: [{}],  total elements: [{}]",
+                offerPage.getPageNumber(),offerPage.getPageSize(),all.getTotalPages(), all.getTotalElements());
         return all;
     }
 }

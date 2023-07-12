@@ -7,13 +7,6 @@ import org.springframework.data.domain.Sort;
 public class OfferPage {
     Integer pageNumber = 1;
     Integer pageSize = 3;
-    Sort.Direction sortDirection = Sort.Direction.ASC;
-    String sortBy = "title";
-
-//    public OfferPage() {
-//        this.pageNumber = 1;
-//        this.pageSize = 10;
-//        this.sortDirection = Sort.Direction.ASC;
-//        this.sortBy = "title";
-//    }
+    Sort.Direction sortDirection = Sort.Direction.DESC;
+    String sortBy = "createdAt";
 }
