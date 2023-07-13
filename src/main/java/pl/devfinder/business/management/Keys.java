@@ -53,18 +53,18 @@ public interface Keys {
     }
 
     enum Experience {
-        JUNIOR("Junior"),
-        MID("Mid"),
-        SENIOR("Senior");
+        JUNIOR("JUNIOR"),
+        MID("MID"),
+        SENIOR("SENIOR");
 
-        private final String level;
+        private final String name;
 
-        Experience(String level) {
-            this.level = level;
+        Experience(String name) {
+            this.name = name;
         }
 
-        public String getLevel() {
-            return level;
+        public String getName() {
+            return name;
         }
     }
     enum Role {
@@ -89,6 +89,35 @@ public interface Keys {
         private final String name;
 
         TokenStatus(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+    enum RemoteWork {
+        OFFICE("OFFICE"),
+        PARTLY("PARTLY"),
+        FULL("FULL");
+
+        private final String name;
+
+        RemoteWork(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+    enum Salary {
+        WITH("WITH"),
+        UNDISCLOSED("UNDISCLOSED");
+
+        private final String name;
+
+        Salary(String name) {
             this.name = name;
         }
 

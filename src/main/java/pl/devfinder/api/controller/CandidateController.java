@@ -15,7 +15,6 @@ import pl.devfinder.business.management.Utility;
 import pl.devfinder.domain.OfferPage;
 import pl.devfinder.domain.OfferSearchCriteria;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -92,34 +91,52 @@ public class CandidateController {
     public String getOffersList(
 //            @PathVariable(value = "pageNumber") Integer pageNumber,
             @ModelAttribute OfferSearchCriteria offerSearchCriteria,
-            @ModelAttribute OfferPage offerPage,
+//            @ModelAttribute OfferPage offerPage,
             Model model,
             Authentication authentication) {
         Utility.putUserDataToModel(authentication, userService, model);
-//offerSearchCriteria.setExperienceLevels(new ArrayList<>(List.of("JUNIOR")));
 
         System.out.println("START #############################");
 //        System.out.println("PAGENUMBER: " + pageNumber);
         System.out.println("Filters:");
-        System.out.println(offerSearchCriteria.getRemoteWork());
+//        System.out.println(offerPage.getPageNumber());
         System.out.println("---");
         System.out.println(offerSearchCriteria.getExperienceLevels());
         System.out.println(offerSearchCriteria.getSkills());
+        System.out.println(offerSearchCriteria.getCity());
+        System.out.println(offerSearchCriteria.getRemoteWork());
+        System.out.println(offerSearchCriteria.getSalary());
+        System.out.println(offerSearchCriteria.getSalaryMin());
         System.out.println("END #############################");
 
-        Page<OfferRowDTO> page = offerService.findAllByStatePaginated(offerPage, offerSearchCriteria, Keys.OfferState.OPEN).map(offerRowMapper::map);
+        Page<OfferRowDTO> page = offerService.findAllByStatePaginated(offerSearchCriteria, Keys.OfferState.OPEN).map(offerRowMapper::map);
         List<OfferRowDTO> allOffers = page.getContent();
-
-        model.addAttribute("pageNumber", offerPage.getPageNumber());
+//ToolBar
+//        model.addAttribute("pageNumber", offerPage.getPageNumber());
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
+
+//Check selected filters
         model.addAttribute("experienceLevelChecked", offerSearchCriteria.getExperienceLevels());
         model.addAttribute("skillChecked", offerSearchCriteria.getSkills());
         model.addAttribute("cityChecked", offerSearchCriteria.getCity());
+        model.addAttribute("remoteChecked", offerSearchCriteria.getRemoteWork());
+        model.addAttribute("salaryChecked", offerSearchCriteria.getSalary());
+//Enums for filters
+        model.addAttribute("remoteEnumFull", Keys.RemoteWork.FULL.getName());
+        model.addAttribute("remoteEnumOffice", Keys.RemoteWork.OFFICE.getName());
+        model.addAttribute("remoteEnumPartly", Keys.RemoteWork.PARTLY.getName());
+        model.addAttribute("expLevelEnumJunior", Keys.Experience.JUNIOR.getName());
+        model.addAttribute("expLevelEnumMid", Keys.Experience.MID.getName());
+        model.addAttribute("expLevelEnumSenior", Keys.Experience.SENIOR.getName());
+        model.addAttribute("salaryEnumWith", Keys.Salary.WITH.getName());
+        model.addAttribute("salaryEnumUndisclosed", Keys.Salary.UNDISCLOSED.getName());
 
-        model.addAttribute("sortBy", offerPage.getSortBy());
-        model.addAttribute("sortDirection", offerPage.getSortDirection());
-        model.addAttribute("reverseSortDirection", offerPage.getSortDirection()
+
+//Sorting
+        model.addAttribute("sortBy", offerSearchCriteria.getSortBy());
+        model.addAttribute("sortDirection", offerSearchCriteria.getSortDirection());
+        model.addAttribute("reverseSortDirection", offerSearchCriteria.getSortDirection()
                 .equals(Sort.Direction.ASC) ? Sort.Direction.DESC : Sort.Direction.ASC);
 //
 //        model.addAttribute("listEmployees", listEmployees);

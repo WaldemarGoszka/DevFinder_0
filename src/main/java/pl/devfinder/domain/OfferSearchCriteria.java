@@ -1,6 +1,7 @@
 package pl.devfinder.domain;
 
 import lombok.Data;
+import org.springframework.data.domain.Sort;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -11,13 +12,19 @@ import java.util.Set;
 @Data
 public class OfferSearchCriteria {
     List<String> experienceLevels = new ArrayList<>();
-    Integer remoteWork;
-    //    Integer yearsOfExperience;
+    List<String> remoteWork = new ArrayList<>();
     BigDecimal salaryMin;
-    //    BigDecimal salaryMax;
+    List<String> salary = new ArrayList<>();
     String status;
     String city;
     Set<String> skills = new HashSet<>();
+
+    Integer pageNumber = 1;
+    Integer pageSize = 3;
+    Sort.Direction sortDirection = Sort.Direction.DESC;
+    String sortBy = "createdAt";
+
+
 
 //    public OfferSearchCriteria(List<String> experienceLevels, Integer remoteWork, BigDecimal salaryMin, String status, String city, Set<String> skills) {
 //        this.experienceLevels = new ArrayList<>();

@@ -33,7 +33,7 @@ public class OfferService {
 
 
     public Page<OfferEntity> getOffersFiltering(OfferPage offerPage,
-                                          OfferSearchCriteria offerSearchCriteria){
+                                                OfferSearchCriteria offerSearchCriteria) {
         return offerCriteriaRepository.findAllWithFilters(offerPage, offerSearchCriteria);
     }
 
@@ -71,14 +71,14 @@ public class OfferService {
                 "Could not find user by userName: [%s]".formatted(offerId)));
     }
 
-    public Page<Offer> findAllByStatePaginated(OfferPage offerPage,
-                                               OfferSearchCriteria offerSearchCriteria,
-                                               Keys.OfferState state) {
-        Sort sort = Sort.by(offerPage.getSortDirection(),offerPage.getSortBy());
-        Pageable pageable = PageRequest.of(offerPage.getPageNumber()-1, offerPage.getPageSize(),sort);
+    public Page<Offer> findAllByStatePaginated(
+            OfferSearchCriteria offerSearchCriteria,
+            Keys.OfferState state) {
+        Sort sort = Sort.by(offerSearchCriteria.getSortDirection(), offerSearchCriteria.getSortBy());
+        Pageable pageable = PageRequest.of(offerSearchCriteria.getPageNumber() - 1, offerSearchCriteria.getPageSize(), sort);
         Page<Offer> all = offerDAO.findAllByState(state, pageable);
         log.info("Offers paginated pageNumber: [{}], page size [{}], totalPages: [{}],  total elements: [{}]",
-                offerPage.getPageNumber(),offerPage.getPageSize(),all.getTotalPages(), all.getTotalElements());
+                offerSearchCriteria.getPageNumber(), offerSearchCriteria.getPageSize(), all.getTotalPages(), all.getTotalElements());
         return all;
     }
 }
