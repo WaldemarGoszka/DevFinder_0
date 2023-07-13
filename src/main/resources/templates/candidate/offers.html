@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org/"
->
+      xmlns="http://www.w3.org/1999/html">
 
 <head>
     <title>DevFinder - Candidate - Offers</title>
@@ -54,15 +54,22 @@
                                         <div class="mb-4">
                                             <h6 class="mb-3">Experience Level</h6>
                                             <div class="btn-group mb3" role="group">
-                                                <input type="checkbox" class="btn-check" id="expJunior" th:value="JUNIOR"
-                                                       th:name="experienceLevels" autocomplete="on">
-                                                <label class="btn btn-outline-light" for="expJunior">Junior</label>
-                                                <input type="checkbox" class="btn-check" id="expMid" th:value="MID"
+                                                <input type="checkbox" class="btn-check" id="expJunior"
+                                                       th:value="JUNIOR"
                                                        th:name="experienceLevels"
+                                                       th:checked="${experienceLevelChecked.contains('JUNIOR')} ? 'checked'"
+                                                       autocomplete="on">
+                                                <label class="btn btn-outline-light" for="expJunior">Junior</label>
+                                                <input type="checkbox" class="btn-check" id="expMid"
+                                                       th:value="MID"
+                                                       th:name="experienceLevels"
+                                                       th:checked="${experienceLevelChecked.contains('MID')} ? 'checked'"
                                                        autocomplete="on">
                                                 <label class="btn btn-outline-light" for="expMid">Mid</label>
-                                                <input type="checkbox" class="btn-check" id="expSenior" th:value="SENIOR"
+                                                <input type="checkbox" class="btn-check" id="expSenior"
+                                                       th:value="SENIOR"
                                                        th:name="experienceLevels"
+                                                       th:checked="${experienceLevelChecked.contains('SENIOR')} ? 'checked'"
                                                        autocomplete="on">
                                                 <label class="btn btn-outline-light" for="expSenior">Senior</label>
                                             </div>
@@ -75,7 +82,7 @@
                                                            th:value="${skill.skillName}"
                                                            th:id="${skill.skillId}"
                                                            th:name="skills"
-                                                           th:checked="${offerSearchCriteria.skills.contains(skill.skillName)}"
+                                                           th:checked="${skillChecked.contains(skill.skillName)} ? 'checked'"
                                                            class="btn-check"
                                                            autocomplete="on">
                                                     <label type="checkbox"
@@ -89,7 +96,7 @@
                                         <div class="mb-4">
                                             <h6 class="mb-3">City</h6>
                                             <select class="form-select select2 mb-3" aria-label="selectCity">
-                                                <option selected>Select a City</option>
+                                                <option selected th:if="${cityChecked == null}">Select a City</option>
                                                 <option th:each="city : ${allCityDTOs}"
                                                         th:value="${city.cityName}"
                                                         th:text="${city.cityName}">

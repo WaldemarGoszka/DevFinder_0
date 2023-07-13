@@ -15,6 +15,7 @@ import pl.devfinder.business.management.Utility;
 import pl.devfinder.domain.OfferPage;
 import pl.devfinder.domain.OfferSearchCriteria;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -87,7 +88,7 @@ public class CandidateController {
 //        return "redirect:" + OFFERS_LIST + PAGE_NO_1;
 //    }
 
-    @GetMapping(value = OFFERS_LIST)// + PAGE_NO_1)
+    @GetMapping(value = OFFERS_LIST)
     public String getOffersList(
 //            @PathVariable(value = "pageNumber") Integer pageNumber,
             @ModelAttribute OfferSearchCriteria offerSearchCriteria,
@@ -95,6 +96,7 @@ public class CandidateController {
             Model model,
             Authentication authentication) {
         Utility.putUserDataToModel(authentication, userService, model);
+//offerSearchCriteria.setExperienceLevels(new ArrayList<>(List.of("JUNIOR")));
 
         System.out.println("START #############################");
 //        System.out.println("PAGENUMBER: " + pageNumber);
@@ -102,6 +104,7 @@ public class CandidateController {
         System.out.println(offerSearchCriteria.getRemoteWork());
         System.out.println("---");
         System.out.println(offerSearchCriteria.getExperienceLevels());
+        System.out.println(offerSearchCriteria.getSkills());
         System.out.println("END #############################");
 
         Page<OfferRowDTO> page = offerService.findAllByStatePaginated(offerPage, offerSearchCriteria, Keys.OfferState.OPEN).map(offerRowMapper::map);
@@ -110,6 +113,9 @@ public class CandidateController {
         model.addAttribute("pageNumber", offerPage.getPageNumber());
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("experienceLevelChecked", offerSearchCriteria.getExperienceLevels());
+        model.addAttribute("skillChecked", offerSearchCriteria.getSkills());
+        model.addAttribute("cityChecked", offerSearchCriteria.getCity());
 
         model.addAttribute("sortBy", offerPage.getSortBy());
         model.addAttribute("sortDirection", offerPage.getSortDirection());
