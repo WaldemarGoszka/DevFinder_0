@@ -53,6 +53,23 @@
                                          aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
                                             <div class="mb-4">
+                                                <h6 class="mb-3">Offer State</h6>
+                                                <div class="btn-group mb3" role="group">
+                                                    <input type="checkbox" class="btn-check" id="statusActive"
+                                                           th:value="${statusEnumActive}"
+                                                           th:name="status"
+                                                           th:checked="${statusChecked.contains(statusEnumActive)}"
+                                                           autocomplete="on">
+                                                    <label class="btn btn-outline-light" for="statusActive">[[${statusEnumActive}]]</label>
+                                                    <input type="checkbox" class="btn-check" id="statusExpired"
+                                                           th:value="${statusEnumExpired}"
+                                                           th:name="status"
+                                                           th:checked="${statusChecked.contains(statusEnumExpired)}"
+                                                           autocomplete="on">
+                                                    <label class="btn btn-outline-light" for="statusExpired">[[${statusEnumExpired}]]</label>
+                                                </div>
+                                            </div>
+                                            <div class="mb-4">
                                                 <h6 class="mb-3">Experience Level</h6>
                                                 <div class="btn-group mb3" role="group">
                                                     <input type="checkbox" class="btn-check" id="expJunior"
@@ -97,7 +114,7 @@
                                             <div class="mb-4">
                                                 <h6 class="mb-3">City</h6>
                                                 <select th:field="*{city}" class="form-select select2 mb-3">
-                                                    <option selected
+                                                    <option th:selected="${cityChecked == null}"
                                                             th:value="${null}"
                                                     >All City's
                                                     </option>
@@ -105,6 +122,21 @@
                                                             th:value="${city.cityName}"
                                                             th:text="${city.cityName}"
                                                             th:selected="${cityChecked == city}"
+                                                    >
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-4">
+                                                <h6 class="mb-3">Employer</h6>
+                                                <select th:field="*{employer}" class="form-select select2 mb-3">
+                                                    <option selected
+                                                            th:value="${null}"
+                                                    >All Employers
+                                                    </option>
+                                                    <option th:each="employer : ${allEmployerDTOs}"
+                                                            th:value="${employer.companyName}"
+                                                            th:text="${employer.companyName}"
+                                                            th:selected="${employerChecked == employer}"
                                                     >
                                                     </option>
                                                 </select>
@@ -158,14 +190,16 @@
                                                 <div class="form-floating mb-3">
                                                     <input type="number" class="form-control" id="minAmount"
                                                            th:field="*{salaryMin}"
-
                                                            placeholder="0">
                                                     <label for="minAmount">Min amount</label>
                                                 </div>
                                             </div>
                                             <div class="d-flex justify-content-between gap-4">
-                                                <button class="btn btn-info w-50 m-2" type="submit">Search</button>
-                                                <a th:href="@{'?pageNumber=1' + '&sortBy=' + ${sortBy} + '&sortDirection=' + ${sortDirection}}"
+                                                <button class="btn btn-info w-50 m-2"
+                                                        th:onclick="'setPageNumber(' + 1 + ')'"
+                                                        type="submit">Search
+                                                </button>
+                                                <a th:href="@{/candidate/offers}"
                                                    class="btn btn-block btn-info w-50 m-2" type="button">Reset
                                                     Filters</a>
                                             </div>
@@ -218,20 +252,64 @@
                                     <input type="hidden" name="sortDirection"
                                            th:value="${offerSearchCriteria.sortDirection}"/>
                                     <tr>
-                                        <th scope="col"><a href="#" onclick="setSortParams('title')">Title</a>
+                                        <th scope="col"><a href="#" onclick="setSortParams('title')">
+                                            <div><i
+                                                    th:if="${sortBy == 'title'}"
+                                                    th:class="${offerSearchCriteria.sortDirection.name() == 'ASC'}
+                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"></i>
+                                            </div>
+                                            Title</a>
+
                                         </th>
-                                        <th scope="col"><a href="#" onclick="setSortParams('experienceLevel')">Exp. Level</a>
+                                        <th scope="col"><a href="#" onclick="setSortParams('experienceLevel')">
+                                            <div><i
+                                                    th:if="${sortBy == 'experienceLevel'}"
+                                                    th:class="${offerSearchCriteria.sortDirection.name() == 'ASC'}
+                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"></i>
+                                            </div>
+                                            Exp.
+                                            Level</a>
                                         </th>
                                         <th scope="col">Tech Stack</th>
-                                        <th scope="col"><a href="#" onclick="setSortParams('employerId.companyName')">Employer</a>
+                                        <th scope="col"><a href="#" onclick="setSortParams('employerId.companyName')">
+                                            <div><i
+                                                    th:if="${sortBy == 'employerId.companyName'}"
+                                                    th:class="${offerSearchCriteria.sortDirection.name() == 'ASC'}
+                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"></i>
+                                            </div>
+                                            Employer</a>
                                         </th>
-                                        <th scope="col"><a href="#" onclick="setSortParams('cityId.cityName')">City</a>
+                                        <th scope="col"><a href="#" onclick="setSortParams('cityId.cityName')">
+                                            <div><i
+                                                    th:if="${sortBy == 'cityId.cityName'}"
+                                                    th:class="${offerSearchCriteria.sortDirection.name() == 'ASC'}
+                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"></i>
+                                            </div>
+                                            City</a>
                                         </th>
-                                        <th scope="col"><a href="#" onclick="setSortParams('remoteWork')">Remote</a>
+                                        <th scope="col"><a href="#" onclick="setSortParams('remoteWork')">
+                                            <div><i
+                                                    th:if="${sortBy == 'remoteWork'}"
+                                                    th:class="${offerSearchCriteria.sortDirection.name() == 'ASC'}
+                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"></i>
+                                            </div>
+                                            Remote</a>
                                         </th>
-                                        <th scope="col"><a href="#" onclick="setSortParams('salaryMin')">Salary</a>
+                                        <th scope="col"><a href="#" onclick="setSortParams('salaryMin')">
+                                            <div><i
+                                                    th:if="${sortBy == 'salaryMin'}"
+                                                    th:class="${offerSearchCriteria.sortDirection.name() == 'ASC'}
+                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"></i>
+                                            </div>
+                                            Salary</a>
                                         </th>
-                                        <th scope="col"><a href="#" onclick="setSortParams('createdAt')">Days Since Created</a>
+                                        <th scope="col"><a href="#" onclick="setSortParams('createdAt')">
+                                            <div><i
+                                                    th:if="${sortBy == 'createdAt'}"
+                                                    th:class="${offerSearchCriteria.sortDirection.name() == 'ASC'}
+                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"></i>
+                                            </div>
+                                            Days Since Created</a>
                                         </th>
                                         <th></th>
                                     </tr>
@@ -309,6 +387,12 @@
 
         document.querySelector('form').submit();
     }
+
+
+
+
+
+
 </script>
 </body>
 

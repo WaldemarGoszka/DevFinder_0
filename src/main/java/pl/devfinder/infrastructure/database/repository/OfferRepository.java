@@ -23,19 +23,19 @@ public class OfferRepository implements OfferDAO {
 
     @Override
     public List<Offer> findAllByState(Keys.OfferState state) {
-        return offerJpaRepository.findAllByState(state.getState()).stream()
+        return offerJpaRepository.findAllByState(state.getName()).stream()
                 .map(offerEntityMapper::mapFromEntity)
                 .toList();
     }
 
     @Override
     public Page<Offer> findAllByState(Keys.OfferState state, Pageable pageable) {
-        return offerJpaRepository.findAllByState(state.getState(),pageable).map(offerEntityMapper::mapFromEntity);
+        return offerJpaRepository.findAllByState(state.getName(),pageable).map(offerEntityMapper::mapFromEntity);
     }
 
     @Override
     public Long getNumberOfOffersByEmployerAndByState(Long employerId, Keys.OfferState offerState) {
-        return offerJpaRepository.getNumberOfOffersByEmployerAndByState(employerId, offerState.getState());
+        return offerJpaRepository.getNumberOfOffersByEmployerAndByState(employerId, offerState.getName());
     }
 
     @Override

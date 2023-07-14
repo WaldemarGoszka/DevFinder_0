@@ -10,10 +10,11 @@ import jakarta.persistence.criteria.Root;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Repository;
 import pl.devfinder.business.management.Keys;
-import pl.devfinder.domain.OfferPage;
 import pl.devfinder.domain.OfferSearchCriteria;
 import pl.devfinder.infrastructure.database.entity.OfferEntity;
+import pl.devfinder.infrastructure.database.repository.mapper.OfferEntityMapper;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -30,20 +31,18 @@ public class OfferCriteriaRepository {
         this.criteriaBuilder = entityManager.getCriteriaBuilder();
     }
 
-
-    public Page<OfferEntity> findAllWithFilters(OfferPage offerPage,
-                                                OfferSearchCriteria offerSearchCriteria) {
+    public Page<OfferEntity> findAllByCriteria(OfferSearchCriteria offerSearchCriteria) {
         CriteriaQuery<OfferEntity> criteriaQuery = criteriaBuilder.createQuery(OfferEntity.class);
         Root<OfferEntity> offerEntityRoot = criteriaQuery.from(OfferEntity.class);
         Predicate predicate = getPredicate(offerSearchCriteria, offerEntityRoot);
         criteriaQuery.where(predicate);
-        setOrder(offerPage, criteriaQuery, offerEntityRoot);
+        setOrder(offerSearchCriteria, criteriaQuery, offerEntityRoot);
 
         TypedQuery<OfferEntity> typedQuery = entityManager.createQuery(criteriaQuery);
-        typedQuery.setFirstResult(offerPage.getPageNumber() * offerPage.getPageSize());
-        typedQuery.setMaxResults(offerPage.getPageSize());
+        typedQuery.setFirstResult(offerSearchCriteria.getPageNumber() * offerSearchCriteria.getPageSize());
+        typedQuery.setMaxResults(offerSearchCriteria.getPageSize());
 
-        Pageable pageable = getPageable(offerPage);
+        Pageable pageable = getPageable(offerSearchCriteria);
 
         long offerCount = getOfferCount(predicate);
 
@@ -53,41 +52,79 @@ public class OfferCriteriaRepository {
     private Predicate getPredicate(OfferSearchCriteria offerSearchCriteria,
                                    Root<OfferEntity> offerRoot) {
         List<Predicate> predicates = new ArrayList<>();
-//        if (Objects.nonNull(offerSearchCriteria.getIsExperienceLevelIsJunior())) {
-//            predicates.add(
-//                    criteriaBuilder.like(offerRoot.get("experienceLevel"),
-//                            Keys.Experience.JUNIOR.getLevel())
-//            );
-//        }
-//        if (Objects.nonNull(offerSearchCriteria.getIsExperienceLevelIsMid())) {
-//            predicates.add(
-//                    criteriaBuilder.like(offerRoot.get("experienceLevel"),
-//                            Keys.Experience.MID.getLevel())
-//            );
-//        }
-//        if (Objects.nonNull(offerSearchCriteria.getIsExperienceLevelIsSenior())) {
-//            predicates.add(
-//                    criteriaBuilder.like(offerRoot.get("experienceLevel"),
-//                            Keys.Experience.SENIOR.getLevel())
-//            );
-//        }
+
+        if (Objects.nonNull(offerSearchCriteria.getExperienceLevels())
+        && !offerSearchCriteria.getExperienceLevels().isEmpty()) {
+            predicates.add(
+                    criteriaBuilder.like(offerRoot.get("experienceLevel"),
+                            Keys.Experience.JUNIOR.getName())
+            );
+        }
+
+
+        // Warunek dla listy remoteWork
+        List<String> remoteWork = offerSearchCriteria.getRemoteWork();
+        if (Objects.nonNull(remoteWork) && !remoteWork.isEmpty()) {
+            List<Predicate> remoteWorkPredicates = remoteWork.stream()
+                    .map(value -> criteriaBuilder.equal(offerRoot.get("remoteWork"), value))
+                    .toList();
+            predicates.addAll(remoteWorkPredicates);
+        }
+
+        // Warunek dla salaryMin
+        BigDecimal salaryMin = offerSearchCriteria.getSalaryMin();
+        if (Objects.nonNull(salaryMin) && salaryMin.equals(BigDecimal.ZERO)) {
+            predicates.add(criteriaBuilder.greaterThan(offerRoot.get("salary"), salaryMin));
+        }
+
+        // Warunek dla listy salary
+        List<String> salary = offerSearchCriteria.getSalary();
+        if (Objects.nonNull(salary) && !salary.isEmpty()) {
+            List<Predicate> salaryPredicates = salary.stream()
+                    .map(value -> criteriaBuilder.equal(offerRoot.get("salary"), value))
+                    .toList();
+            predicates.addAll(salaryPredicates);
+        }
+
+        // Warunek dla listy status
+        List<String> status = offerSearchCriteria.getStatus();
+        if (Objects.nonNull(status) && !status.isEmpty()) {
+            List<Predicate> statusPredicates = status.stream()
+                    .map(value -> criteriaBuilder.equal(offerRoot.get("status"), value))
+                    .toList();
+            predicates.addAll(statusPredicates);
+        }
+
+        // Warunek dla city
+        String city = offerSearchCriteria.getCity();
+        if (Objects.nonNull(city) && city.isBlank()) {
+            predicates.add(criteriaBuilder.equal(offerRoot.get("city"), city));
+        }
+
+        // Warunek dla employer
+        String employer = offerSearchCriteria.getEmployer();
+        if (Objects.nonNull(employer) && employer.isBlank()) {
+            predicates.add(criteriaBuilder.equal(offerRoot.get("employer"), employer));
+        }
+
+
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 
-    private void setOrder(OfferPage offerPage,
+    private void setOrder(OfferSearchCriteria offerSearchCriteria,
                           CriteriaQuery<OfferEntity> criteriaQuery,
                           Root<OfferEntity> offerEntityRoot) {
-        if (offerPage.getSortDirection().equals(Sort.Direction.ASC)) {
-            criteriaQuery.orderBy(criteriaBuilder.asc(offerEntityRoot.get(offerPage.getSortBy())));
+        if (offerSearchCriteria.getSortDirection().equals(Sort.Direction.ASC)) {
+            criteriaQuery.orderBy(criteriaBuilder.asc(offerEntityRoot.get(offerSearchCriteria.getSortBy())));
         } else {
-            criteriaQuery.orderBy(criteriaBuilder.desc(offerEntityRoot.get(offerPage.getSortBy())));
+            criteriaQuery.orderBy(criteriaBuilder.desc(offerEntityRoot.get(offerSearchCriteria.getSortBy())));
         }
     }
 
-    private Pageable getPageable(OfferPage offerPage) {
-        Sort sort = Sort.by(offerPage.getSortDirection(), offerPage.getSortBy());
-        return PageRequest.of(offerPage.getPageNumber(), offerPage.getPageSize(), sort);
+    private Pageable getPageable(OfferSearchCriteria offerSearchCriteria) {
+        Sort sort = Sort.by(offerSearchCriteria.getSortDirection(), offerSearchCriteria.getSortBy());
+        return PageRequest.of(offerSearchCriteria.getPageNumber(), offerSearchCriteria.getPageSize(), sort);
     }
 
     private long getOfferCount(Predicate predicate) {

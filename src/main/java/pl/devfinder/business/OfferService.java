@@ -9,15 +9,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.devfinder.api.dto.OfferDetailsDTO;
 import pl.devfinder.business.dao.OfferDAO;
 import pl.devfinder.business.management.Keys;
 import pl.devfinder.domain.Offer;
-import pl.devfinder.domain.OfferPage;
 import pl.devfinder.domain.OfferSearchCriteria;
 import pl.devfinder.domain.exception.NotFoundException;
-import pl.devfinder.infrastructure.database.entity.OfferEntity;
 import pl.devfinder.infrastructure.database.repository.OfferCriteriaRepository;
+import pl.devfinder.infrastructure.database.repository.mapper.OfferEntityMapper;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -30,11 +28,12 @@ import java.util.List;
 public class OfferService {
     private final OfferDAO offerDAO;
     private final OfferCriteriaRepository offerCriteriaRepository;
+    private final OfferEntityMapper offerEntityMapper;
 
 
-    public Page<OfferEntity> getOffersFiltering(OfferPage offerPage,
-                                                OfferSearchCriteria offerSearchCriteria) {
-        return offerCriteriaRepository.findAllWithFilters(offerPage, offerSearchCriteria);
+    public Page<Offer> findAllByCriteria(OfferSearchCriteria offerSearchCriteria) {
+        return offerCriteriaRepository.findAllByCriteria(offerSearchCriteria)
+                .map(offerEntityMapper::mapFromEntity);
     }
 
     @Transactional

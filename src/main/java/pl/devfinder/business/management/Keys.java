@@ -22,17 +22,17 @@ public interface Keys {
     }
 
     enum OfferState {
-        OPEN("open"),
-        CLOSED("closed");
+        ACTIVE("ACTIVE"),
+        EXPIRED("EXPIRED");
 
-        private final String state;
+        private final String name;
 
-        OfferState(String state) {
-            this.state = state;
+        OfferState(String name) {
+            this.name = name;
         }
 
-        public String getState() {
-            return state;
+        public String getName() {
+            return name;
         }
     }
 
@@ -118,6 +118,25 @@ public interface Keys {
         private final String name;
 
         Salary(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+    enum OfferSortBy {
+        title("title"),
+        employerIdCompanyName("employerId.companyName"),
+        remoteWork("remoteWork"),
+        salaryMin("salaryMin"),
+        createdAt("createdAt"),
+        cityIdCityName("cityId.cityName"),
+        experienceLevel("experienceLevel");
+
+        private final String name;
+
+        OfferSortBy(String name) {
             this.name = name;
         }
 

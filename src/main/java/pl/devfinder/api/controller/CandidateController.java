@@ -12,7 +12,6 @@ import pl.devfinder.api.dto.mapper.*;
 import pl.devfinder.business.*;
 import pl.devfinder.business.management.Keys;
 import pl.devfinder.business.management.Utility;
-import pl.devfinder.domain.OfferPage;
 import pl.devfinder.domain.OfferSearchCriteria;
 
 import java.util.List;
@@ -74,7 +73,7 @@ public class CandidateController {
     public String getEmployersList(Model model, Authentication authentication) {
         Utility.putUserDataToModel(authentication, userService, model);
 
-        List<EmployerRowDTO> allEmployers = employerService.findAllEmployers().stream()
+        List<EmployerRowDTO> allEmployers = employerService.findAll().stream()
                 .map(employerRowMapper::map)
                 .toList();
 //todo przyciks Details odnoszący się do profilu firmy
@@ -89,17 +88,13 @@ public class CandidateController {
 
     @GetMapping(value = OFFERS_LIST)
     public String getOffersList(
-//            @PathVariable(value = "pageNumber") Integer pageNumber,
             @ModelAttribute OfferSearchCriteria offerSearchCriteria,
-//            @ModelAttribute OfferPage offerPage,
             Model model,
             Authentication authentication) {
         Utility.putUserDataToModel(authentication, userService, model);
 
         System.out.println("START #############################");
-//        System.out.println("PAGENUMBER: " + pageNumber);
         System.out.println("Filters:");
-//        System.out.println(offerPage.getPageNumber());
         System.out.println("---");
         System.out.println(offerSearchCriteria.getExperienceLevels());
         System.out.println(offerSearchCriteria.getSkills());
@@ -107,12 +102,14 @@ public class CandidateController {
         System.out.println(offerSearchCriteria.getRemoteWork());
         System.out.println(offerSearchCriteria.getSalary());
         System.out.println(offerSearchCriteria.getSalaryMin());
+        System.out.println(offerSearchCriteria.getStatus());
+        System.out.println(Sort.Direction.DESC);
         System.out.println("END #############################");
 
-        Page<OfferRowDTO> page = offerService.findAllByStatePaginated(offerSearchCriteria, Keys.OfferState.OPEN).map(offerRowMapper::map);
+        Page<OfferRowDTO> page = offerService.findAllByStatePaginated(offerSearchCriteria, Keys.OfferState.ACTIVE).map(offerRowMapper::map);
+        Page<OfferRowDTO> pageFiltering = offerService.findAllByCriteria(offerSearchCriteria).map(offerRowMapper::map);
         List<OfferRowDTO> allOffers = page.getContent();
 //ToolBar
-//        model.addAttribute("pageNumber", offerPage.getPageNumber());
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
 
@@ -122,6 +119,8 @@ public class CandidateController {
         model.addAttribute("cityChecked", offerSearchCriteria.getCity());
         model.addAttribute("remoteChecked", offerSearchCriteria.getRemoteWork());
         model.addAttribute("salaryChecked", offerSearchCriteria.getSalary());
+        model.addAttribute("statusChecked", offerSearchCriteria.getStatus());
+        model.addAttribute("employerChecked", offerSearchCriteria.getEmployer());
 //Enums for filters
         model.addAttribute("remoteEnumFull", Keys.RemoteWork.FULL.getName());
         model.addAttribute("remoteEnumOffice", Keys.RemoteWork.OFFICE.getName());
@@ -131,25 +130,22 @@ public class CandidateController {
         model.addAttribute("expLevelEnumSenior", Keys.Experience.SENIOR.getName());
         model.addAttribute("salaryEnumWith", Keys.Salary.WITH.getName());
         model.addAttribute("salaryEnumUndisclosed", Keys.Salary.UNDISCLOSED.getName());
-
+        model.addAttribute("statusEnumActive", Keys.OfferState.ACTIVE.getName());
+        model.addAttribute("statusEnumExpired", Keys.OfferState.EXPIRED.getName());
 
 //Sorting
         model.addAttribute("sortBy", offerSearchCriteria.getSortBy());
         model.addAttribute("sortDirection", offerSearchCriteria.getSortDirection());
         model.addAttribute("reverseSortDirection", offerSearchCriteria.getSortDirection()
                 .equals(Sort.Direction.ASC) ? Sort.Direction.DESC : Sort.Direction.ASC);
-//
-//        model.addAttribute("listEmployees", listEmployees);
 
-
-//        List<OfferRowDTO> allOffers = offerService.findAllByState(Keys.OfferState.OPEN).stream()
-//                .map(offerRowMapper::map)
-//                .toList();
         List<SkillDTO> allSkills= skillService.findAll().stream().map(skillMapper::map).toList();
         List<CityDTO> allCity = cityService.findAll().stream().map(cityMapper::map).toList();
+        List<EmployerRowDTO> allEmployer = employerService.findAll().stream().map(employerRowMapper::map).toList();
         model.addAttribute("allOffersDTOs", allOffers);
         model.addAttribute("allSkillsDTOs", allSkills);
         model.addAttribute("allCityDTOs", allCity);
+        model.addAttribute("allEmployerDTOs", allEmployer);
 
         return "candidate/offers";
     }
