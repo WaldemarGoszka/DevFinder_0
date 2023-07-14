@@ -214,32 +214,24 @@
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead>
-                                    <input type="hidden" name="sortBy" th:value="${offerSearchCriteria.sortBy}" />
-                                    <input type="hidden" name="sortDirection" th:value="${offerSearchCriteria.sortDirection}" />
+                                    <input type="hidden" name="sortBy" th:value="${offerSearchCriteria.sortBy}"/>
+                                    <input type="hidden" name="sortDirection"
+                                           th:value="${offerSearchCriteria.sortDirection}"/>
                                     <tr>
-                                        <th scope="col"><a
-                                                th:href="@{'?pageNumber=' + ${pageNumber} + '&sortBy=title&sortDirection=' + ${reverseSortDirection}}">Title</a>
+                                        <th scope="col"><a href="#" onclick="setSortParams('title')">Title</a>
                                         </th>
-                                        <th scope="col"><a
-                                                th:href="@{'?pageNumber=' + ${pageNumber} + '&sortBy=experienceLevel&sortDirection=' + ${reverseSortDirection}}">Exp.
-                                            Level</a>
+                                        <th scope="col"><a href="#" onclick="setSortParams('experienceLevel')">Exp. Level</a>
                                         </th>
                                         <th scope="col">Tech Stack</th>
-                                        <th scope="col"><a
-                                                th:href="@{'?pageNumber=' + ${pageNumber} + '&sortBy=employerId.companyName&sortDirection=' + ${reverseSortDirection}}">Employer</a>
+                                        <th scope="col"><a href="#" onclick="setSortParams('employerId.companyName')">Employer</a>
                                         </th>
-                                        <th scope="col"><a
-                                                th:href="@{'?pageNumber=' + ${pageNumber} + '&sortBy=cityId.cityName&sortDirection=' + ${reverseSortDirection}}">City</a>
+                                        <th scope="col"><a href="#" onclick="setSortParams('cityId.cityName')">City</a>
                                         </th>
-                                        <th scope="col"><a
-                                                th:href="@{'?pageNumber=' + ${pageNumber} + '&sortBy=remoteWork&sortDirection=' + ${reverseSortDirection}}">Remote</a>
+                                        <th scope="col"><a href="#" onclick="setSortParams('remoteWork')">Remote</a>
                                         </th>
-                                        <th scope="col"><a
-                                                th:href="@{'?pageNumber=' + ${pageNumber} + '&sortBy=salaryMin&sortDirection=' + ${reverseSortDirection}}">Salary</a>
+                                        <th scope="col"><a href="#" onclick="setSortParams('salaryMin')">Salary</a>
                                         </th>
-                                        <th scope="col"><a
-                                                th:href="@{'?pageNumber=' + ${pageNumber} + '&sortBy=createdAt&sortDirection=' + ${reverseSortDirection}}">Days
-                                            Since Created</a>
+                                        <th scope="col"><a href="#" onclick="setSortParams('createdAt')">Days Since Created</a>
                                         </th>
                                         <th></th>
                                     </tr>
@@ -304,6 +296,18 @@
     function increasePageNumber() {
         var pageNumberInput = document.getElementsByName('pageNumber')[0];
         pageNumberInput.value = parseInt(pageNumberInput.value) + 1;
+    }
+
+    function setSortParams(sortBy) {
+        var currentSortBy = document.getElementsByName('sortBy')[0].value;
+        var currentSortDirection = document.getElementsByName('sortDirection')[0].value;
+
+        var newSortDirection = currentSortBy === sortBy && currentSortDirection === 'ASC' ? 'DESC' : 'ASC';
+
+        document.getElementsByName('sortBy')[0].value = sortBy;
+        document.getElementsByName('sortDirection')[0].value = newSortDirection;
+
+        document.querySelector('form').submit();
     }
 </script>
 </body>
