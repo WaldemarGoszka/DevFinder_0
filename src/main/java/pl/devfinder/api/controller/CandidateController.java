@@ -106,8 +106,8 @@ public class CandidateController {
         System.out.println(Sort.Direction.DESC);
         System.out.println("END #############################");
 
-        Page<OfferRowDTO> page = offerService.findAllByStatePaginated(offerSearchCriteria, Keys.OfferState.ACTIVE).map(offerRowMapper::map);
-        Page<OfferRowDTO> pageFiltering = offerService.findAllByCriteria(offerSearchCriteria).map(offerRowMapper::map);
+        //Page<OfferRowDTO> page = offerService.findAllByStatePaginated(offerSearchCriteria, Keys.OfferState.ACTIVE).map(offerRowMapper::map);
+        Page<OfferRowDTO> page = offerService.findAllByCriteria(offerSearchCriteria).map(offerRowMapper::map);
         List<OfferRowDTO> allOffers = page.getContent();
 //ToolBar
         model.addAttribute("totalPages", page.getTotalPages());

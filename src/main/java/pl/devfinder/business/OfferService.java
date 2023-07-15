@@ -28,12 +28,10 @@ import java.util.List;
 public class OfferService {
     private final OfferDAO offerDAO;
     private final OfferCriteriaRepository offerCriteriaRepository;
-    private final OfferEntityMapper offerEntityMapper;
 
 
     public Page<Offer> findAllByCriteria(OfferSearchCriteria offerSearchCriteria) {
-        return offerCriteriaRepository.findAllByCriteria(offerSearchCriteria)
-                .map(offerEntityMapper::mapFromEntity);
+        return offerCriteriaRepository.findAllByCriteria(offerSearchCriteria);
     }
 
     @Transactional

@@ -19,7 +19,7 @@ public class OfferSearchCriteria {
     List<String> status = new ArrayList<>(List.of(Keys.OfferState.ACTIVE.getName()));
     String city;
     String employer;
-    Set<String> skills = new HashSet<>();
+    List<String> skills = new ArrayList<>();
     Integer pageNumber = 1;
     Integer pageSize = 3;
     Sort.Direction sortDirection = Sort.Direction.DESC;

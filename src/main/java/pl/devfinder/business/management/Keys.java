@@ -125,18 +125,26 @@ public interface Keys {
             return name;
         }
     }
-    enum OfferSortBy {
+    enum OfferFilterBy {
         title("title"),
-        employerIdCompanyName("employerId.companyName"),
+        employerId("employerId"),
+        companyName("companyName"),
         remoteWork("remoteWork"),
         salaryMin("salaryMin"),
+        salaryMax("salaryMax"),
+        salary("salary"),
         createdAt("createdAt"),
-        cityIdCityName("cityId.cityName"),
-        experienceLevel("experienceLevel");
+        status("status"),
+        cityId("cityId"),
+        cityName("cityName"),
+        experienceLevel("experienceLevel"),
+        offerSkills("offerSkills"),
+        skillId("skillId"),
+        skillName("skillName");
 
         private final String name;
 
-        OfferSortBy(String name) {
+        OfferFilterBy(String name) {
             this.name = name;
         }
 
