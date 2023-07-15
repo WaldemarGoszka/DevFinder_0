@@ -11,10 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Repository;
 import pl.devfinder.business.management.Keys;
-import pl.devfinder.domain.Offer;
-import pl.devfinder.domain.OfferSearchCriteria;
-import pl.devfinder.infrastructure.database.entity.OfferEntity;
-import pl.devfinder.infrastructure.database.repository.mapper.OfferEntityMapper;
+import pl.devfinder.domain.Candidate;
+import pl.devfinder.domain.CandidateSearchCriteria;
+import pl.devfinder.infrastructure.database.entity.CandidateEntity;
+import pl.devfinder.infrastructure.database.repository.mapper.CandidateEntityMapper;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -25,52 +25,52 @@ import java.util.stream.Stream;
 
 @Repository
 @Slf4j
-public class OfferCriteriaRepository {
+public class CandidateCriteriaRepository {
 
     private final EntityManager entityManager;
     private final CriteriaBuilder criteriaBuilder;
-    private final OfferEntityMapper offerEntityMapper;
+    private final CandidateEntityMapper candidateEntityMapper;
 
-    public OfferCriteriaRepository(EntityManager entityManager, OfferEntityMapper offerEntityMapper) {
+    public CandidateCriteriaRepository(EntityManager entityManager, CandidateEntityMapper candidateEntityMapper) {
         this.entityManager = entityManager;
         this.criteriaBuilder = entityManager.getCriteriaBuilder();
-        this.offerEntityMapper = offerEntityMapper;
+        this.candidateEntityMapper = candidateEntityMapper;
     }
 
-    public Page<Offer> findAllByCriteria(OfferSearchCriteria offerSearchCriteria) {
+    public Page<Candidate> findAllByCriteria(CandidateSearchCriteria candidateSearchCriteria) {
         log.info("Trying Find By Criteria");
-        CriteriaQuery<OfferEntity> criteriaQuery = criteriaBuilder.createQuery(OfferEntity.class);
-        Root<OfferEntity> offerEntityRoot = criteriaQuery.from(OfferEntity.class);
-        Predicate predicate = getPredicate(offerSearchCriteria, offerEntityRoot);
+        CriteriaQuery<CandidateEntity> criteriaQuery = criteriaBuilder.createQuery(CandidateEntity.class);
+        Root<CandidateEntity> candidateEntityRoot = criteriaQuery.from(CandidateEntity.class);
+        Predicate predicate = getPredicate(candidateSearchCriteria, candidateEntityRoot);
         criteriaQuery.where(predicate);
-        setOrder(offerSearchCriteria, criteriaQuery, offerEntityRoot);
+        setOrder(candidateSearchCriteria, criteriaQuery, candidateEntityRoot);
 
-        TypedQuery<OfferEntity> typedQuery = entityManager.createQuery(criteriaQuery);
-        typedQuery.setFirstResult(offerSearchCriteria.getPageNumber() * offerSearchCriteria.getPageSize());
-        typedQuery.setMaxResults(offerSearchCriteria.getPageSize());
+        TypedQuery<CandidateEntity> typedQuery = entityManager.createQuery(criteriaQuery);
+        typedQuery.setFirstResult(candidateSearchCriteria.getPageNumber() * candidateSearchCriteria.getPageSize());
+        typedQuery.setMaxResults(candidateSearchCriteria.getPageSize());
 
-        Pageable pageable = getPageable(offerSearchCriteria);
+        Pageable pageable = getPageable(candidateSearchCriteria);
 
-        long offerCount = 19;//getOfferCount(predicate);
-        PageImpl<OfferEntity> offerEntities = new PageImpl<>(typedQuery.getResultList(), pageable, offerCount);
+        long candidateCount = getCandidateCount(predicate);
+        PageImpl<CandidateEntity> candidateEntities = new PageImpl<>(typedQuery.getResultList(), pageable, candidateCount);
 
-        return offerEntities.map(offerEntityMapper::mapFromEntity);
+        return candidateEntities.map(candidateEntityMapper::mapFromEntity);
     }
 
-    private Predicate getPredicate(OfferSearchCriteria offerSearchCriteria,
-                                   Root<OfferEntity> offerRoot) {
+    private Predicate getPredicate(CandidateSearchCriteria candidateSearchCriteria,
+                                   Root<CandidateEntity> candidateRoot) {
         List<Predicate> predicates = new ArrayList<>();
 
-//        if (Objects.nonNull(offerSearchCriteria.getExperienceLevels())
-//                && !offerSearchCriteria.getExperienceLevels().isEmpty()) {
+//        if (Objects.nonNull(candidateSearchCriteria.getExperienceLevels())
+//                && !candidateSearchCriteria.getExperienceLevels().isEmpty()) {
 //            predicates.add(
-//                    criteriaBuilder.like(offerRoot.get("experienceLevel"),
+//                    criteriaBuilder.like(candidateRoot.get("experienceLevel"),
 //                            Keys.Experience.JUNIOR.getName())
 //            );
 //        }
 
         // Warunek dla listy experienceLevels
-        List<String> experienceLevels = offerSearchCriteria.getExperienceLevels();
+        List<String> experienceLevels = candidateSearchCriteria.getExperienceLevels();
         if (Objects.nonNull(experienceLevels) && !experienceLevels.isEmpty()) {
             List<Predicate> experienceLevelPredicates = experienceLevels.stream()
                     .filter(Objects::nonNull)
@@ -78,16 +78,16 @@ public class OfferCriteriaRepository {
                     .flatMap(value -> {
                         if (Keys.Experience.JUNIOR.getName().equals(value)) {
                             log.info("->> CA experienceLevels JUNIOR");
-                            return Stream.of(criteriaBuilder.equal(offerRoot.get(
-                                    Keys.OfferFilterBy.experienceLevel.getName()), Keys.Experience.JUNIOR.getName()));
+                            return Stream.of(criteriaBuilder.equal(candidateRoot.get(
+                                    Keys.CandidateFilterBy.experienceLevel.getName()), Keys.Experience.JUNIOR.getName()));
                         } else if (Keys.Experience.MID.getName().equals(value)) {
                             log.info("->> CA experienceLevels MID");
-                            return Stream.of(criteriaBuilder.equal(offerRoot.get(
-                                    Keys.OfferFilterBy.experienceLevel.getName()), Keys.Experience.MID.getName()));
+                            return Stream.of(criteriaBuilder.equal(candidateRoot.get(
+                                    Keys.CandidateFilterBy.experienceLevel.getName()), Keys.Experience.MID.getName()));
                         } else if (Keys.Experience.SENIOR.getName().equals(value)) {
                             log.info("->> CA experienceLevels SENIOR");
-                            return Stream.of(criteriaBuilder.equal(offerRoot.get(
-                                    Keys.OfferFilterBy.experienceLevel.getName()), Keys.Experience.SENIOR.getName()));
+                            return Stream.of(criteriaBuilder.equal(candidateRoot.get(
+                                    Keys.CandidateFilterBy.experienceLevel.getName()), Keys.Experience.SENIOR.getName()));
                         } else {
                             log.info("->> CA experienceLevels NoFilter");
                             return Stream.empty();
@@ -98,7 +98,7 @@ public class OfferCriteriaRepository {
         }
 
         // Warunek dla listy remoteWork
-        List<String> remoteWork = offerSearchCriteria.getRemoteWork();
+        List<String> remoteWork = candidateSearchCriteria.getRemoteWork();
         if (Objects.nonNull(remoteWork) && !remoteWork.isEmpty()) {
             List<Predicate> remoteWorkPredicates = remoteWork.stream()
                     .filter(Objects::nonNull)
@@ -106,13 +106,13 @@ public class OfferCriteriaRepository {
                     .flatMap(value -> {
                         if (Keys.RemoteWork.OFFICE.getName().equals(value)) {
                             log.info("->> CA remoteWork OFFICE");
-                            return Stream.of(criteriaBuilder.equal(offerRoot.get(Keys.OfferFilterBy.remoteWork.getName()), 0));
+                            return Stream.of(criteriaBuilder.equal(candidateRoot.get(Keys.CandidateFilterBy.remoteWork.getName()), 0));
                         } else if (Keys.RemoteWork.PARTLY.getName().equals(value)) {
                             log.info("->> CA remoteWork PARTLY");
-                            return Stream.of(criteriaBuilder.between(offerRoot.get(Keys.OfferFilterBy.remoteWork.getName()), 1, 99));
+                            return Stream.of(criteriaBuilder.between(candidateRoot.get(Keys.CandidateFilterBy.remoteWork.getName()), 1, 99));
                         } else if (Keys.RemoteWork.FULL.getName().equals(value)) {
                             log.info("->> CA remoteWork FULL");
-                            return Stream.of(criteriaBuilder.equal(offerRoot.get(Keys.OfferFilterBy.remoteWork.getName()), 100));
+                            return Stream.of(criteriaBuilder.equal(candidateRoot.get(Keys.CandidateFilterBy.remoteWork.getName()), 100));
                         } else {
                             log.info("->> CA remoteWork NoFilter");
                             return Stream.empty();
@@ -123,13 +123,13 @@ public class OfferCriteriaRepository {
         }
 
         // Warunek dla salaryMin
-        BigDecimal salaryMin = offerSearchCriteria.getSalaryMin();
+        BigDecimal salaryMin = candidateSearchCriteria.getSalaryMin();
         if (Objects.nonNull(salaryMin) && salaryMin.equals(BigDecimal.ZERO)) {
-            predicates.add(criteriaBuilder.greaterThanOrEqualTo(offerRoot.get(Keys.OfferFilterBy.salaryMin.getName()), salaryMin));
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(candidateRoot.get(Keys.CandidateFilterBy.salaryMin.getName()), salaryMin));
         }
 
         // Warunek dla listy salary
-        List<String> salary = offerSearchCriteria.getSalary();
+        List<String> salary = candidateSearchCriteria.getSalary();
         if (Objects.nonNull(salary) && !salary.isEmpty()) {
             List<Predicate> salaryPredicates = salary.stream()
                     .filter(Objects::nonNull)
@@ -137,13 +137,13 @@ public class OfferCriteriaRepository {
                     .flatMap(value -> {
                         if (Keys.Salary.WITH.getName().equals(value)) {
                             log.info("->> CA salary WITH");
-                            return Stream.of(criteriaBuilder.isNotNull(offerRoot.get(Keys.OfferFilterBy.salaryMin.getName())), criteriaBuilder.isNotNull(offerRoot.get(Keys.OfferFilterBy.salaryMax.getName())));
+                            return Stream.of(criteriaBuilder.isNotNull(candidateRoot.get(Keys.CandidateFilterBy.salaryMin.getName())), criteriaBuilder.isNotNull(candidateRoot.get(Keys.CandidateFilterBy.salaryMax.getName())));
                         } else if (Keys.Salary.UNDISCLOSED.getName().equals(value)) {
                             log.info("->> CA salary UNDISCLOSED");
-                            return Stream.of(criteriaBuilder.isNull(offerRoot.get(Keys.OfferFilterBy.salaryMin.getName())), criteriaBuilder.isNull(offerRoot.get(Keys.OfferFilterBy.salaryMax.getName())));
+                            return Stream.of(criteriaBuilder.isNull(candidateRoot.get(Keys.CandidateFilterBy.salaryMin.getName())), criteriaBuilder.isNull(candidateRoot.get(Keys.CandidateFilterBy.salaryMax.getName())));
                         }
 //                        else {
-//                            return Stream.of(criteriaBuilder.equal(offerRoot.get(Keys.OfferFilterBy.salary.getName()), value));
+//                            return Stream.of(criteriaBuilder.equal(candidateRoot.get(Keys.CandidateFilterBy.salary.getName()), value));
 //                        }
                         else {
                             log.info("->> CA salary NoFilter");
@@ -154,46 +154,46 @@ public class OfferCriteriaRepository {
             predicates.addAll(salaryPredicates);
         }
 
-        // Warunek dla listy status
-        List<String> status = offerSearchCriteria.getStatus();
-        if (Objects.nonNull(status) && !status.isEmpty()) {
-            List<Predicate> statusPredicates = status.stream()
-                    .filter(Objects::nonNull)
-                    .filter(value -> !value.isBlank())
-                    .flatMap(value -> {
-                        if (Keys.OfferState.ACTIVE.getName().equals(value)) {
-                            log.info("->> CA status ACTIVE");
-                            return Stream.of(criteriaBuilder.equal(offerRoot.get(Keys.OfferFilterBy.status.getName()), Keys.OfferState.ACTIVE.getName()));
-                        } else if (Keys.OfferState.EXPIRED.getName().equals(value)) {
-                            log.info("->> CA status EXPIRED");
-                            return Stream.of(criteriaBuilder.equal(offerRoot.get(Keys.OfferFilterBy.status.getName()), Keys.OfferState.EXPIRED.getName()));
-                        } else {
-                            log.info("->> CA status NoFilter");
-                            return Stream.empty();
-                        }
-                    })
-                    .toList();
-            predicates.addAll(statusPredicates);
-        }
+//        // Warunek dla listy status
+//        List<String> status = candidateSearchCriteria.getStatus();
+//        if (Objects.nonNull(status) && !status.isEmpty()) {
+//            List<Predicate> statusPredicates = status.stream()
+//                    .filter(Objects::nonNull)
+//                    .filter(value -> !value.isBlank())
+//                    .flatMap(value -> {
+//                        if (Keys.CandidateState.ACTIVE.getName().equals(value)) {
+//                            log.info("->> CA status ACTIVE");
+//                            return Stream.of(criteriaBuilder.equal(candidateRoot.get(Keys.CandidateFilterBy.status.getName()), Keys.CandidateState.ACTIVE.getName()));
+//                        } else if (Keys.CandidateState.EXPIRED.getName().equals(value)) {
+//                            log.info("->> CA status EXPIRED");
+//                            return Stream.of(criteriaBuilder.equal(candidateRoot.get(Keys.CandidateFilterBy.status.getName()), Keys.CandidateState.EXPIRED.getName()));
+//                        } else {
+//                            log.info("->> CA status NoFilter");
+//                            return Stream.empty();
+//                        }
+//                    })
+//                    .toList();
+//            predicates.addAll(statusPredicates);
+//        }
 
         // Warunek dla city
-        String city = offerSearchCriteria.getCity();
+        String city = candidateSearchCriteria.getCity();
         if (Objects.nonNull(city) && !city.isBlank()) {
             log.info("->> CA city");
-            predicates.add(criteriaBuilder.equal(offerRoot.get(Keys.OfferFilterBy.cityId.getName())
-                    .get(Keys.OfferFilterBy.cityName.getName()), city));
+            predicates.add(criteriaBuilder.equal(candidateRoot.get(Keys.CandidateFilterBy.cityId.getName())
+                    .get(Keys.CandidateFilterBy.cityName.getName()), city));
         }
 
         // Warunek dla employer
-        String employer = offerSearchCriteria.getEmployer();
+        String employer = candidateSearchCriteria.getEmployer();
         if (Objects.nonNull(employer) && !employer.isBlank()) {
             log.info("->> CA employer");
-            predicates.add(criteriaBuilder.equal(offerRoot.get(Keys.OfferFilterBy.employerId.getName())
-                    .get(Keys.OfferFilterBy.companyName.getName()), employer));
+            predicates.add(criteriaBuilder.equal(candidateRoot.get(Keys.CandidateFilterBy.employerId.getName())
+                    .get(Keys.CandidateFilterBy.companyName.getName()), employer));
         }
 
         // Warunek dla listy skills
-        List<String> skills = offerSearchCriteria.getSkills();
+        List<String> skills = candidateSearchCriteria.getSkills();
         if (Objects.nonNull(skills) && !skills.isEmpty()) {
             List<Predicate> skillPredicates = skills.stream()
                     .filter(Objects::nonNull)
@@ -249,10 +249,10 @@ public class OfferCriteriaRepository {
                                 "Gradle"
                         ).contains(value)) {
                             log.info("->> CA skills");
-                            return Stream.of(criteriaBuilder.equal(offerRoot.get(
-                                            Keys.OfferFilterBy.offerSkills.getName())
-                                    .get(Keys.OfferFilterBy.skillId.getName())
-                                    .get(Keys.OfferFilterBy.skillName.getName()), value));
+                            return Stream.of(criteriaBuilder.equal(candidateRoot.get(
+                                            Keys.CandidateFilterBy.candidateSkills.getName())
+                                    .get(Keys.CandidateFilterBy.skillId.getName())
+                                    .get(Keys.CandidateFilterBy.skillName.getName()), value));
                         } else {
                             return Stream.empty();
                         }
@@ -265,38 +265,38 @@ public class OfferCriteriaRepository {
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 
-    private void setOrder(OfferSearchCriteria offerSearchCriteria,
-                          CriteriaQuery<OfferEntity> criteriaQuery,
-                          Root<OfferEntity> offerEntityRoot) {
-        if (offerSearchCriteria.getSortDirection().equals(Sort.Direction.ASC)) {
-            criteriaQuery.orderBy(criteriaBuilder.asc(offerEntityRoot.get(offerSearchCriteria.getSortBy())));
+    private void setOrder(CandidateSearchCriteria candidateSearchCriteria,
+                          CriteriaQuery<CandidateEntity> criteriaQuery,
+                          Root<CandidateEntity> candidateEntityRoot) {
+        if (candidateSearchCriteria.getSortDirection().equals(Sort.Direction.ASC)) {
+            criteriaQuery.orderBy(criteriaBuilder.asc(candidateEntityRoot.get(candidateSearchCriteria.getSortBy())));
         } else {
-            criteriaQuery.orderBy(criteriaBuilder.desc(offerEntityRoot.get(offerSearchCriteria.getSortBy())));
+            criteriaQuery.orderBy(criteriaBuilder.desc(candidateEntityRoot.get(candidateSearchCriteria.getSortBy())));
         }
     }
 
-    private Pageable getPageable(OfferSearchCriteria offerSearchCriteria) {
-        Sort sort = Sort.by(offerSearchCriteria.getSortDirection(), offerSearchCriteria.getSortBy());
-        return PageRequest.of(offerSearchCriteria.getPageNumber(), offerSearchCriteria.getPageSize(), sort);
+    private Pageable getPageable(CandidateSearchCriteria candidateSearchCriteria) {
+        Sort sort = Sort.by(candidateSearchCriteria.getSortDirection(), candidateSearchCriteria.getSortBy());
+        return PageRequest.of(candidateSearchCriteria.getPageNumber(), candidateSearchCriteria.getPageSize(), sort);
     }
 
-    private long getOfferCount(Predicate predicate) {
+    private long getCandidateCount(Predicate predicate) {
 //        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-//        Root<OfferEntity> countRoot = countQuery.from(OfferEntity.class);
+//        Root<CandidateEntity> countRoot = countQuery.from(CandidateEntity.class);
 //        countQuery.select(criteriaBuilder.count(countRoot)).where(predicate);
 //        return entityManager.createQuery(countQuery).getSingleResult();
 
         // z bing
 //        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 //        CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
-//        Root<OfferEntity> countRoot = countQuery.from(OfferEntity.class);
+//        Root<CandidateEntity> countRoot = countQuery.from(CandidateEntity.class);
 //        countQuery.select(builder.count(countRoot)).where(predicate);
 //        return entityManager.createQuery(countQuery).getSingleResult();
 
         //z gpt
 //        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-        Root<OfferEntity> countRoot = countQuery.from(OfferEntity.class);
+        Root<CandidateEntity> countRoot = countQuery.from(CandidateEntity.class);
         countQuery.select(criteriaBuilder.count(countRoot)).where(predicate);
         TypedQuery<Long> typedQuery = entityManager.createQuery(countQuery);
         return typedQuery.getSingleResult();

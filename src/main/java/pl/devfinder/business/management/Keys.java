@@ -152,4 +152,31 @@ public interface Keys {
             return name;
         }
     }
+    enum CandidateFilterBy {
+        title("title"),
+        employerId("employerId"),
+        companyName("companyName"),
+        remoteWork("remoteWork"),
+        salaryMin("salaryMin"),
+        salaryMax("salaryMax"),
+        salary("salary"),
+        createdAt("createdAt"),
+        status("status"),
+        cityId("cityId"),
+        cityName("cityName"),
+        experienceLevel("experienceLevel"),
+        candidateSkills("candidateSkills"),
+        skillId("skillId"),
+        skillName("skillName");
+
+        private final String name;
+
+        CandidateFilterBy(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
 }
