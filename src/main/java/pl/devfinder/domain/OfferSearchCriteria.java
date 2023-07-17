@@ -21,7 +21,7 @@ public class OfferSearchCriteria {
     String employer;
     List<String> skills = new ArrayList<>();
     Integer pageNumber = 1;
-    Integer pageSize = 3;
+    Integer pageSize = 5;
     Sort.Direction sortDirection = Sort.Direction.DESC;
     String sortBy = "createdAt";
 

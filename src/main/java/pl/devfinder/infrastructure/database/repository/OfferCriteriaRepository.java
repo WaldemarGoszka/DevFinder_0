@@ -38,7 +38,7 @@ public class OfferCriteriaRepository {
     }
 
     public Page<Offer> findAllByCriteria(OfferSearchCriteria offerSearchCriteria) {
-        log.info("Trying Find By Criteria");
+        log.error("Trying Find By Criteria");
         CriteriaQuery<OfferEntity> criteriaQuery = criteriaBuilder.createQuery(OfferEntity.class);
         Root<OfferEntity> offerEntityRoot = criteriaQuery.from(OfferEntity.class);
         Predicate predicate = getPredicate(offerSearchCriteria, offerEntityRoot);
@@ -46,14 +46,14 @@ public class OfferCriteriaRepository {
         setOrder(offerSearchCriteria, criteriaQuery, offerEntityRoot);
 
         TypedQuery<OfferEntity> typedQuery = entityManager.createQuery(criteriaQuery);
-        typedQuery.setFirstResult(offerSearchCriteria.getPageNumber() * offerSearchCriteria.getPageSize());
+        typedQuery.setFirstResult((offerSearchCriteria.getPageNumber()-1) * offerSearchCriteria.getPageSize());
         typedQuery.setMaxResults(offerSearchCriteria.getPageSize());
 
         Pageable pageable = getPageable(offerSearchCriteria);
 
-        long offerCount = 19;//getOfferCount(predicate);
+        long offerCount = 19; //getOfferCount(predicate);
         PageImpl<OfferEntity> offerEntities = new PageImpl<>(typedQuery.getResultList(), pageable, offerCount);
-
+        log.error("->> CA count PageImpl size: " + offerEntities.getTotalElements());
         return offerEntities.map(offerEntityMapper::mapFromEntity);
     }
 
@@ -76,20 +76,21 @@ public class OfferCriteriaRepository {
                     .filter(Objects::nonNull)
                     .filter(value -> !value.isBlank())
                     .flatMap(value -> {
+                        log.error("->> CA find value in experienceLevels list: " + value);
                         if (Keys.Experience.JUNIOR.getName().equals(value)) {
-                            log.info("->> CA experienceLevels JUNIOR");
+                            log.error("->> CA return experienceLevels JUNIOR");
                             return Stream.of(criteriaBuilder.equal(offerRoot.get(
                                     Keys.OfferFilterBy.experienceLevel.getName()), Keys.Experience.JUNIOR.getName()));
                         } else if (Keys.Experience.MID.getName().equals(value)) {
-                            log.info("->> CA experienceLevels MID");
+                            log.error("->> CA return experienceLevels MID");
                             return Stream.of(criteriaBuilder.equal(offerRoot.get(
                                     Keys.OfferFilterBy.experienceLevel.getName()), Keys.Experience.MID.getName()));
                         } else if (Keys.Experience.SENIOR.getName().equals(value)) {
-                            log.info("->> CA experienceLevels SENIOR");
+                            log.error("->> CA return experienceLevels SENIOR");
                             return Stream.of(criteriaBuilder.equal(offerRoot.get(
                                     Keys.OfferFilterBy.experienceLevel.getName()), Keys.Experience.SENIOR.getName()));
                         } else {
-                            log.info("->> CA experienceLevels NoFilter");
+                            log.error("->> CA return experienceLevels NoFilter");
                             return Stream.empty();
                         }
                     })
@@ -104,17 +105,18 @@ public class OfferCriteriaRepository {
                     .filter(Objects::nonNull)
                     .filter(value -> !value.isBlank())
                     .flatMap(value -> {
+                        log.error("->> CA find value in remoteWork list: " + value);
                         if (Keys.RemoteWork.OFFICE.getName().equals(value)) {
-                            log.info("->> CA remoteWork OFFICE");
+                            log.error("->> CA return remoteWork OFFICE");
                             return Stream.of(criteriaBuilder.equal(offerRoot.get(Keys.OfferFilterBy.remoteWork.getName()), 0));
                         } else if (Keys.RemoteWork.PARTLY.getName().equals(value)) {
-                            log.info("->> CA remoteWork PARTLY");
+                            log.error("->> CA return remoteWork PARTLY");
                             return Stream.of(criteriaBuilder.between(offerRoot.get(Keys.OfferFilterBy.remoteWork.getName()), 1, 99));
                         } else if (Keys.RemoteWork.FULL.getName().equals(value)) {
-                            log.info("->> CA remoteWork FULL");
+                            log.error("->> CA return remoteWork FULL");
                             return Stream.of(criteriaBuilder.equal(offerRoot.get(Keys.OfferFilterBy.remoteWork.getName()), 100));
                         } else {
-                            log.info("->> CA remoteWork NoFilter");
+                            log.error("->> CA return remoteWork NoFilter");
                             return Stream.empty();
                         }
                     })
@@ -125,6 +127,7 @@ public class OfferCriteriaRepository {
         // Warunek dla salaryMin
         BigDecimal salaryMin = offerSearchCriteria.getSalaryMin();
         if (Objects.nonNull(salaryMin) && salaryMin.equals(BigDecimal.ZERO)) {
+            log.error("->> CA return salaryMin: " + salaryMin);
             predicates.add(criteriaBuilder.greaterThanOrEqualTo(offerRoot.get(Keys.OfferFilterBy.salaryMin.getName()), salaryMin));
         }
 
@@ -135,18 +138,19 @@ public class OfferCriteriaRepository {
                     .filter(Objects::nonNull)
                     .filter(value -> !value.isBlank())
                     .flatMap(value -> {
+                        log.error("->> CA find value in salary list: " + value);
                         if (Keys.Salary.WITH.getName().equals(value)) {
-                            log.info("->> CA salary WITH");
+                            log.error("->> CA return salary WITH");
                             return Stream.of(criteriaBuilder.isNotNull(offerRoot.get(Keys.OfferFilterBy.salaryMin.getName())), criteriaBuilder.isNotNull(offerRoot.get(Keys.OfferFilterBy.salaryMax.getName())));
                         } else if (Keys.Salary.UNDISCLOSED.getName().equals(value)) {
-                            log.info("->> CA salary UNDISCLOSED");
+                            log.error("->> CA return salary UNDISCLOSED");
                             return Stream.of(criteriaBuilder.isNull(offerRoot.get(Keys.OfferFilterBy.salaryMin.getName())), criteriaBuilder.isNull(offerRoot.get(Keys.OfferFilterBy.salaryMax.getName())));
                         }
 //                        else {
 //                            return Stream.of(criteriaBuilder.equal(offerRoot.get(Keys.OfferFilterBy.salary.getName()), value));
 //                        }
                         else {
-                            log.info("->> CA salary NoFilter");
+                            log.error("->> CA return salary NoFilter");
                             return Stream.empty();
                         }
                     })
@@ -161,14 +165,15 @@ public class OfferCriteriaRepository {
                     .filter(Objects::nonNull)
                     .filter(value -> !value.isBlank())
                     .flatMap(value -> {
+                        log.error("->> CA find value in status list: " + value);
                         if (Keys.OfferState.ACTIVE.getName().equals(value)) {
-                            log.info("->> CA status ACTIVE");
+                            log.error("->> CA return status ACTIVE");
                             return Stream.of(criteriaBuilder.equal(offerRoot.get(Keys.OfferFilterBy.status.getName()), Keys.OfferState.ACTIVE.getName()));
                         } else if (Keys.OfferState.EXPIRED.getName().equals(value)) {
-                            log.info("->> CA status EXPIRED");
+                            log.error("->> CA return status EXPIRED");
                             return Stream.of(criteriaBuilder.equal(offerRoot.get(Keys.OfferFilterBy.status.getName()), Keys.OfferState.EXPIRED.getName()));
                         } else {
-                            log.info("->> CA status NoFilter");
+                            log.error("->> CA return status NoFilter");
                             return Stream.empty();
                         }
                     })
@@ -179,7 +184,7 @@ public class OfferCriteriaRepository {
         // Warunek dla city
         String city = offerSearchCriteria.getCity();
         if (Objects.nonNull(city) && !city.isBlank()) {
-            log.info("->> CA city");
+            log.error("->> CA return city: " + city);
             predicates.add(criteriaBuilder.equal(offerRoot.get(Keys.OfferFilterBy.cityId.getName())
                     .get(Keys.OfferFilterBy.cityName.getName()), city));
         }
@@ -187,7 +192,7 @@ public class OfferCriteriaRepository {
         // Warunek dla employer
         String employer = offerSearchCriteria.getEmployer();
         if (Objects.nonNull(employer) && !employer.isBlank()) {
-            log.info("->> CA employer");
+            log.error("->> CA return employer: " + employer );
             predicates.add(criteriaBuilder.equal(offerRoot.get(Keys.OfferFilterBy.employerId.getName())
                     .get(Keys.OfferFilterBy.companyName.getName()), employer));
         }
@@ -199,6 +204,7 @@ public class OfferCriteriaRepository {
                     .filter(Objects::nonNull)
                     .filter(value -> !value.isBlank())
                     .flatMap(value -> {
+                        log.error("->> CA find value in skills list: " + value);
                         if (Arrays.asList(
                                 "Python",
                                 "JavaScript",
@@ -248,7 +254,7 @@ public class OfferCriteriaRepository {
                                 "Maven",
                                 "Gradle"
                         ).contains(value)) {
-                            log.info("->> CA skills");
+                            log.error("->> CA return skills: " + value);
                             return Stream.of(criteriaBuilder.equal(offerRoot.get(
                                             Keys.OfferFilterBy.offerSkills.getName())
                                     .get(Keys.OfferFilterBy.skillId.getName())
@@ -268,16 +274,32 @@ public class OfferCriteriaRepository {
     private void setOrder(OfferSearchCriteria offerSearchCriteria,
                           CriteriaQuery<OfferEntity> criteriaQuery,
                           Root<OfferEntity> offerEntityRoot) {
-        if (offerSearchCriteria.getSortDirection().equals(Sort.Direction.ASC)) {
-            criteriaQuery.orderBy(criteriaBuilder.asc(offerEntityRoot.get(offerSearchCriteria.getSortBy())));
-        } else {
-            criteriaQuery.orderBy(criteriaBuilder.desc(offerEntityRoot.get(offerSearchCriteria.getSortBy())));
+
+        if(offerSearchCriteria.getSortBy().contains(".")) {
+            String[] split = offerSearchCriteria.getSortBy().split("[.]");
+            if (offerSearchCriteria.getSortDirection().equals(Sort.Direction.ASC)) {
+                log.error("->> CA Sorting ASC with: " + split[0] + " and " + split[1]);
+                criteriaQuery.orderBy(criteriaBuilder.asc(offerEntityRoot.get(split[0]).get(split[1])));
+            } else {
+                log.error("->> CA Sorting DESC with: " + split[0] + " and " + split[1]);
+                criteriaQuery.orderBy(criteriaBuilder.desc(offerEntityRoot.get(split[0]).get(split[1])));
+            }
+        }
+        else {
+            if (offerSearchCriteria.getSortDirection().equals(Sort.Direction.ASC)) {
+                log.error("->> CA Sorting ASC with: " + offerSearchCriteria.getSortBy());
+                criteriaQuery.orderBy(criteriaBuilder.asc(offerEntityRoot.get(offerSearchCriteria.getSortBy())));
+            } else {
+                log.error("->> CA Sorting DESC with: " + offerSearchCriteria.getSortBy());
+                criteriaQuery.orderBy(criteriaBuilder.desc(offerEntityRoot.get(offerSearchCriteria.getSortBy())));
+            }
         }
     }
 
     private Pageable getPageable(OfferSearchCriteria offerSearchCriteria) {
+        log.error("->> CA Pageable pageNumber: " + (offerSearchCriteria.getPageNumber()-1));
         Sort sort = Sort.by(offerSearchCriteria.getSortDirection(), offerSearchCriteria.getSortBy());
-        return PageRequest.of(offerSearchCriteria.getPageNumber(), offerSearchCriteria.getPageSize(), sort);
+        return PageRequest.of(offerSearchCriteria.getPageNumber()-1, offerSearchCriteria.getPageSize(), sort);
     }
 
     private long getOfferCount(Predicate predicate) {

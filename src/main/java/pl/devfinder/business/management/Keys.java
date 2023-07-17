@@ -152,6 +152,26 @@ public interface Keys {
             return name;
         }
     }
+    enum OfferSortedBy {
+        title("title"),
+        employerId_companyName("employerId.companyName"),
+        remoteWork("remoteWork"),
+        salaryMin("salaryMin"),
+        createdAt("createdAt"),
+        status("status"),
+        cityId_cityName("cityId.cityName"),
+        experienceLevel("experienceLevel");
+
+        private final String name;
+
+        OfferSortedBy(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
     enum CandidateFilterBy {
         title("title"),
         employerId("employerId"),

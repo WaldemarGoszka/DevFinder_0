@@ -5,8 +5,20 @@ server:
   port: 8190
   servlet:
     context-path: /devfinder
-
+#log4j:
+#  logger:
+#    org:
+#      hibernate:
+#        SQL: DEBUG
+#        type: TRACE
 spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+#    properties:
+#      show_sql: true              # show SQL with Slf4j
+#      hibernate.format_sql: true  # show SQL pretty
   security:
     enabled: false
   datasource:
@@ -20,17 +32,13 @@ spring:
       connectionTimeout: 20000
       minimumIdle: 10
       maximumPoolSize: 20
-    jpa:
-      hibernate:
-        ddl-auto: validate
-      show-sql: true
       properties:
         hibernate:
           dialect: org.hibernate.dialect.PostgreSQLDialect
-    mvc:
-      hiddenmethod:
-        filter:
-          enabled: true
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
   mail:
     host: smtp.gmail.com
     port: 587
