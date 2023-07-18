@@ -1,6 +1,9 @@
 package pl.devfinder.business.management;
 
 
+import java.util.Arrays;
+import java.util.List;
+
 public interface Keys {
 
     enum CandidateState {
@@ -139,6 +142,7 @@ public interface Keys {
         cityName("cityName"),
         experienceLevel("experienceLevel"),
         offerSkills("offerSkills"),
+        offerId("offerId"),
         skillId("skillId"),
         skillName("skillName");
 
@@ -197,6 +201,66 @@ public interface Keys {
 
         public String getName() {
             return name;
+        }
+    }
+
+    public enum LIST_OF_SKILLS {
+        LIST_OF_SKILLS(
+                "Python",
+                "JavaScript",
+                "C++",
+                "SQL",
+                "HTML",
+                "CSS",
+                "PHP",
+                "Ruby",
+                "Swift",
+                "Go",
+                "Kotlin",
+                "React",
+                "Angular",
+                "Vue.js",
+                "Node.js",
+                "Docker",
+                "Git",
+                "AWS",
+                "Machine Learning",
+                "Data Science",
+                "Ruby on Rails",
+                "ASP.NET",
+                "Laravel",
+                "Spring Framework",
+                "Express.js",
+                "MongoDB",
+                "PostgreSQL",
+                "Firebase",
+                "Elasticsearch",
+                "GraphQL",
+                "AWS Lambda",
+                "Azure",
+                "Google Cloud Platform",
+                "DevOps",
+                "Scrum",
+                "Kubernetes",
+                "Microservices",
+                "RESTful API",
+                "Test Driven Development",
+                "Agile Project Management",
+                "Spring Boot",
+                "Hibernate",
+                "JavaFX",
+                "JPA",
+                "JUnit",
+                "Maven",
+                "Gradle"
+        );
+
+        private final List<String> fields;
+        private LIST_OF_SKILLS(String... fields){
+            this.fields = Arrays.asList(fields);
+        }
+        public List<String> getFields(){
+            return fields;
         }
     }
 }

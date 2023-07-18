@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -52,7 +53,10 @@ public class OfferService {
     }
 
     public String formatSalaryRange(BigDecimal salaryMin, BigDecimal salaryMax) {
-        return String.valueOf(salaryMin.toBigInteger()) + " - " + String.valueOf(salaryMax.toBigInteger());
+        if(Objects.nonNull(salaryMin) && Objects.nonNull(salaryMax)) {
+            return String.valueOf(salaryMin.toBigInteger()) + " - " + String.valueOf(salaryMax.toBigInteger());
+        }
+        return Keys.Salary.UNDISCLOSED.getName();
     }
 
     public String formatRemoteWork(Integer remote) {
