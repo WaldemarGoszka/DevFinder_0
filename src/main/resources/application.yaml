@@ -15,7 +15,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-    show-sql: false
+    show-sql: true
 #    properties:
 #      show_sql: true              # show SQL with Slf4j
 #      hibernate.format_sql: true  # show SQL pretty

@@ -330,12 +330,15 @@
                                         <td th:text="${offer.getSalaryRange()}"></td>
                                         <td th:text="${offer.getDaysSinceCreated()} + ' days ago'"></td>
                                         <td>
-                                            <form
-                                                    action="#"
-                                                    th:action="@{offer/{offerId}(offerId=${offer.getOfferId})}"
-                                                    method="GET">
-                                                <button class="btn btn-info m-2" type="submit">Details</button>
-                                            </form>
+                                            <!--                                            <form-->
+                                            <!--                                                    action="#"-->
+                                            <!--                                                    th:action="@{offer/{offerId}(offerId=${offer.getOfferId})}"-->
+                                            <!--                                                    method="GET">-->
+                                            <!--                                                <button class="btn btn-info m-2" type="submit">Details</button>-->
+                                            <!--                                            </form>-->
+                                            <a th:href="@{offer/{offerId}(offerId=${offer.getOfferId})}">
+                                                <button class="btn btn-info m-2" type="button">Details</button>
+                                            </a>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -387,10 +390,6 @@
 
         document.querySelector('form').submit();
     }
-
-
-
-
 
 
 </script>

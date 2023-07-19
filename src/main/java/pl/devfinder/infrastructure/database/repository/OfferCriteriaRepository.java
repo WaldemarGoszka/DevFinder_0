@@ -52,7 +52,6 @@ public class OfferCriteriaRepository {
                 PageRequest.of(0, 500,
                         Sort.by(offerSearchCriteria.getSortDirection(), offerSearchCriteria.getSortBy())), 500);
         long offerCount = offerEntitiesToCheck.getContent().size();
-        System.out.println("############################## size" + offerCount);
 ///////////////
         typedQuery.setFirstResult((offerSearchCriteria.getPageNumber() - 1) * offerSearchCriteria.getPageSize());
         typedQuery.setMaxResults(offerSearchCriteria.getPageSize());
