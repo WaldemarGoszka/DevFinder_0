@@ -44,6 +44,9 @@ public class EmployerEntity {
     @Column(name = "number_of_employees")
     private Integer numberOfEmployees;
 
+    @Column(name = "amount_of_available_offers")
+    private Integer amountOfAvailableOffers;
+
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;
 

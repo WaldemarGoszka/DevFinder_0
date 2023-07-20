@@ -1,4 +1,4 @@
-package pl.devfinder.infrastructure.database.repository;
+package pl.devfinder.infrastructure.database.repository.criteria;
 
 
 import jakarta.persistence.EntityManager;
@@ -37,6 +37,8 @@ public class OfferCriteriaRepository {
     }
 
     public Page<Offer> findAllByCriteria(OfferSearchCriteria offerSearchCriteria) {
+        //TODO tu wstawić CriteriaBuilder builder = entityManager.getCriteriaBuilder(); zamiast w konktruktorze
+
         log.info("Trying Find By Criteria");
         CriteriaQuery<OfferEntity> criteriaQuery = criteriaBuilder.createQuery(OfferEntity.class);
         Root<OfferEntity> offerEntityRoot = criteriaQuery.from(OfferEntity.class);

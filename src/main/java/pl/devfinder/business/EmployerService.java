@@ -5,13 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.devfinder.api.dto.mapper.CandidateRowMapper;
 import pl.devfinder.business.dao.EmployerDAO;
 import pl.devfinder.domain.Employer;
 import pl.devfinder.domain.EmployerSearchCriteria;
 import pl.devfinder.domain.User;
-import pl.devfinder.infrastructure.database.repository.EmployerCriteriaRepository;
-import pl.devfinder.infrastructure.database.repository.OfferCriteriaRepository;
+import pl.devfinder.infrastructure.database.repository.criteria.EmployerCriteriaRepository;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -41,6 +39,6 @@ public class EmployerService {
     }
 
     public Page<Employer> findAllByCriteria(EmployerSearchCriteria employerSearchCriteria) {
-        return employerSearchCriteria.findAllByCriteria(employerSearchCriteria);
+        return employerCriteriaRepository.findAllByCriteria(employerSearchCriteria);
     }
 }

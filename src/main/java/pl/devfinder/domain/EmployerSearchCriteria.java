@@ -13,11 +13,14 @@ public class EmployerSearchCriteria {
 
     String city;
     String companyName;
-    List<String> skillsInOffer = new ArrayList<>();
+    List<String> skillsInOffers = new ArrayList<>();
+    Integer amountOffers;
+    Integer numberOfEmployees;
+
 
     Integer pageNumber = 1;
     Integer pageSize = 5;
-    Sort.Direction sortDirection = Sort.Direction.DESC;
+    Sort.Direction sortDirection = Sort.Direction.ASC;
     String sortBy = "companyName";
 
 }

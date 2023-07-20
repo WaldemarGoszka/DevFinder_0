@@ -14,8 +14,7 @@ import pl.devfinder.business.management.Keys;
 import pl.devfinder.domain.Offer;
 import pl.devfinder.domain.OfferSearchCriteria;
 import pl.devfinder.domain.exception.NotFoundException;
-import pl.devfinder.infrastructure.database.repository.OfferCriteriaRepository;
-import pl.devfinder.infrastructure.database.repository.mapper.OfferEntityMapper;
+import pl.devfinder.infrastructure.database.repository.criteria.OfferCriteriaRepository;
 
 import java.math.BigDecimal;
 import java.time.Duration;

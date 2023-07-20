@@ -76,8 +76,14 @@ public class CandidateController {
                                    Authentication authentication) {
         Utility.putUserDataToModel(authentication, userService, model);
 
+        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+
         Page<EmployerRowDTO> page = employerService.findAllByCriteria(employerSearchCriteria).map(employerRowMapper::map);
         List<EmployerRowDTO> allEmployers = page.getContent();
+
+//ToolBar
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
 
 //        List<EmployerRowDTO> allEmployers = employerService.findAll().stream()
 //                .map(employerRowMapper::map)

@@ -22,7 +22,7 @@ public abstract class EmployerRowMapper {
         employerRowDTO.website(employer.getWebsite());
         employerRowDTO.numberOfEmployees(employer.getNumberOfEmployees());
         employerRowDTO.cityId(employer.getCityId());
-        employerRowDTO.numberOfAvailableOffers(offerService.getNumberOfOffersByEmployerAndByState(employer.getEmployerId(), Keys.OfferState.ACTIVE));
+        employerRowDTO.amountOfAvailableOffers(employer.getAmountOfAvailableOffers());
         return employerRowDTO.build();
     }
 

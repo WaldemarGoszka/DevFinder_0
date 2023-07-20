@@ -156,7 +156,7 @@ public interface Keys {
             return name;
         }
     }
-    enum OfferSortedBy {
+    enum OfferSortBy {
         title("title"),
         employerId_companyName("employerId.companyName"),
         remoteWork("remoteWork"),
@@ -168,7 +168,7 @@ public interface Keys {
 
         private final String name;
 
-        OfferSortedBy(String name) {
+        OfferSortBy(String name) {
             this.name = name;
         }
 
@@ -261,6 +261,24 @@ public interface Keys {
         }
         public List<String> getFields(){
             return fields;
+        }
+    }
+
+    enum EmployerSortBy {
+        companyName("companyName"),
+        skillsInOffers("skillsInOffers"),
+        city("city"),
+        amountOfAvailableOffers("amountOffers"),
+        numberOfEmployees("numberOfEmployees");
+
+        private final String name;
+
+        EmployerSortBy(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
         }
     }
 }

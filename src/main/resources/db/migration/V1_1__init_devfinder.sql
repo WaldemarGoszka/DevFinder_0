@@ -157,3 +157,4 @@ CREATE TABLE  email_verification_token (
     CONSTRAINT "verification_token_user_id"
         FOREIGN KEY (user_id) REFERENCES devfinder_user (user_id) ON DELETE CASCADE
 );
+

@@ -19,6 +19,7 @@ public class Employer {
     String logoFile;
     String website;
     Integer numberOfEmployees;
+    Integer amountOfAvailableOffers;
     OffsetDateTime createdAt;
     City cityId;
 }
