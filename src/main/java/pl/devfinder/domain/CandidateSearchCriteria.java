@@ -13,13 +13,17 @@ public class CandidateSearchCriteria {
     List<String> experienceLevels = new ArrayList<>();
     List<String> remoteWork = new ArrayList<>();
     BigDecimal salaryMin;
-    List<String> salary = new ArrayList<>();
-    List<String> status = new ArrayList<>(List.of(Keys.OfferState.ACTIVE.getName()));
+    Integer yearsOfExperience;
+    Boolean openToRelocation;
+    Boolean openToRemoteJob;
+
+    List<String> status = new ArrayList<>(List.of(Keys.CandidateState.ACTIVE.getState()));
+
     String city;
-    String employer;
     List<String> skills = new ArrayList<>();
+
     Integer pageNumber = 1;
-    Integer pageSize = 3;
+    Integer pageSize = 5;
     Sort.Direction sortDirection = Sort.Direction.DESC;
     String sortBy = "createdAt";
 

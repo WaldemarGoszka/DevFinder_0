@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org/"
-      xmlns="http://www.w3.org/1999/html">
+      xmlns="http://www.w3.org/1999/html"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head>
     <title>DevFinder - Candidate - Offers</title>
@@ -246,7 +247,7 @@
                             </div>
                             <!--                        End Page Numbers Bar-->
                             <div class="table-responsive">
-                                <table class="table">
+                                <table class="table table-hover">
                                     <thead>
                                     <input type="hidden" name="sortBy" th:value="${offerSearchCriteria.sortBy}"/>
                                     <input type="hidden" name="sortDirection"

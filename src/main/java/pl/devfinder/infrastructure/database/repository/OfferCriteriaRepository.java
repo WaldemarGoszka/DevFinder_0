@@ -160,27 +160,6 @@ public class OfferCriteriaRepository {
         }
 
 //         Warunek dla listy status
-//        List<String> status = offerSearchCriteria.getStatus();
-//        if (Objects.nonNull(status) && !status.isEmpty()) {
-//            List<Predicate> statusPredicates = status.stream()
-//                    .filter(Objects::nonNull)
-//                    .filter(value -> !value.isBlank())
-//                    .flatMap(value -> {
-//                        log.info("->> CA find value in status list: " + value);
-//                        if (Keys.OfferState.ACTIVE.getName().equals(value)) {
-//                            log.info("->> CA return status ACTIVE");
-//                            return Stream.of(criteriaBuilder.equal(offerRoot.get(Keys.OfferFilterBy.status.getName()), Keys.OfferState.ACTIVE.getName()));
-//                        } else if (Keys.OfferState.EXPIRED.getName().equals(value)) {
-//                            log.info("->> CA return status EXPIRED");
-//                            return Stream.of(criteriaBuilder.equal(offerRoot.get(Keys.OfferFilterBy.status.getName()), Keys.OfferState.EXPIRED.getName()));
-//                        } else {
-//                            log.info("->> CA return status NoFilter");
-//                            return Stream.empty();
-//                        }
-//                    })
-//                    .toList();
-//            predicates.addAll(statusPredicates);
-//        }
 
         List<String> status = offerSearchCriteria.getStatus();
         if (Objects.nonNull(status) && !status.isEmpty()) {
