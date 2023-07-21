@@ -1,4 +1,4 @@
-package pl.devfinder.domain;
+package pl.devfinder.domain.search;
 
 import lombok.Data;
 import org.springframework.data.domain.Sort;

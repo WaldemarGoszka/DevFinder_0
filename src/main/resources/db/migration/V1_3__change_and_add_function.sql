@@ -1,6 +1,6 @@
 ALTER TABLE employer ADD COLUMN amount_of_available_offers INTEGER DEFAULT 0;
 
-CREATE OR REPLACE FUNCTION update_amount_of_available_offers()
+CREATE OR REPLACE FUNCTION increase_amount_of_available_offers_when_add_new()
     RETURNS TRIGGER AS
 $$
 BEGIN
@@ -15,16 +15,16 @@ END;
 $$
     LANGUAGE plpgsql;
 
-CREATE TRIGGER update_employer_amount_of_available_offers
+CREATE TRIGGER trigger_increase_amount_of_available_offers_when_add_new
     AFTER INSERT ON offer
     FOR EACH ROW
-EXECUTE FUNCTION update_amount_of_available_offers();
+EXECUTE FUNCTION increase_amount_of_available_offers_when_add_new();
 
-CREATE OR REPLACE FUNCTION decrease_amount_of_available_offers()
+CREATE OR REPLACE FUNCTION decrease_amount_of_available_offers_when_delete()
     RETURNS TRIGGER AS
 $$
 BEGIN
-    IF OLD.status = 'EXPIRED' THEN
+    IF OLD.status = 'ACTIVE' THEN
         UPDATE employer
         SET amount_of_available_offers = amount_of_available_offers - 1
         WHERE employer_id = OLD.employer_id;
@@ -34,12 +34,12 @@ END;
 $$
     LANGUAGE plpgsql;
 
-CREATE TRIGGER decrease_employer_amount_of_available_offers
+CREATE TRIGGER trigger_decrease_amount_of_available_offers_when_delete
     AFTER DELETE ON offer
     FOR EACH ROW
-EXECUTE FUNCTION decrease_amount_of_available_offers();
+EXECUTE FUNCTION decrease_amount_of_available_offers_when_delete();
 
-CREATE OR REPLACE FUNCTION recalculate_amount_of_available_offers()
+CREATE OR REPLACE FUNCTION recalculate_amount_of_available_offers_after_inserts()
     RETURNS VOID AS
 $$
 BEGIN
@@ -56,9 +56,9 @@ END;
 $$
     LANGUAGE plpgsql;
 
-SELECT recalculate_amount_of_available_offers();
+SELECT recalculate_amount_of_available_offers_after_inserts();
 
-CREATE OR REPLACE FUNCTION decrease_amount_of_available_offers_expired()
+CREATE OR REPLACE FUNCTION decrease_amount_of_available_offers_when_change_active_to_expired()
     RETURNS TRIGGER AS
 $$
 BEGIN
@@ -73,12 +73,12 @@ END;
 $$
     LANGUAGE plpgsql;
 
-CREATE TRIGGER decrease_amount_of_available_offers_expired_trigger
+CREATE TRIGGER trigger_decrease_amount_of_available_offers_when_change_active_to_expired
     AFTER UPDATE ON offer
     FOR EACH ROW
-EXECUTE FUNCTION decrease_amount_of_available_offers_expired();
+EXECUTE FUNCTION decrease_amount_of_available_offers_when_change_active_to_expired();
 
-CREATE OR REPLACE FUNCTION increase_amount_of_available_offers_active()
+CREATE OR REPLACE FUNCTION increase_amount_of_available_offers_when_change_expired_to_active()
     RETURNS TRIGGER AS
 $$
 BEGIN
@@ -93,7 +93,7 @@ END;
 $$
     LANGUAGE plpgsql;
 
-CREATE TRIGGER increase_amount_of_available_offers_active_trigger
+CREATE TRIGGER trigger_increase_amount_of_available_offers_when_change_expired_to_active
     AFTER UPDATE ON offer
     FOR EACH ROW
-EXECUTE FUNCTION increase_amount_of_available_offers_active();
+EXECUTE FUNCTION increase_amount_of_available_offers_when_change_expired_to_active();

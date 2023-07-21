@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.devfinder.business.dao.EmployerDAO;
 import pl.devfinder.domain.Employer;
-import pl.devfinder.domain.EmployerSearchCriteria;
+import pl.devfinder.domain.search.EmployerSearchCriteria;
 import pl.devfinder.domain.User;
 import pl.devfinder.infrastructure.database.repository.criteria.EmployerCriteriaRepository;
 

@@ -12,12 +12,13 @@ DROP TABLE IF EXISTS reset_password_token CASCADE;
 DROP TABLE IF EXISTS email_verification_token CASCADE;
 DROP TABLE IF EXISTS flyway_schema_history CASCADE;
 
-DROP FUNCTION IF EXISTS update_amount_of_available_offers();
-DROP FUNCTION IF EXISTS decrease_amount_of_available_offers();
-DROP FUNCTION IF EXISTS recalculate_amount_of_available_offers();
-DROP FUNCTION IF EXISTS decrease_amount_of_available_offers_expired();
-DROP FUNCTION IF EXISTS increase_amount_of_available_offers_active();
-DROP TRIGGER IF EXISTS update_employer_amount_of_available_offers ON offer;
-DROP TRIGGER IF EXISTS decrease_employer_amount_of_available_offers ON offer;
-DROP TRIGGER IF EXISTS decrease_amount_of_available_offers_expired_trigger ON offer;
-DROP TRIGGER IF EXISTS increase_amount_of_available_offers_active_trigger ON offer;
+DROP FUNCTION IF EXISTS increase_amount_of_available_offers_when_add_new();
+DROP FUNCTION IF EXISTS decrease_amount_of_available_offers_when_delete();
+DROP FUNCTION IF EXISTS recalculate_amount_of_available_offers_after_inserts();
+DROP FUNCTION IF EXISTS decrease_amount_of_available_offers_when_change_active_to_expired();
+DROP FUNCTION IF EXISTS increase_amount_of_available_offers_when_change_expired_to_active();
+
+DROP TRIGGER IF EXISTS trigger_increase_amount_of_available_offers_when_add_new ON offer;
+DROP TRIGGER IF EXISTS trigger_decrease_amount_of_available_offers_when_delete ON offer;
+DROP TRIGGER IF EXISTS trigger_decrease_amount_of_available_offers_when_change_active_to_expired ON offer;
+DROP TRIGGER IF EXISTS trigger_increase_amount_of_available_offers_when_change_expired_to_active ON offer;

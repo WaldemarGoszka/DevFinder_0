@@ -12,8 +12,7 @@ import pl.devfinder.business.CandidateService;
 import pl.devfinder.business.UserService;
 import pl.devfinder.business.management.Keys;
 import pl.devfinder.business.management.Utility;
-import pl.devfinder.domain.CandidateSearchCriteria;
-import pl.devfinder.domain.EmployerSearchCriteria;
+import pl.devfinder.domain.search.CandidateSearchCriteria;
 
 import java.util.List;
 

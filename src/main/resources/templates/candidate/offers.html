@@ -215,7 +215,31 @@
                     <!--            TABLE-->
                     <div class="col-sm-12 col-xl-12">
                         <div class="bg-secondary rounded h-100 p-4">
-                            <h6 class="mb-4">Current job offers (found: [[${totalItems}]])</h6>
+
+                            <!--                            START PAGE SIZE BAR-->
+                            <div class="btn-toolbar justify-content-between mb-3">
+                                <input type="hidden" th:name="pageSize"
+                                       th:value="${offerSearchCriteria.pageSize}"/>
+                                <div><h6 class="mb-4">Current job offers (found: [[${totalItems}]])</h6></div>
+                                <span class="btn-group" role="group">
+                                    <button th:onclick="'setPageSize(5)'"
+                                            type="submit"
+                                            th:class="${offerSearchCriteria.pageSize == 5}
+                                            ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-outline-primary'"
+                                    >5</button>
+                                    <button th:onclick="'setPageSize(10)'"
+                                            type="submit"
+                                            th:class="${offerSearchCriteria.pageSize == 10}
+                                            ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-outline-primary'"
+                                    >10</button>
+                                    <button th:onclick="'setPageSize(50)'"
+                                            type="submit"
+                                            th:class="${offerSearchCriteria.pageSize == 50}
+                                            ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-outline-primary'"
+                                    >50</button>
+                                </span>
+                            </div>
+                            <!--                            END PAGE SIZE BAR-->
                             <!--                        START PAGINATION BAR-->
                             <div th:if="${totalPages > 1}" class="btn-toolbar justify-content-between" role="toolbar">
                                 <input type="hidden" th:name="pageNumber" th:value="${offerSearchCriteria.pageNumber}"/>
@@ -332,12 +356,6 @@
                                         <td th:text="${offer.getSalaryRange()}"></td>
                                         <td th:text="${offer.getDaysSinceCreated()} + ' days ago'"></td>
                                         <td>
-                                            <!--                                            <form-->
-                                            <!--                                                    action="#"-->
-                                            <!--                                                    th:action="@{offer/{offerId}(offerId=${offer.getOfferId})}"-->
-                                            <!--                                                    method="GET">-->
-                                            <!--                                                <button class="btn btn-info m-2" type="submit">Details</button>-->
-                                            <!--                                            </form>-->
                                             <a th:href="@{offer/{offerId}(offerId=${offer.getOfferId})}">
                                                 <button class="btn btn-info m-2" type="button">Details</button>
                                             </a>
@@ -374,6 +392,11 @@
     function setPageNumber(page) {
         var pageNumberInput = document.getElementsByName('pageNumber')[0];
         pageNumberInput.value = page;
+    }
+
+    function setPageSize(size) {
+        var pageSizeInput = document.getElementsByName('pageSize')[0];
+        pageSizeInput.value = size;
     }
 
     function increasePageNumber() {

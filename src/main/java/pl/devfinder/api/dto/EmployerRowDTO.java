@@ -11,6 +11,7 @@ import pl.devfinder.domain.City;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmployerRowDTO {
+    Long employerId;
     String companyName;
     String logoFile;
     String website;

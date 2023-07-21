@@ -12,8 +12,8 @@ import pl.devfinder.api.dto.mapper.*;
 import pl.devfinder.business.*;
 import pl.devfinder.business.management.Keys;
 import pl.devfinder.business.management.Utility;
-import pl.devfinder.domain.EmployerSearchCriteria;
-import pl.devfinder.domain.OfferSearchCriteria;
+import pl.devfinder.domain.search.EmployerSearchCriteria;
+import pl.devfinder.domain.search.OfferSearchCriteria;
 
 import java.util.List;
 
@@ -80,15 +80,19 @@ public class CandidateController {
 
         Page<EmployerRowDTO> page = employerService.findAllByCriteria(employerSearchCriteria).map(employerRowMapper::map);
         List<EmployerRowDTO> allEmployers = page.getContent();
+        model.addAttribute("allEmployersDTOs", allEmployers);
+
 
 //ToolBar
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
 
-//        List<EmployerRowDTO> allEmployers = employerService.findAll().stream()
-//                .map(employerRowMapper::map)
-//                .toList();
-        model.addAttribute("allEmployersDTOs", allEmployers);
+//Sorting
+        model.addAttribute("sortBy", employerSearchCriteria.getSortBy());
+        model.addAttribute("sortDirection", employerSearchCriteria.getSortDirection());
+        model.addAttribute("reverseSortDirection", employerSearchCriteria.getSortDirection()
+                .equals(Sort.Direction.ASC) ? Sort.Direction.DESC : Sort.Direction.ASC);
+
         return "candidate/employers";
     }
 
@@ -103,12 +107,14 @@ public class CandidateController {
         //Page<OfferRowDTO> page = offerService.findAllByStatePaginated(offerSearchCriteria, Keys.OfferState.ACTIVE).map(offerRowMapper::map);
         Page<OfferRowDTO> page = offerService.findAllByCriteria(offerSearchCriteria).map(offerRowMapper::map);
         List<OfferRowDTO> allOffers = page.getContent();
+        model.addAttribute("allOffersDTOs", allOffers);
 
-//ToolBar
+
+//Pagination Bar
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
 
-//Check selected filters
+//Check selected for filters
         model.addAttribute("experienceLevelChecked", offerSearchCriteria.getExperienceLevels());
         model.addAttribute("skillChecked", offerSearchCriteria.getSkills());
         model.addAttribute("cityChecked", offerSearchCriteria.getCity());
@@ -128,6 +134,13 @@ public class CandidateController {
         model.addAttribute("salaryEnumUndisclosed", Keys.Salary.UNDISCLOSED.getName());
         model.addAttribute("statusEnumActive", Keys.OfferState.ACTIVE.getName());
         model.addAttribute("statusEnumExpired", Keys.OfferState.EXPIRED.getName());
+//List for filters
+        List<SkillDTO> allSkills = skillService.findAll().stream().map(skillMapper::map).toList();
+        List<CityDTO> allCity = cityService.findAll().stream().map(cityMapper::map).toList();
+        List<EmployerRowDTO> allEmployer = employerService.findAll().stream().map(employerRowMapper::map).toList();
+        model.addAttribute("allSkillsDTOs", allSkills);
+        model.addAttribute("allCityDTOs", allCity);
+        model.addAttribute("allEmployerDTOs", allEmployer);
 
 //Sorting
         model.addAttribute("sortBy", offerSearchCriteria.getSortBy());
@@ -135,13 +148,6 @@ public class CandidateController {
         model.addAttribute("reverseSortDirection", offerSearchCriteria.getSortDirection()
                 .equals(Sort.Direction.ASC) ? Sort.Direction.DESC : Sort.Direction.ASC);
 
-        List<SkillDTO> allSkills = skillService.findAll().stream().map(skillMapper::map).toList();
-        List<CityDTO> allCity = cityService.findAll().stream().map(cityMapper::map).toList();
-        List<EmployerRowDTO> allEmployer = employerService.findAll().stream().map(employerRowMapper::map).toList();
-        model.addAttribute("allOffersDTOs", allOffers);
-        model.addAttribute("allSkillsDTOs", allSkills);
-        model.addAttribute("allCityDTOs", allCity);
-        model.addAttribute("allEmployerDTOs", allEmployer);
 
         return "candidate/offers";
     }

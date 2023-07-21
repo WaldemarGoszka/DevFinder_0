@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.devfinder.business.dao.OfferDAO;
 import pl.devfinder.business.management.Keys;
 import pl.devfinder.domain.Offer;
-import pl.devfinder.domain.OfferSearchCriteria;
+import pl.devfinder.domain.search.OfferSearchCriteria;
 import pl.devfinder.domain.exception.NotFoundException;
 import pl.devfinder.infrastructure.database.repository.criteria.OfferCriteriaRepository;
 

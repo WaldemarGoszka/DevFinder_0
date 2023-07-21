@@ -1,4 +1,4 @@
-package pl.devfinder.domain;
+package pl.devfinder.domain.search;
 
 import lombok.Data;
 import org.springframework.data.domain.Sort;
@@ -14,13 +14,13 @@ public class EmployerSearchCriteria {
     String city;
     String companyName;
     List<String> skillsInOffers = new ArrayList<>();
-    Integer amountOffers;
+    Integer amountOfAvailableOffers;
     Integer numberOfEmployees;
 
 
     Integer pageNumber = 1;
     Integer pageSize = 5;
     Sort.Direction sortDirection = Sort.Direction.ASC;
-    String sortBy = "companyName";
+    String sortBy = Keys.EmployerSortBy.amountOfAvailableOffers.getName();
 
 }

@@ -1,4 +1,4 @@
-package pl.devfinder.domain;
+package pl.devfinder.domain.search;
 
 import lombok.Data;
 import org.springframework.data.domain.Sort;
@@ -23,6 +23,6 @@ public class OfferSearchCriteria {
     Integer pageNumber = 1;
     Integer pageSize = 5;
     Sort.Direction sortDirection = Sort.Direction.DESC;
-    String sortBy = "createdAt";
+    String sortBy = Keys.OfferSortBy.createdAt.getName();
 
 }

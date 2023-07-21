@@ -17,6 +17,7 @@ public abstract class EmployerRowMapper {
             return null;
         }
         EmployerRowDTO.EmployerRowDTOBuilder employerRowDTO = EmployerRowDTO.builder();
+        employerRowDTO.employerId(employer.getEmployerId());
         employerRowDTO.companyName(employer.getCompanyName());
         employerRowDTO.logoFile(employer.getLogoFile());
         employerRowDTO.website(employer.getWebsite());

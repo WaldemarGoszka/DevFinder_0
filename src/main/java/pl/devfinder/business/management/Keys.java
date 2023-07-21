@@ -268,7 +268,7 @@ public interface Keys {
         companyName("companyName"),
         skillsInOffers("skillsInOffers"),
         city("city"),
-        amountOfAvailableOffers("amountOffers"),
+        amountOfAvailableOffers("amountOfAvailableOffers"),
         numberOfEmployees("numberOfEmployees");
 
         private final String name;

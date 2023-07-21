@@ -7,17 +7,13 @@ import jakarta.persistence.criteria.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Repository;
-import pl.devfinder.business.management.Keys;
 import pl.devfinder.domain.Employer;
-import pl.devfinder.domain.EmployerSearchCriteria;
+import pl.devfinder.domain.search.EmployerSearchCriteria;
 import pl.devfinder.infrastructure.database.entity.EmployerEntity;
 import pl.devfinder.infrastructure.database.repository.mapper.EmployerEntityMapper;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Stream;
 
 @Repository
 @Slf4j

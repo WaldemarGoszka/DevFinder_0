@@ -212,7 +212,30 @@
                     <!--                    END FILTERS -->
                     <div class="col-12">
                         <div class="bg-secondary rounded h-100 p-4">
-                            <h6 class="mb-4">Employers (found: [[${totalItems}]])</h6>
+<!--                            START PAGE SIZE BAR-->
+                            <div class="btn-toolbar justify-content-between mb-3">
+                                <input type="hidden" th:name="pageSize"
+                                       th:value="${employerSearchCriteria.pageSize}"/>
+                                <div><h6 class="mb-4">Employers (found: [[${totalItems}]])</h6></div>
+                                <span class="btn-group" role="group">
+                                    <button th:onclick="'setPageSize(5)'"
+                                            type="submit"
+                                            th:class="${employerSearchCriteria.pageSize == 5}
+                                            ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-outline-primary'"
+                                    >5</button>
+                                    <button th:onclick="'setPageSize(10)'"
+                                            type="submit"
+                                            th:class="${employerSearchCriteria.pageSize == 10}
+                                            ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-outline-primary'"
+                                    >10</button>
+                                    <button th:onclick="'setPageSize(50)'"
+                                            type="submit"
+                                            th:class="${employerSearchCriteria.pageSize == 50}
+                                            ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-outline-primary'"
+                                    >50</button>
+                                </span>
+                            </div>
+                            <!--                            END PAGE SIZE BAR-->
                             <!--                        START PAGINATION BAR-->
                             <div th:if="${totalPages > 1}" class="btn-toolbar justify-content-between" role="toolbar">
                                 <input type="hidden" th:name="pageNumber"
@@ -253,7 +276,7 @@
                                            th:value="${employerSearchCriteria.sortDirection}"/>
                                     <tr>
                                         <th scope="col">Logo</th>
-                                        <th scope="col"><a href="#" onclick="setSortParams('title')">
+                                        <th scope="col"><a href="#" onclick="setSortParams('companyName')">
                                             <div><i
                                                     th:if="${sortBy == 'companyName'}"
                                                     th:class="${employerSearchCriteria.sortDirection.name() == 'ASC'}
@@ -261,7 +284,7 @@
                                             </div>
                                             CompanyName</a>
                                         </th>
-                                        <th scope="col"><a href="#" onclick="setSortParams('title')">
+                                        <th scope="col"><a href="#" onclick="setSortParams('numberOfEmployees')">
                                             <div><i
                                                     th:if="${sortBy == 'numberOfEmployees'}"
                                                     th:class="${employerSearchCriteria.sortDirection.name() == 'ASC'}
@@ -277,7 +300,15 @@
                                             </div>
                                             City</a>
                                         </th>
-                                        <th scope="col">Amount Of Job Offers</th>
+                                        <th scope="col"><a href="#" onclick="setSortParams('amountOfAvailableOffers')">
+                                            <div><i
+                                                    th:if="${sortBy == 'amountOfAvailableOffers'}"
+                                                    th:class="${employerSearchCriteria.sortDirection.name() == 'ASC'}
+                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"></i>
+                                            </div>
+                                            Amount Of Job Offers</a>
+                                        </th>
+                                        <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -287,6 +318,11 @@
                                         <td th:text="${employer.getNumberOfEmployees()}"></td>
                                         <td th:text="${employer.getCityId().getCityName()}"></td>
                                         <td th:text="${employer.getAmountOfAvailableOffers()}"></td>
+                                        <td>
+                                            <a th:href="@{employer/{employerId}(employerId=${employer.getEmployerId})}">
+                                                <button class="btn btn-info m-2" type="button">Details</button>
+                                            </a>
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -324,6 +360,11 @@
         pageNumberInput.value = page;
     }
 
+    function setPageSize(size) {
+        var pageSizeInput = document.getElementsByName('pageSize')[0];
+        pageSizeInput.value = size;
+    }
+
     function increasePageNumber() {
         var pageNumberInput = document.getElementsByName('pageNumber')[0];
         pageNumberInput.value = parseInt(pageNumberInput.value) + 1;
@@ -340,6 +381,9 @@
 
         document.querySelector('form').submit();
     }
+
+
+
 </script>
 </body>
 
