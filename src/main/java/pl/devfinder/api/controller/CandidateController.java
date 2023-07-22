@@ -82,6 +82,15 @@ public class CandidateController {
         List<EmployerRowDTO> allEmployers = page.getContent();
         model.addAttribute("allEmployersDTOs", allEmployers);
 
+        model.addAttribute("skillChecked", employerSearchCriteria.getSkillsInOffers());
+        model.addAttribute("cityChecked", employerSearchCriteria.getCity());
+        model.addAttribute("offersChecked", employerSearchCriteria.getJobOffersStatus());
+
+
+        model.addAttribute("hasNoJobOffersEnum", Keys.EmployerFilterBy.hasNoJobOffers.getName());
+        model.addAttribute("hasJobOffersEnum", Keys.EmployerFilterBy.hasJobOffers.getName());
+
+
 
 //ToolBar
         model.addAttribute("totalPages", page.getTotalPages());
@@ -92,6 +101,11 @@ public class CandidateController {
         model.addAttribute("sortDirection", employerSearchCriteria.getSortDirection());
         model.addAttribute("reverseSortDirection", employerSearchCriteria.getSortDirection()
                 .equals(Sort.Direction.ASC) ? Sort.Direction.DESC : Sort.Direction.ASC);
+
+        List<SkillDTO> allSkills = skillService.findAll().stream().map(skillMapper::map).toList();
+        List<CityDTO> allCity = cityService.findAll().stream().map(cityMapper::map).toList();
+        model.addAttribute("allSkillsDTOs", allSkills);
+        model.addAttribute("allCityDTOs", allCity);
 
         return "candidate/employers";
     }

@@ -397,6 +397,7 @@
     function setPageSize(size) {
         var pageSizeInput = document.getElementsByName('pageSize')[0];
         pageSizeInput.value = size;
+        setPageNumber(1);
     }
 
     function increasePageNumber() {

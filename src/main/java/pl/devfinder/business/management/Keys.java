@@ -266,7 +266,6 @@ public interface Keys {
 
     enum EmployerSortBy {
         companyName("companyName"),
-        skillsInOffers("skillsInOffers"),
         city("city"),
         amountOfAvailableOffers("amountOfAvailableOffers"),
         numberOfEmployees("numberOfEmployees");
@@ -274,6 +273,25 @@ public interface Keys {
         private final String name;
 
         EmployerSortBy(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+    enum EmployerFilterBy {
+        skillsInOffers("skillsInOffers"),
+        hasJobOffers("hasJobOffers"),
+        hasNoJobOffers("hasNoJobOffers"),
+        amountOfAvailableOffers("amountOfAvailableOffers"),
+        city("city"),
+        cityId("cityId"),
+        cityName("cityName");
+
+        private final String name;
+
+        EmployerFilterBy(String name) {
             this.name = name;
         }
 
