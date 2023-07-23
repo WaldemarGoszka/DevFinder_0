@@ -14,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CandidateRowDTO {
-    //String candidateUUId;
+    Long candidateId;
     String firstName;
     String lastName;
     String experienceLevel;

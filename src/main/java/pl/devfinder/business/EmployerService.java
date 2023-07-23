@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.devfinder.business.dao.EmployerDAO;
 import pl.devfinder.domain.Employer;
+import pl.devfinder.domain.Offer;
+import pl.devfinder.domain.exception.NotFoundException;
 import pl.devfinder.domain.search.EmployerSearchCriteria;
 import pl.devfinder.domain.User;
 import pl.devfinder.infrastructure.database.repository.criteria.EmployerCriteriaRepository;
@@ -21,6 +23,12 @@ public class EmployerService {
 
     private final EmployerDAO employerDAO;
     private final EmployerCriteriaRepository employerCriteriaRepository;
+
+    public Employer findById(Long employerId) {
+        log.info("Trying find employerById, id: [{}]", employerId);
+        return employerDAO.findById(employerId).orElseThrow(() -> new NotFoundException(
+                "Could not find employer by Id [%s]".formatted(employerId)));
+    }
 
     @Transactional
     public List<Employer> findAll() {

@@ -9,6 +9,7 @@ import pl.devfinder.infrastructure.database.repository.jpa.EmployerJpaRepository
 import pl.devfinder.infrastructure.database.repository.mapper.EmployerEntityMapper;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
@@ -27,5 +28,10 @@ public class EmployerRepository implements EmployerDAO {
     public void save(Employer employer) {
         EmployerEntity employerEntity = employerEntityMapper.mapToEntity(employer);
         employerJpaRepository.save(employerEntity);
+    }
+
+    @Override
+    public Optional<Employer> findById(Long employerId) {
+        return employerJpaRepository.findById(employerId).map(employerEntityMapper::mapFromEntity);
     }
 }

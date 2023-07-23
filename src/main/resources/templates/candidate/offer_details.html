@@ -118,13 +118,19 @@
                                         th:text="${offerDetailsDTO.employerId.numberOfEmployees} + ' employees'"
                                         class="col-sm-8"></dd>
                                     <dt class="col-sm-4">
-                                        <button th:href="@{employer/{employerId}(employerId=${offerDetailsDTO.employerId.employerId})}"
-                                                class="btn btn-sm btn-primary">Employer Details
-                                        </button>
+                                        <a th:href="@{/candidate/employer/{employerId}(employerId=${offerDetailsDTO.employerId.employerId})}">
+                                            <button
+                                                    class="btn btn-sm btn-primary" type="button">Employer Details
+                                            </button>
+                                        </a>
                                     </dt>
                                     <dd class="col-sm-8">
-                                        <button class="btn btn-sm btn-primary">Job offers of this employer</button>
-                                    </dd>
+                                        <a th:href="@{/candidate/offers?employer={companyName}(companyName=${offerDetailsDTO.employerId.companyName})}">
+                                            <button
+                                                    class="btn btn-sm btn-primary" type="button">Job offers of this
+                                                employer
+                                            </button>
+                                        </a></dd>
 
                                 </dl>
                             </dd>
@@ -132,7 +138,8 @@
                             <dd th:text="${offerDetailsDTO.status}" class="col-sm-8"></dd>
 
                             <dt class="col-sm-4">Created At</dt>
-                            <dd  th:text="${#temporals.format(offerDetailsDTO.createdAt, 'dd-MM-yyyy')}" class="col-sm-8"></dd>
+                            <dd th:text="${#temporals.format(offerDetailsDTO.createdAt, 'dd-MM-yyyy')}"
+                                class="col-sm-8"></dd>
 
                         </dl>
                     </div>

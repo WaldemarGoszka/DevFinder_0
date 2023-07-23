@@ -25,6 +25,6 @@ public class CandidateSearchCriteria {
     Integer pageNumber = 1;
     Integer pageSize = 5;
     Sort.Direction sortDirection = Sort.Direction.DESC;
-    String sortBy = "createdAt";
+    String sortBy = "lastName";
 
 }

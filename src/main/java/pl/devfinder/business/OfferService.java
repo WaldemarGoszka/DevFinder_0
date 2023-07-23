@@ -68,7 +68,7 @@ public class OfferService {
     public Offer findById(Long offerId) {
         log.info("Trying find offerById, id: [{}]", offerId);
         return offerDAO.findById(offerId).orElseThrow(() -> new NotFoundException(
-                "Could not find user by userName: [%s]".formatted(offerId)));
+                "Could not find offer by Id [%s]".formatted(offerId)));
     }
 
     public Page<Offer> findAllByStatePaginated(

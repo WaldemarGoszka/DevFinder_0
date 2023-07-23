@@ -37,7 +37,7 @@ public class OfferCriteriaRepository {
     public Page<Offer> findAllByCriteria(OfferSearchCriteria offerSearchCriteria) {
         //TODO tu wstawić CriteriaBuilder builder = entityManager.getCriteriaBuilder(); zamiast w konktruktorze
 
-        log.info("Trying Find By Criteria");
+        log.info("Trying Find Offer By Criteria");
         CriteriaQuery<OfferEntity> criteriaQuery = criteriaBuilder.createQuery(OfferEntity.class);
         Root<OfferEntity> offerEntityRoot = criteriaQuery.from(OfferEntity.class);
         Predicate predicate = getPredicate(offerSearchCriteria, offerEntityRoot, criteriaQuery);
@@ -49,7 +49,7 @@ public class OfferCriteriaRepository {
 //////////////// Obejście problermu wyrzucającego błąd z metody getOfferCount(predicate)iczanie ilości wszystkich
 //        elementów uwzględniając predykaty
         PageImpl<OfferEntity> offerEntitiesToCheck = new PageImpl<>(typedQuery.getResultList(),
-                PageRequest.of(0, 500,
+                PageRequest.of(0, Integer.MAX_VALUE,
                         Sort.by(offerSearchCriteria.getSortDirection(), offerSearchCriteria.getSortBy())), 500);
         long offerCount = offerEntitiesToCheck.getContent().size();
 ///////////////
@@ -262,19 +262,6 @@ public class OfferCriteriaRepository {
     }
 
     private long getOfferCount(Predicate predicate) {
-//        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-//        Root<OfferEntity> countRoot = countQuery.from(OfferEntity.class);
-//        countQuery.select(criteriaBuilder.count(countRoot)).where(predicate);
-//        return entityManager.createQuery(countQuery).getSingleResult();
-
-        // z bing
-//        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-//        CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
-//        Root<OfferEntity> countRoot = countQuery.from(OfferEntity.class);
-//        countQuery.select(builder.count(countRoot)).where(predicate);
-//        return entityManager.createQuery(countQuery).getSingleResult();
-
-        //z gpt
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
         Root<OfferEntity> countRoot = countQuery.from(OfferEntity.class);
         countQuery.select(criteriaBuilder.count(countRoot)).where(predicate);

@@ -2,6 +2,7 @@ package pl.devfinder.infrastructure.database.repository.criteria;
 
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import lombok.extern.slf4j.Slf4j;
@@ -12,12 +13,11 @@ import pl.devfinder.domain.Employer;
 import pl.devfinder.domain.search.EmployerSearchCriteria;
 import pl.devfinder.infrastructure.database.entity.EmployerEntity;
 import pl.devfinder.infrastructure.database.entity.OfferEntity;
+import pl.devfinder.infrastructure.database.entity.OfferSkillEntity;
 import pl.devfinder.infrastructure.database.entity.SkillEntity;
 import pl.devfinder.infrastructure.database.repository.mapper.EmployerEntityMapper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -37,7 +37,7 @@ public class EmployerCriteriaRepository {
 
     public Page<Employer> findAllByCriteria(EmployerSearchCriteria employerSearchCriteria) {
         //TODO tu wstawić CriteriaBuilder builder = entityManager.getCriteriaBuilder(); zamiast w konktruktorze
-        log.info("Trying Find By Criteria");
+        log.info("Trying Find Employer By Criteria");
         CriteriaQuery<EmployerEntity> criteriaQuery = criteriaBuilder.createQuery(EmployerEntity.class);
         Root<EmployerEntity> employerEntityRoot = criteriaQuery.from(EmployerEntity.class);
         Predicate predicate = getPredicate(employerSearchCriteria, employerEntityRoot, criteriaQuery);
@@ -49,7 +49,7 @@ public class EmployerCriteriaRepository {
 //////////////// Obejście problermu wyrzucającego błąd z metody getEmployerCount(predicate)iczanie ilości wszystkich
 //        elementów uwzględniając predykaty
         PageImpl<EmployerEntity> employerEntitiesToCountItems = new PageImpl<>(typedQuery.getResultList(),
-                PageRequest.of(0, 500,
+                PageRequest.of(0, Integer.MAX_VALUE,
                         Sort.by(employerSearchCriteria.getSortDirection(), employerSearchCriteria.getSortBy())), 500);
         long employerCount = employerEntitiesToCountItems.getContent().size();
 ///////////////
@@ -100,33 +100,15 @@ public class EmployerCriteriaRepository {
         }
 
         // Warunek dla skilli w ofertach employera
-//        List<String> skillsInOffers = employerSearchCriteria.getSkillsInOffers();
-//        if (Objects.nonNull(skillsInOffers) && !skillsInOffers.isEmpty()) {
-//
-//            List<String> skillNamesToSearch = Keys.LIST_OF_SKILLS.LIST_OF_SKILLS.getFields();
-//
-//            Subquery<Long> offerSubquery = criteriaQuery.subquery(Long.class);
-//            Root<OfferEntity> offerRoot = offerSubquery.from(OfferEntity.class);
-//            Join<OfferEntity, SkillEntity> offerSkillJoin = offerRoot.join("offerSkills").join("skillId");
-//
-//            List<Predicate> skillPredicates = skillsInOffers.stream()
-//                    .map(skillName -> criteriaBuilder.equal(offerSkillJoin.get("skillName"), skillName))
-//                    .collect(Collectors.toList());
-//
-//            offerSubquery.select(offerRoot.get("employerId").get("employerId"))
-//                    .where(criteriaBuilder.or(skillPredicates.toArray(new Predicate[0])));
-//            predicates.add(criteriaBuilder.in(employerRoot.get("employerId")).value(offerSubquery));
-//    }
         List<String> skillsInOffers = employerSearchCriteria.getSkillsInOffers();
         if (Objects.nonNull(skillsInOffers) && !skillsInOffers.isEmpty()) {
-            List<String> skillNamesToSearch = Keys.LIST_OF_SKILLS.LIST_OF_SKILLS.getFields();
+//            List<String> skillNamesToSearch = Keys.LIST_OF_SKILLS.LIST_OF_SKILLS.getFields();
 
             Subquery<Long> offerSubquery = criteriaQuery.subquery(Long.class);
             Root<OfferEntity> offerRoot = offerSubquery.from(OfferEntity.class);
             Join<OfferEntity, SkillEntity> offerSkillJoin = offerRoot.join("offerSkills").join("skillId");
 
-            List<Predicate> skillPredicates = skillNamesToSearch.stream()
-                    .filter(skillsInOffers::contains) // Wybierz tylko skille z listy skillsInOffers
+            List<Predicate> skillPredicates = skillsInOffers.stream()
                     .map(skillName -> criteriaBuilder.equal(offerSkillJoin.get("skillName"), skillName))
                     .collect(Collectors.toList());
 
@@ -146,6 +128,8 @@ public class EmployerCriteriaRepository {
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
+
+
 
     private void setOrder(EmployerSearchCriteria employerSearchCriteria,
                           CriteriaQuery<EmployerEntity> criteriaQuery,
@@ -183,7 +167,6 @@ public class EmployerCriteriaRepository {
         countQuery.select(criteriaBuilder.count(countRoot)).where(predicate);
         TypedQuery<Long> typedQuery = entityManager.createQuery(countQuery);
         return typedQuery.getSingleResult();
-
     }
 
 

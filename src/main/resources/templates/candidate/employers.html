@@ -53,17 +53,17 @@
                                          aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
                                             <div class="mb-4">
-                                                <h6 class="mb-3">Tech Stack required in Active Employers Offers (you can choose many)</h6>
+                                                <h6 class="mb-3">Tech Stack required in Active Employers Offers (you can check that the employer works in a given technology)</h6>
                                                 <div class="m-n2">
                                                     <span th:each="skill : ${allSkillsDTOs}">
-                                                        <input type="checkbox"
+                                                        <input type="radio"
                                                                th:value="${skill.skillName}"
                                                                th:id="${skill.skillId}"
                                                                th:name="skillsInOffers"
                                                                th:checked="${skillChecked.contains(skill.skillName)}"
                                                                class="btn-check"
                                                                autocomplete="on">
-                                                        <label type="checkbox"
+                                                        <label type="radio"
                                                                class="btn btn-outline-light m-2"
                                                                th:for="${skill.skillId}"
                                                                th:text="${skill.skillName}"
@@ -87,7 +87,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-sm-12 col-xl-6 mb-4">
-                                                <h6 class="mb-3">With or without offers </h6>
+                                                <h6 class="mb-3">With or without active offers </h6>
                                                 <div class="btn-group" role="group">
                                                     <input type="checkbox" class="btn-check" id="hasJobOffers"
                                                            th:value="${hasJobOffersEnum}"

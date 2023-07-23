@@ -24,15 +24,18 @@ public class CandidateController {
 
     public static final String CANDIDATE_PROFILE = "/profile";
     public static final String CANDIDATE_EDIT_PROFILE = "/edit_profile";
-    public static final String PAGE_NO_1 = "?pageNumber=1";
+
     public static final String OFFERS_LIST = "/offers";
-    public static final String OFFER_DETAILS = "/offer/{offerId}";
+    public static final String OFFER_DETAILS = "/offer";
+
+    public static final String EMPLOYER_DETAILS = "/employer";
     public static final String EMPLOYERS_LIST = "/employers";
+
+
     public static final String MY_EMPLOYER = "/my_employer";
     public static final String CANDIDATE_SETTINGS = "/settings";
     public static final String CANDIDATE_MATCHED_OFFERS = "/matched_offers";
     public static final String CANDIDATE_APPLICATIONS = "/applications";
-    public static final String EMPLOYER_OFFERS = "/employer_offers";
 
     private final EmployerService employerService;
     private final EmployerRowMapper employerRowMapper;
@@ -44,6 +47,7 @@ public class CandidateController {
     private final CityMapper cityMapper;
     private final SkillService skillService;
     private final SkillMapper skillMapper;
+    private final EmployerDetailsMapper employerDetailsMapper;
 
 
     @GetMapping()
@@ -76,8 +80,6 @@ public class CandidateController {
                                    Authentication authentication) {
         Utility.putUserDataToModel(authentication, userService, model);
 
-        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-
         Page<EmployerRowDTO> page = employerService.findAllByCriteria(employerSearchCriteria).map(employerRowMapper::map);
         List<EmployerRowDTO> allEmployers = page.getContent();
         model.addAttribute("allEmployersDTOs", allEmployers);
@@ -86,11 +88,8 @@ public class CandidateController {
         model.addAttribute("cityChecked", employerSearchCriteria.getCity());
         model.addAttribute("offersChecked", employerSearchCriteria.getJobOffersStatus());
 
-
         model.addAttribute("hasNoJobOffersEnum", Keys.EmployerFilterBy.hasNoJobOffers.getName());
         model.addAttribute("hasJobOffersEnum", Keys.EmployerFilterBy.hasJobOffers.getName());
-
-
 
 //ToolBar
         model.addAttribute("totalPages", page.getTotalPages());
@@ -118,7 +117,6 @@ public class CandidateController {
             Authentication authentication) {
         Utility.putUserDataToModel(authentication, userService, model);
 
-        //Page<OfferRowDTO> page = offerService.findAllByStatePaginated(offerSearchCriteria, Keys.OfferState.ACTIVE).map(offerRowMapper::map);
         Page<OfferRowDTO> page = offerService.findAllByCriteria(offerSearchCriteria).map(offerRowMapper::map);
         List<OfferRowDTO> allOffers = page.getContent();
         model.addAttribute("allOffersDTOs", allOffers);
@@ -166,12 +164,20 @@ public class CandidateController {
         return "candidate/offers";
     }
 
-    @GetMapping(value = OFFER_DETAILS)
+    @GetMapping(value = OFFER_DETAILS+"/{offerId}")
     public String getOfferDetails(@PathVariable Long offerId, Model model, Authentication authentication) {
         Utility.putUserDataToModel(authentication, userService, model);
         OfferDetailsDTO offerDetailsDTO = offerDetailsMapper.map(offerService.findById(offerId));
         model.addAttribute("offerDetailsDTO", offerDetailsDTO);
         return "candidate/offer_details";
+
+    }
+    @GetMapping(value = EMPLOYER_DETAILS+"/{employerId}")
+    public String getEmployerDetails(@PathVariable Long employerId, Model model, Authentication authentication) {
+        Utility.putUserDataToModel(authentication, userService, model);
+        EmployerDetailsDTO employerDetailsDTO = employerDetailsMapper.map(employerService.findById(employerId));
+        model.addAttribute("employerDetailsDTO", employerDetailsDTO);
+        return "candidate/employer_details";
 
     }
 

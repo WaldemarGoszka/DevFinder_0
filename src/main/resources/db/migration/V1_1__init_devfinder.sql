@@ -18,8 +18,8 @@ CREATE TABLE employer
 (
     employer_id         SERIAL       NOT NULL,
     employer_uuid       VARCHAR(64)  NOT NULL,
-    company_name        VARCHAR(255),
-    email_contact       VARCHAR(128),
+    company_name        VARCHAR(255) NOT NULL,
+    email_contact       VARCHAR(128) NOT NULL,
     phone_number        VARCHAR(255),
     description         VARCHAR(255),
     logo_file           VARCHAR(500),

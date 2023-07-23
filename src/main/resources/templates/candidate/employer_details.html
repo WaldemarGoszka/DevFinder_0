@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/"
+>
+
+<head>
+    <title>DevFinder - Candidate - Offers</title>
+    <link href="../img/favicon.ico" rel="icon">
+    <div th:replace="~{fragments :: head_style__}"></div>
+</head>
+
+<body>
+<div class="container-fluid position-relative d-flex p-0">
+    <!-- Spinner Start -->
+    <div th:replace="~{fragments :: spinner}"></div>
+    <!-- Spinner End -->
+
+
+    <!-- Sidebar Start -->
+    <div th:replace="~{fragments :: sidebar}"></div>
+    <!-- Sidebar End -->
+
+
+    <!-- Content Start -->
+    <div class="content">
+        <!-- Navbar Start -->
+        <div th:replace="~{fragments :: navbar}"></div>
+        <!-- Navbar End -->
+
+        <!-- Content Side Start -->
+        <div class="container-fluid pt-4 px-4">
+            <div class="row g-4">
+                <div class="col-sm-12 col-xl-12">
+                    <div class="bg-secondary rounded h-100 p-4">
+                        <h6 class="mb-4"
+                            th:text="'Employer nr '+ ${employerDetailsDTO.employerId} + ' Id: '+ ${employerDetailsDTO.employerUUId} + ''"></h6>
+                        <dl class="row mb-0">
+                            <dt class="col-sm-4">Logo</dt>
+                            <dd th:text="${employerDetailsDTO.logoFile}" class="col-sm-8"></dd>
+
+                            <dt class="col-sm-4">Company Name</dt>
+                            <dd th:text="${employerDetailsDTO.companyName}" class="col-sm-8"></dd>
+
+                            <dt th:if="${employerDetailsDTO.description != null}" class="col-sm-4">Employer
+                                description
+                            </dt>
+                            <dd th:if="${employerDetailsDTO.description != null}"
+                                th:text="${employerDetailsDTO.description}"
+                                class="col-sm-8"></dd>
+
+                            <dt th:if="${employerDetailsDTO.website != null}" class="col-sm-4 text-truncate">
+                                Website
+                            </dt>
+                            <dd th:if="${employerDetailsDTO.website != null}" th:text="${employerDetailsDTO.website}"
+                                class="col-sm-8"></dd>
+
+                            <dt th:if="${employerDetailsDTO.numberOfEmployees != null}" class="col-sm-4">Number Of
+                                Employees
+                            </dt>
+                            <dd th:if="${employerDetailsDTO.numberOfEmployees != null}"
+                                th:text="${employerDetailsDTO.numberOfEmployees}" class="col-sm-8"></dd>
+
+
+                            <dt th:if="${employerDetailsDTO.emailContact != null}" class="col-sm-4">Email Contact</dt>
+                            <dd th:if="${employerDetailsDTO.emailContact != null}"
+                                th:text="${employerDetailsDTO.emailContact}"
+                                class="col-sm-8"></dd>
+
+                            <dt th:if="${employerDetailsDTO.phoneNumber != null}" class="col-sm-4">Phone Number</dt>
+                            <dd th:if="${employerDetailsDTO.phoneNumber != null}"
+                                th:text="${employerDetailsDTO.phoneNumber}"
+                                class="col-sm-8"></dd>
+
+                            <dt th:if="${employerDetailsDTO.cityId.cityName != null}" class="col-sm-4">City</dt>
+                            <dd th:if="${employerDetailsDTO.cityId.cityName != null}"
+                                th:text="${employerDetailsDTO.cityId.cityName}"
+                                class="col-sm-8"></dd>
+
+                            <div th:if="${employerDetailsDTO.amountOfAvailableOffers == 0}"><h6>This employer does not
+                                have any job offers </h6></div>
+
+                            <dt th:if="${employerDetailsDTO.amountOfAvailableOffers != 0}" class="col-sm-4">Amount Of
+                                Available Offers
+                            </dt>
+                            <dd th:if="${employerDetailsDTO.amountOfAvailableOffers != 0}"
+                                th:text="${employerDetailsDTO.amountOfAvailableOffers}" class="col-sm-8"></dd>
+
+                            <a th:href="@{/candidate/offers?employer={companyName}(companyName=${employerDetailsDTO.companyName})}">
+                                <button th:if="${employerDetailsDTO.amountOfAvailableOffers != 0}"
+                                        class="btn btn-sm btn-primary" type="button">Job offers of this employer
+                                </button>
+                            </a>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Content Side End -->
+
+
+        <!-- Footer Start -->
+        <div th:replace="~{fragments :: footer}"></div>
+        <!-- Footer End -->
+    </div>
+    <!-- Content End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+</div>
+
+<div th:replace="~{fragments :: js__}"></div>
+</body>
+
+</html>
