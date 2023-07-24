@@ -29,9 +29,6 @@ public class CityEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cityId")
     private Set<OfferEntity> offerCities;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "desiredJobCityId")
-    private Set<CandidateEntity> candidateDesiredJobCities;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "residenceCityId")
     private Set<CandidateEntity> candidateResidenceCities;
 

@@ -91,7 +91,7 @@ public class CandidateController {
         model.addAttribute("hasNoJobOffersEnum", Keys.EmployerFilterBy.hasNoJobOffers.getName());
         model.addAttribute("hasJobOffersEnum", Keys.EmployerFilterBy.hasJobOffers.getName());
 
-//ToolBar
+//Pagination Bar
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
 
@@ -146,6 +146,7 @@ public class CandidateController {
         model.addAttribute("salaryEnumUndisclosed", Keys.Salary.UNDISCLOSED.getName());
         model.addAttribute("statusEnumActive", Keys.OfferState.ACTIVE.getName());
         model.addAttribute("statusEnumExpired", Keys.OfferState.EXPIRED.getName());
+
 //List for filters
         List<SkillDTO> allSkills = skillService.findAll().stream().map(skillMapper::map).toList();
         List<CityDTO> allCity = cityService.findAll().stream().map(cityMapper::map).toList();

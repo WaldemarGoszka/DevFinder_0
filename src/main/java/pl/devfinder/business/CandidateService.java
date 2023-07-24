@@ -4,14 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import pl.devfinder.api.dto.mapper.CandidateRowMapper;
 import pl.devfinder.business.dao.CandidateDAO;
 import pl.devfinder.business.management.Keys;
 import pl.devfinder.domain.Candidate;
 import pl.devfinder.domain.Employer;
 import pl.devfinder.domain.User;
+import pl.devfinder.domain.exception.NotFoundException;
 import pl.devfinder.domain.search.CandidateSearchCriteria;
-import pl.devfinder.domain.search.EmployerSearchCriteria;
 import pl.devfinder.infrastructure.database.repository.criteria.CandidateCriteriaRepository;
 
 import java.time.OffsetDateTime;
@@ -33,7 +32,7 @@ public class CandidateService {
         Candidate candidate = Candidate.builder()
                 .candidateUUId(user.getUserUuid())
                 .createdAt(OffsetDateTime.now())
-                .status(Keys.CandidateState.ACTIVE.getState())
+                .status(Keys.CandidateState.ACTIVE.getName())
                 .build();
         candidateDAO.save(candidate);
     }
@@ -41,4 +40,11 @@ public class CandidateService {
     public Page<Candidate> findAllByCriteria(CandidateSearchCriteria candidateSearchCriteria) {
         return candidateCriteriaRepository.findAllByCriteria(candidateSearchCriteria);
     }
+
+
+         public Candidate findById(Long candidateId) {
+            log.info("Trying find candidateById, id: [{}]", candidateId);
+            return candidateDAO.findById(candidateId).orElseThrow(() -> new NotFoundException(
+                    "Could not find candidate by Id [%s]".formatted(candidateId)));
+        }
 }

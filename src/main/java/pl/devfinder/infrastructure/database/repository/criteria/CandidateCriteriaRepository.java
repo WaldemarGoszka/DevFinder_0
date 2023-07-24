@@ -7,13 +7,18 @@ import jakarta.persistence.criteria.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Repository;
+import pl.devfinder.business.management.Keys;
 import pl.devfinder.domain.Candidate;
 import pl.devfinder.domain.search.CandidateSearchCriteria;
 import pl.devfinder.infrastructure.database.entity.CandidateEntity;
+import pl.devfinder.infrastructure.database.entity.CandidateSkillEntity;
 import pl.devfinder.infrastructure.database.repository.mapper.CandidateEntityMapper;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 @Repository
 @Slf4j
@@ -65,35 +70,30 @@ public class CandidateCriteriaRepository {
         List<Predicate> predicates = new ArrayList<>();
 
 
-////         Warunek dla listy experienceLevels
-//        List<String> experienceLevels = candidateSearchCriteria.getExperienceLevels();
-//        if (Objects.nonNull(experienceLevels) && !experienceLevels.isEmpty()) {
-//            Predicate experienceLevelPredicates = experienceLevels.stream()
-//                    .filter(Objects::nonNull)
-//                    .filter(value -> !value.isBlank())
-//                    .flatMap(value -> {
-//                        log.info("->> CA find value in experienceLevels list: " + value);
-//                        if (Keys.Experience.JUNIOR.getName().equals(value)) {
-//                            log.info("->> CA return experienceLevels JUNIOR");
-//                            return Stream.of(criteriaBuilder.equal(candidateRoot.get(
-//                                    Keys.CandidateFilterBy.experienceLevel.getName()), Keys.Experience.JUNIOR.getName()));
-//                        } else if (Keys.Experience.MID.getName().equals(value)) {
-//                            log.info("->> CA return experienceLevels MID");
-//                            return Stream.of(criteriaBuilder.equal(candidateRoot.get(
-//                                    Keys.CandidateFilterBy.experienceLevel.getName()), Keys.Experience.MID.getName()));
-//                        } else if (Keys.Experience.SENIOR.getName().equals(value)) {
-//                            log.info("->> CA return experienceLevels SENIOR");
-//                            return Stream.of(criteriaBuilder.equal(candidateRoot.get(
-//                                    Keys.CandidateFilterBy.experienceLevel.getName()), Keys.Experience.SENIOR.getName()));
-//                        } else {
-//                            log.info("->> CA return experienceLevels NoFilter");
-//                            return Stream.empty();
-//                        }
-//                    })
-//                    .reduce(criteriaBuilder::or)
-//                    .orElse(criteriaBuilder.conjunction());
-//            predicates.add(experienceLevelPredicates);
-//        }
+//         Warunek dla listy experienceLevels
+        List<String> experienceLevels = candidateSearchCriteria.getExperienceLevels();
+        if (Objects.nonNull(experienceLevels) && !experienceLevels.isEmpty()) {
+            Predicate experienceLevelPredicates = experienceLevels.stream()
+                    .filter(Objects::nonNull)
+                    .filter(value -> !value.isBlank())
+                    .flatMap(value -> {
+                        if (Keys.Experience.JUNIOR.getName().equals(value)) {
+                            return Stream.of(criteriaBuilder.equal(candidateRoot.get(
+                                    Keys.CandidateFilterBy.experienceLevel.getName()), Keys.Experience.JUNIOR.getName()));
+                        } else if (Keys.Experience.MID.getName().equals(value)) {
+                            return Stream.of(criteriaBuilder.equal(candidateRoot.get(
+                                    Keys.CandidateFilterBy.experienceLevel.getName()), Keys.Experience.MID.getName()));
+                        } else if (Keys.Experience.SENIOR.getName().equals(value)) {
+                            return Stream.of(criteriaBuilder.equal(candidateRoot.get(
+                                    Keys.CandidateFilterBy.experienceLevel.getName()), Keys.Experience.SENIOR.getName()));
+                        } else {
+                            return Stream.empty();
+                        }
+                    })
+                    .reduce(criteriaBuilder::or)
+                    .orElse(criteriaBuilder.conjunction());
+            predicates.add(experienceLevelPredicates);
+        }
 //
 //        // Warunek dla listy remoteWork
 //        List<String> remoteWork = candidateSearchCriteria.getRemoteWork();
@@ -122,72 +122,74 @@ public class CandidateCriteriaRepository {
 //            predicates.add(remoteWorkPredicates);
 //        }
 //
-//        // Warunek dla salaryMin
-//        BigDecimal salaryMin = candidateSearchCriteria.getSalaryMin();
-//        if (Objects.nonNull(salaryMin) && !salaryMin.equals(BigDecimal.ZERO)) {
-//            log.info("->> CA return salaryMin: " + salaryMin);
-//            predicates.add(criteriaBuilder.greaterThanOrEqualTo(candidateRoot.get(Keys.CandidateFilterBy.salaryMin.getName()), salaryMin));
-//        }
-//
-//        // Warunek dla listy salary
-//        List<String> salary = candidateSearchCriteria.getSalary();
-//        if (Objects.nonNull(salary) && !salary.isEmpty()) {
-//            Predicate salaryPredicates = salary.stream()
-//                    .filter(Objects::nonNull)
-//                    .filter(value -> !value.isBlank())
-//                    .flatMap(value -> {
-//                        log.info("->> CA find value in salary list: " + value);
-//                        if (Keys.Salary.WITH.getName().equals(value)) {
-//                            log.info("->> CA return salary WITH");
-//                            return Stream.of(criteriaBuilder.isNotNull(candidateRoot.get(Keys.CandidateFilterBy.salaryMin.getName())), criteriaBuilder.isNotNull(candidateRoot.get(Keys.CandidateFilterBy.salaryMax.getName())));
-//                        } else if (Keys.Salary.UNDISCLOSED.getName().equals(value)) {
-//                            log.info("->> CA return salary UNDISCLOSED");
-//                            return Stream.of(criteriaBuilder.isNull(candidateRoot.get(Keys.CandidateFilterBy.salaryMin.getName())), criteriaBuilder.isNull(candidateRoot.get(Keys.CandidateFilterBy.salaryMax.getName())));
-//                        } else {
-//                            log.info("->> CA return salary NoFilter");
-//                            return Stream.empty();
-//                        }
-//                    })
-//                    .reduce(criteriaBuilder::or)
-//                    .orElse(criteriaBuilder.conjunction());
-//            predicates.add(salaryPredicates);
-//        }
-//
-////         Warunek dla listy status
-//
-//        List<String> status = candidateSearchCriteria.getStatus();
-//        if (Objects.nonNull(status) && !status.isEmpty()) {
-//            List<Predicate> statusPredicates = status.stream()
-//                    .filter(Objects::nonNull)
-//                    .filter(value -> !value.isBlank())
-//                    .map(value -> {
-//                        log.info("->> CA find value in status list: " + value);
-//                        if (Keys.CandidateState.ACTIVE.getName().equals(value)) {
-//                            log.info("->> CA return status ACTIVE");
-//                            return criteriaBuilder.like(candidateRoot.get(Keys.CandidateFilterBy.status.getName()), Keys.CandidateState.ACTIVE.getName());
-//                        } else if (Keys.CandidateState.EXPIRED.getName().equals(value)) {
-//                            log.info("->> CA return status EXPIRED");
-//                            return criteriaBuilder.equal(candidateRoot.get(Keys.CandidateFilterBy.status.getName()), Keys.CandidateState.EXPIRED.getName());
-//                        } else {
-//                            log.info("->> CA return status NoFilter");
-//                            return null;
-//                        }
-//                    })
-//                    .filter(Objects::nonNull)
-//                    .toList();
-//            if (!statusPredicates.isEmpty()) {
-//                Predicate combinedStatusPredicate = criteriaBuilder.or(statusPredicates.toArray(new Predicate[0]));
-//                predicates.add(combinedStatusPredicate);
-//            }
-//        }
-//
-//        // Warunek dla city
-//        String city = candidateSearchCriteria.getCity();
-//        if (Objects.nonNull(city) && !city.isBlank()) {
-//            log.info("->> CA return city: " + city);
-//            predicates.add(criteriaBuilder.equal(candidateRoot.get(Keys.CandidateFilterBy.cityId.getName())
-//                    .get(Keys.CandidateFilterBy.cityName.getName()), city));
-//        }
+        // Warunek dla salaryMin
+        BigDecimal salaryMax = candidateSearchCriteria.getSalaryMax();
+        if (Objects.nonNull(salaryMax) && !salaryMax.equals(BigDecimal.ZERO)) {
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(candidateRoot.get(Keys.CandidateFilterBy.salaryMin.getName()), salaryMax));
+        }
+
+//       Warunek dla minYearsOfExperience
+        Integer minYearsOfExperience = candidateSearchCriteria.getMinYearsOfExperience();
+        if (Objects.nonNull(minYearsOfExperience) && !minYearsOfExperience.equals(0)) {
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(candidateRoot.get(Keys.CandidateFilterBy.yearsOfExperience.getName()), minYearsOfExperience));
+        }
+
+        // Warunek dla listy salary
+        List<String> openToRemoteJob = candidateSearchCriteria.getOpenToRemoteJob();
+        if (Objects.nonNull(openToRemoteJob) && !openToRemoteJob.isEmpty()) {
+            List<Predicate> openToRemoteJobPredicates = openToRemoteJob.stream()
+                    .filter(Objects::nonNull)
+                    .filter(value -> !value.isBlank())
+                    .map(value -> {
+                        if (Keys.CandidateFilterBy.YES.getName().equals(value)) {
+                            return criteriaBuilder.equal(candidateRoot.get(Keys.CandidateFilterBy.openToRemoteJob.getName()),true);
+                        } else if (Keys.CandidateFilterBy.NO.getName().equals(value)) {
+                            return criteriaBuilder.equal(candidateRoot.get(Keys.CandidateFilterBy.openToRemoteJob.getName()),false);
+                        } else {
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .toList();
+            if (!openToRemoteJobPredicates.isEmpty()) {
+                Predicate combinedStatusPredicate = criteriaBuilder.or(openToRemoteJobPredicates.toArray(new Predicate[0]));
+                predicates.add(combinedStatusPredicate);
+            }
+        }
+
+
+//         Warunek dla listy status
+        List<String> status = candidateSearchCriteria.getStatus();
+        if (Objects.nonNull(status) && !status.isEmpty()) {
+            List<Predicate> statusPredicates = status.stream()
+                    .filter(Objects::nonNull)
+                    .filter(value -> !value.isBlank())
+                    .map(value -> {
+                        if (Keys.CandidateState.ACTIVE.getName().equals(value)) {
+                            return criteriaBuilder.equal(candidateRoot.get(Keys.CandidateFilterBy.status.getName()), Keys.OfferState.ACTIVE.getName());
+                        } else if (Keys.CandidateState.INACTIVE.getName().equals(value)) {
+                            return criteriaBuilder.equal(candidateRoot.get(Keys.CandidateFilterBy.status.getName()), Keys.CandidateState.INACTIVE.getName());
+                        } else if (Keys.CandidateState.EMPLOYED.getName().equals(value)) {
+                            return criteriaBuilder.equal(candidateRoot.get(Keys.CandidateFilterBy.status.getName()), Keys.CandidateState.EMPLOYED.getName());
+                        } else {
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .toList();
+            if (!statusPredicates.isEmpty()) {
+                Predicate combinedStatusPredicate = criteriaBuilder.or(statusPredicates.toArray(new Predicate[0]));
+                predicates.add(combinedStatusPredicate);
+            }
+        }
+
+        // Warunek dla city
+        String city = candidateSearchCriteria.getCity();
+        if (Objects.nonNull(city) && !city.isBlank()) {
+            log.info("->> CA return city: " + city);
+            predicates.add(criteriaBuilder.equal(candidateRoot.get(Keys.CandidateFilterBy.residenceCityId.getName())
+                    .get(Keys.CandidateFilterBy.cityName.getName()), city));
+        }
 //
 //        // Warunek dla candidate
 //        String candidate = candidateSearchCriteria.getCandidate();
@@ -197,30 +199,30 @@ public class CandidateCriteriaRepository {
 //                    .get(Keys.CandidateFilterBy.companyName.getName()), candidate));
 //        }
 //
-//        // Warunek dla listy skills
-//        List<String> skills = candidateSearchCriteria.getSkills();
-//        if (Objects.nonNull(skills) && !skills.isEmpty()) {
-//            Predicate skillPredicates =
-//                    skills.stream()
-//                    .filter(Objects::nonNull)
-//                    .filter(value -> !value.isBlank())
-//                    .filter(value -> Keys.LIST_OF_SKILLS.LIST_OF_SKILLS.getFields()
-//                            .contains(value))
-//                            .map(value -> {
-//                                Subquery<CandidateSkillEntity> subquery = criteriaQuery.subquery(CandidateSkillEntity.class);
-//                                Root<CandidateSkillEntity> candidateSkillRoot = subquery.from(CandidateSkillEntity.class);
-//                                subquery.select(candidateSkillRoot);
-//
-//                                Predicate candidateIdPredicate = criteriaBuilder.equal(candidateSkillRoot.get(Keys.CandidateFilterBy.candidateId.getName()), candidateRoot);
-//                                Predicate skillNamePredicate = criteriaBuilder.equal(candidateSkillRoot.get(Keys.CandidateFilterBy.skillId.getName()).get(Keys.CandidateFilterBy.skillName.getName()), value);
-//
-//                                return criteriaBuilder.exists(subquery.where(criteriaBuilder.and(candidateIdPredicate, skillNamePredicate)));
-//                            })
-//                            .reduce(criteriaBuilder::and)
-//                            .orElse(criteriaBuilder.conjunction());
-//
-//            predicates.add(skillPredicates);
-//        }
+        // Warunek dla listy skills
+        List<String> skills = candidateSearchCriteria.getSkills();
+        if (Objects.nonNull(skills) && !skills.isEmpty()) {
+            Predicate skillPredicates =
+                    skills.stream()
+                    .filter(Objects::nonNull)
+                    .filter(value -> !value.isBlank())
+                    .filter(value -> Keys.LIST_OF_SKILLS.LIST_OF_SKILLS.getFields()
+                            .contains(value))
+                            .map(value -> {
+                                Subquery<CandidateSkillEntity> subquery = criteriaQuery.subquery(CandidateSkillEntity.class);
+                                Root<CandidateSkillEntity> candidateSkillRoot = subquery.from(CandidateSkillEntity.class);
+                                subquery.select(candidateSkillRoot);
+
+                                Predicate candidateIdPredicate = criteriaBuilder.equal(candidateSkillRoot.get(Keys.CandidateFilterBy.candidateId.getName()), candidateRoot);
+                                Predicate skillNamePredicate = criteriaBuilder.equal(candidateSkillRoot.get(Keys.CandidateFilterBy.skillId.getName()).get(Keys.CandidateFilterBy.skillName.getName()), value);
+
+                                return criteriaBuilder.exists(subquery.where(criteriaBuilder.and(candidateIdPredicate, skillNamePredicate)));
+                            })
+                            .reduce(criteriaBuilder::and)
+                            .orElse(criteriaBuilder.conjunction());
+
+            predicates.add(skillPredicates);
+        }
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }

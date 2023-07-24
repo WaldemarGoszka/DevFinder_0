@@ -102,7 +102,6 @@ public class EmployerCriteriaRepository {
         // Warunek dla skilli w ofertach employera
         List<String> skillsInOffers = employerSearchCriteria.getSkillsInOffers();
         if (Objects.nonNull(skillsInOffers) && !skillsInOffers.isEmpty()) {
-//            List<String> skillNamesToSearch = Keys.LIST_OF_SKILLS.LIST_OF_SKILLS.getFields();
 
             Subquery<Long> offerSubquery = criteriaQuery.subquery(Long.class);
             Root<OfferEntity> offerRoot = offerSubquery.from(OfferEntity.class);
@@ -112,10 +111,8 @@ public class EmployerCriteriaRepository {
                     .map(skillName -> criteriaBuilder.equal(offerSkillJoin.get("skillName"), skillName))
                     .collect(Collectors.toList());
 
-            // Warunek: offer.status = "ACTIVE"
             Predicate activeStatusPredicate = criteriaBuilder.equal(offerRoot.get("status"), "ACTIVE");
 
-            // Wybierz pracodawców, którzy mają oferty zawierające wszystkie skille z listy skillsInOffers
             Expression<Long> employerIdExpression = offerRoot.get("employerId").get("employerId");
             offerSubquery.select(employerIdExpression)
                     .where(criteriaBuilder.and(activeStatusPredicate, criteriaBuilder.and(skillPredicates.toArray(new Predicate[0]))))

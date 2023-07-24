@@ -7,20 +7,20 @@ import java.util.List;
 public interface Keys {
 
     enum CandidateState {
-        ACTIVE("active"),
-        INACTIVE("inactive"),
-        EMPLOYED("employed"),
-        EMPLOYED_BUT_SEEKING_NEXT_JOB("employed_but_seeking_next_job"),
-        BANNED("banned");
+        ACTIVE("ACTIVE"),
+        INACTIVE("INACTIVE"),
+        EMPLOYED("EMPLOYED");
+//        EMPLOYED_BUT_SEEKING_NEXT_JOB("employed_but_seeking_next_job"),
+//        BANNED("banned");
 
-        private final String state;
+        private final String name;
 
-        CandidateState(String state) {
-            this.state = state;
+        CandidateState(String name) {
+            this.name = name;
         }
 
-        public String getState() {
-            return state;
+        public String getName() {
+            return name;
         }
     }
 
@@ -70,6 +70,7 @@ public interface Keys {
             return name;
         }
     }
+
     enum Role {
         CANDIDATE("CANDIDATE"),
         EMPLOYER("EMPLOYER");
@@ -84,6 +85,7 @@ public interface Keys {
             return name;
         }
     }
+
     enum TokenStatus {
         INVALID("INVALID"),
         EXPIRED("EXPIRED"),
@@ -99,6 +101,7 @@ public interface Keys {
             return name;
         }
     }
+
     enum RemoteWork {
         OFFICE("OFFICE"),
         PARTLY("PARTLY"),
@@ -114,6 +117,7 @@ public interface Keys {
             return name;
         }
     }
+
     enum Salary {
         WITH("WITH"),
         UNDISCLOSED("UNDISCLOSED");
@@ -128,6 +132,7 @@ public interface Keys {
             return name;
         }
     }
+
     enum OfferFilterBy {
         title("title"),
         employerId("employerId"),
@@ -156,6 +161,7 @@ public interface Keys {
             return name;
         }
     }
+
     enum OfferSortBy {
         title("title"),
         employerId_companyName("employerId.companyName"),
@@ -176,22 +182,29 @@ public interface Keys {
             return name;
         }
     }
+
     enum CandidateFilterBy {
-        title("title"),
-        employerId("employerId"),
-        companyName("companyName"),
-        remoteWork("remoteWork"),
+        //        title("title"),
+//        employerId("employerId"),
+//        companyName("companyName"),
+//        remoteWork("remoteWork"),
         salaryMin("salaryMin"),
-        salaryMax("salaryMax"),
-        salary("salary"),
-        createdAt("createdAt"),
-        status("status"),
-        cityId("cityId"),
+//        salaryMax("salaryMax"),
+//        salary("salary"),
+        openToRemoteJob("openToRemoteJob"),
+        yearsOfExperience("yearsOfExperience"),
+        residenceCityId("residenceCityId"),
         cityName("cityName"),
+        candidateId("candidateId"),
+
         experienceLevel("experienceLevel"),
-        candidateSkills("candidateSkills"),
+        //        candidateSkills("candidateSkills"),
         skillId("skillId"),
-        skillName("skillName");
+        skillName("skillName"),
+        status("status"),
+        YES("YES"),
+        NO("NO");
+
 
         private final String name;
 
@@ -256,10 +269,12 @@ public interface Keys {
         );
 
         private final List<String> fields;
-        private LIST_OF_SKILLS(String... fields){
+
+        private LIST_OF_SKILLS(String... fields) {
             this.fields = Arrays.asList(fields);
         }
-        public List<String> getFields(){
+
+        public List<String> getFields() {
             return fields;
         }
     }
@@ -280,6 +295,7 @@ public interface Keys {
             return name;
         }
     }
+
     enum EmployerFilterBy {
         skillsInOffers("skillsInOffers"),
         hasJobOffers("hasJobOffers"),

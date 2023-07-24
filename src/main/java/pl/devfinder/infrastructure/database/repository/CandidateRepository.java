@@ -10,6 +10,7 @@ import pl.devfinder.infrastructure.database.repository.jpa.CandidateJpaRepositor
 import pl.devfinder.infrastructure.database.repository.mapper.CandidateEntityMapper;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
@@ -19,7 +20,7 @@ public class CandidateRepository implements CandidateDAO {
 
     @Override
     public List<Candidate> findAllByState(Keys.CandidateState state) {
-        return candidateJpaRepository.findAllByState(state.getState()).stream()
+        return candidateJpaRepository.findAllByState(state.getName()).stream()
                 .map(candidateEntityMapper::mapFromEntity)
                 .toList();
     }
@@ -28,6 +29,11 @@ public class CandidateRepository implements CandidateDAO {
     public void save(Candidate candidate) {
         CandidateEntity candidateEntity = candidateEntityMapper.mapToEntity(candidate);
         candidateJpaRepository.save(candidateEntity);
+    }
+
+    @Override
+    public Optional<Candidate> findById(Long candidateId) {
+        return candidateJpaRepository.findById(candidateId).map(candidateEntityMapper::mapFromEntity);
     }
 
 }

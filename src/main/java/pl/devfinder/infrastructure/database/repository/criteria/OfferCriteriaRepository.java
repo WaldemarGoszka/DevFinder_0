@@ -160,7 +160,6 @@ public class OfferCriteriaRepository {
         }
 
 //         Warunek dla listy status
-
         List<String> status = offerSearchCriteria.getStatus();
         if (Objects.nonNull(status) && !status.isEmpty()) {
             List<Predicate> statusPredicates = status.stream()

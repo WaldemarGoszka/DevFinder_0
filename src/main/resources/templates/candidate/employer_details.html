@@ -3,7 +3,7 @@
 >
 
 <head>
-    <title>DevFinder - Candidate - Offers</title>
+    <title>DevFinder - Candidate - Employer</title>
     <link href="../img/favicon.ico" rel="icon">
     <div th:replace="~{fragments :: head_style__}"></div>
 </head>
@@ -47,7 +47,7 @@
                                 th:text="${employerDetailsDTO.description}"
                                 class="col-sm-8"></dd>
 
-                            <dt th:if="${employerDetailsDTO.website != null}" class="col-sm-4 text-truncate">
+                            <dt th:if="${employerDetailsDTO.website != null}" class="col-sm-4">
                                 Website
                             </dt>
                             <dd th:if="${employerDetailsDTO.website != null}" th:text="${employerDetailsDTO.website}"

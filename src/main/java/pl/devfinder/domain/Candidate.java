@@ -10,14 +10,14 @@ import java.util.Set;
 @Value
 @Builder
 @EqualsAndHashCode(of = "candidateUUId")
-@ToString(of = {"candidateId", "candidateUUId", "firstName", "lastName", "email_Contact"})
+@ToString(of = {"candidateId", "candidateUUId", "firstName", "lastName", "emailContact"})
 public class Candidate {
 
     Long candidateId;
     String candidateUUId;
     String firstName;
     String lastName;
-    String email_Contact;
+    String emailContact;
     String phoneNumber;
     OffsetDateTime createdAt;
     String status;

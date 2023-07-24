@@ -32,7 +32,7 @@ public class CandidateEntity {
     private String lastName;
 
     @Column(name = "email_contact")
-    private String email_Contact;
+    private String emailContact;
 
     @Column(name = "phone_number")
     private String phoneNumber;
@@ -76,19 +76,12 @@ public class CandidateEntity {
     @Column(name = "salary_min")
     private BigDecimal salaryMin;
 
-    @Column(name = "open_to_relocation")
-    private Boolean openToRelocation;
-
     @Column(name = "open_to_remote_job")
     private Boolean openToRemoteJob;
 
     @ManyToOne
     @JoinColumn(name = "employer_id")
     private EmployerEntity employerId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "desired_job_city_id")
-    private CityEntity desiredJobCityId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "residence_city_id")

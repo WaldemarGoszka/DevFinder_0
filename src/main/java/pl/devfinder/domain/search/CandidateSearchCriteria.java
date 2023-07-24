@@ -10,17 +10,13 @@ import java.util.List;
 
 @Data
 public class CandidateSearchCriteria {
+    List<String> status = new ArrayList<>(List.of(Keys.CandidateState.ACTIVE.getName()));
     List<String> experienceLevels = new ArrayList<>();
-    List<String> remoteWork = new ArrayList<>();
-    BigDecimal salaryMin;
-    Integer yearsOfExperience;
-    Boolean openToRelocation;
-    Boolean openToRemoteJob;
-
-    List<String> status = new ArrayList<>(List.of(Keys.CandidateState.ACTIVE.getState()));
-
-    String city;
     List<String> skills = new ArrayList<>();
+    Integer minYearsOfExperience;
+    String city;
+    List<String> openToRemoteJob = new ArrayList<>();
+    BigDecimal salaryMax;
 
     Integer pageNumber = 1;
     Integer pageSize = 5;
