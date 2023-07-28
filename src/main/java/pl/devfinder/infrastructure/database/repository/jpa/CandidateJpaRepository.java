@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 import pl.devfinder.infrastructure.database.entity.CandidateEntity;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 @Repository
 public interface CandidateJpaRepository extends JpaRepository<CandidateEntity, Long> {
@@ -14,4 +16,6 @@ public interface CandidateJpaRepository extends JpaRepository<CandidateEntity, L
         """
 )
     List<CandidateEntity> findAllByState(String state);
+
+    Optional<CandidateEntity> findByCandidateUuid(String uuid);
 }

@@ -1,9 +1,11 @@
 package pl.devfinder.api.dto;
 
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 import pl.devfinder.domain.CandidateSkill;
 import pl.devfinder.domain.City;
 import pl.devfinder.domain.Employer;
@@ -18,9 +20,11 @@ import java.util.Set;
 @AllArgsConstructor
 public class CandidateDetailsDTO {
     Long candidateId;
-    String candidateUUId;
+    String candidateUuid;
     String firstName;
     String lastName;
+    @Email
+            //TODO add validate other pool
     String emailContact;
     String phoneNumber;
     OffsetDateTime createdAt;
@@ -40,4 +44,7 @@ public class CandidateDetailsDTO {
     Employer employer;
     City residenceCityId;
     Set<CandidateSkill> candidateSkills;
+    Set<String> nameCandidateSkills;
+    MultipartFile photoFile;
+    MultipartFile pdfCvFile;
 }

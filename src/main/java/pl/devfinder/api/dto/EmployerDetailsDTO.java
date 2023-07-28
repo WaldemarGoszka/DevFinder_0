@@ -14,7 +14,7 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 public class EmployerDetailsDTO {
     Long employerId;
-    String employerUUId;
+    String employerUuid;
     String companyName;
     String emailContact;
     String phoneNumber;

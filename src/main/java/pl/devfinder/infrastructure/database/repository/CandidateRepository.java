@@ -36,4 +36,9 @@ public class CandidateRepository implements CandidateDAO {
         return candidateJpaRepository.findById(candidateId).map(candidateEntityMapper::mapFromEntity);
     }
 
+    @Override
+    public Optional<Candidate> findByCandidateUuid(String uuid) {
+        return candidateJpaRepository.findByCandidateUuid(uuid).map(candidateEntityMapper::mapFromEntity);
+    }
+
 }

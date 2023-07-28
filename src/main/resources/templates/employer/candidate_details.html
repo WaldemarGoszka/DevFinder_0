@@ -32,7 +32,7 @@
                 <div class="col-sm-12 col-xl-12">
                     <div class="bg-secondary rounded h-100 p-4">
                         <h6 class="mb-4"
-                            th:text="'Candidate nr '+ ${candidateDetailsDTO.candidateId} + ' Id: '+ ${candidateDetailsDTO.candidateUUId} + ''"></h6>
+                            th:text="'Candidate nr '+ ${candidateDetailsDTO.candidateId} + ' Id: '+ ${candidateDetailsDTO.candidateUuid} + ''"></h6>
                         <dl class="row mb-0">
                             <dt th:if="${candidateDetailsDTO.status != null}" class="col-sm-4">Status</dt>
                             <dd th:if="${candidateDetailsDTO.status != null}" th:text="${candidateDetailsDTO.status}" class="col-sm-8"></dd>
@@ -40,7 +40,7 @@
                             <dt th:if="${candidateDetailsDTO.employer != null}" class="col-sm-4">Employer</dt>
                             <dd th:if="${candidateDetailsDTO.employer != null}" th:text="${candidateDetailsDTO.employer}" class="col-sm-8"></dd>
 
-                            <dt th:if="${candidateDetailsDTO.pictureFile != null}" class="col-sm-4">Picture</dt>
+                            <dt th:if="${candidateDetailsDTO.pictureFile != null}" class="col-sm-4">Face photo</dt>
                             <dd th:if="${candidateDetailsDTO.pictureFile != null}" th:text="${candidateDetailsDTO.pictureFile}" class="col-sm-8"></dd>
 
                             <dt th:if="${candidateDetailsDTO.firstName != null}" class="col-sm-4">First name</dt>
@@ -121,7 +121,7 @@
                             <dd th:if="${candidateDetailsDTO.phoneNumber != null}" th:text="${candidateDetailsDTO.phoneNumber}"
                                 class="col-sm-8"></dd>
 
-                            <dt class="col-sm-4">Registered at</dt>
+                            <dt class="col-sm-4">Profil created at</dt>
                             <dd th:text="${#temporals.format(candidateDetailsDTO.createdAt, 'dd-MM-yyyy')}"
                                 class="col-sm-8"></dd>
                         </dl>

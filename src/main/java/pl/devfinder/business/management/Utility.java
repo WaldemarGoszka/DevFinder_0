@@ -5,7 +5,10 @@ import lombok.experimental.UtilityClass;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
+import pl.devfinder.business.CandidateService;
+import pl.devfinder.business.EmployerService;
 import pl.devfinder.business.UserService;
+import pl.devfinder.domain.Candidate;
 import pl.devfinder.domain.User;
 
 import java.util.Optional;
@@ -31,10 +34,22 @@ public final class Utility {
     public static Optional<User> putUserDataToModel(Authentication authentication, UserService userService, Model model) {
         if(authentication != null){
             Optional<User> user = userService.findByEmail(authentication.getName());
-            if(user.isPresent()){
-                model.addAttribute("user", user.orElse(User.builder().userName("").build()));
+            if(user.isEmpty()){
+                return Optional.empty();
             }
+            model.addAttribute("user", user.get());
+            return user;
         }
         return Optional.empty();
+    }
+
+    public static void putUserPictureToModel(User user, CandidateService candidateService, EmployerService employerService, Model model) {
+        if(user.getRole().getRole().equals(Keys.Role.CANDIDATE.getName())){
+//            Candidate candidate = candidateService.findByCandidateUuid(user.getUserUuid()).orElseThrow();
+//                model.addAttribute("picture",candidate.getPictureFile());
+        }
+        if(user.getRole().getRole().equals(Keys.Role.EMPLOYER.getName())){
+//                model.addAttribute picture from server
+        }
     }
 }

@@ -28,6 +28,7 @@ CREATE TABLE employer
     created_at          TIMESTAMP    NOT NULL,
     city_id             INTEGER,
     UNIQUE (company_name),
+    UNIQUE (employer_uuid),
     PRIMARY KEY (employer_id),
     CONSTRAINT fk_employer_city
         FOREIGN KEY (city_id) REFERENCES city (city_id)
@@ -51,6 +52,7 @@ CREATE TABLE offer
     employer_id         INTEGER      NOT NULL,
     city_id             INTEGER,
     PRIMARY KEY (offer_id),
+    UNIQUE (offer_uuid),
     CONSTRAINT fk_offer_city
         FOREIGN KEY (city_id) REFERENCES city (city_id),
     CONSTRAINT fk_offer_employer
@@ -84,6 +86,7 @@ CREATE TABLE candidate
     desired_job_city_id INTEGER,
     residence_city_id   INTEGER,
     PRIMARY KEY (candidate_id),
+    UNIQUE (candidate_uuid),
     CONSTRAINT fk_candidate_residence_city
         FOREIGN KEY (residence_city_id) REFERENCES city (city_id),
     CONSTRAINT fk_candidate_desired_job_city
@@ -124,35 +127,38 @@ CREATE TABLE devfinder_role
 
 CREATE TABLE devfinder_user
 (
-    user_id   SERIAL       NOT NULL,
-    user_name VARCHAR(32),
-    user_uuid VARCHAR(64)  NOT NULL,
-    email     VARCHAR(64)  NOT NULL,
-    password  VARCHAR(128) NOT NULL,
-    is_enabled    BOOLEAN  NOT NULL DEFAULT FALSE,
-    role_id INT NOT NULL,
+    user_id    SERIAL       NOT NULL,
+    user_name  VARCHAR(32)  NOT NULL,
+    user_uuid  VARCHAR(64)  NOT NULL,
+    email      VARCHAR(64)  NOT NULL,
+    password   VARCHAR(128) NOT NULL,
+    is_enabled BOOLEAN      NOT NULL DEFAULT FALSE,
+    role_id    INT          NOT NULL,
     UNIQUE (email),
+    UNIQUE (user_uuid),
     PRIMARY KEY (user_id),
     CONSTRAINT fk_devfinder_user_role_role
         FOREIGN KEY (role_id)
             REFERENCES devfinder_role (role_id)
 );
 
-CREATE TABLE reset_password_token (
-    password_reset_token_id     SERIAL NOT NULL,
-    token                       VARCHAR(255),
-    expiration_time             TIMESTAMP,
-    user_id                     INTEGER,
+CREATE TABLE reset_password_token
+(
+    password_reset_token_id SERIAL NOT NULL,
+    token                   VARCHAR(255),
+    expiration_time         TIMESTAMP,
+    user_id                 INTEGER,
     PRIMARY KEY (password_reset_token_id),
     CONSTRAINT "fk_password_reset_token_user"
         FOREIGN KEY (user_id) REFERENCES devfinder_user (user_id) ON DELETE CASCADE
 );
 
-CREATE TABLE  email_verification_token (
-    verification_token_id   SERIAL NOT NULL,
-    token                   VARCHAR(255),
-    expiration_time         TIMESTAMP,
-    user_id                 INTEGER,
+CREATE TABLE email_verification_token
+(
+    verification_token_id SERIAL NOT NULL,
+    token                 VARCHAR(255),
+    expiration_time       TIMESTAMP,
+    user_id               INTEGER,
     PRIMARY KEY (verification_token_id),
     CONSTRAINT "verification_token_user_id"
         FOREIGN KEY (user_id) REFERENCES devfinder_user (user_id) ON DELETE CASCADE

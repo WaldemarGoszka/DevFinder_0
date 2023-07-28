@@ -20,7 +20,7 @@ spring:
 #      show_sql: true              # show SQL with Slf4j
 #      hibernate.format_sql: true  # show SQL pretty
   security:
-    enabled: false
+    enabled: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: org.postgresql.Driver
@@ -50,5 +50,10 @@ spring:
           auth: true
           starttls:
             enable: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
 
 

@@ -34,6 +34,10 @@
                     <div class="alert alert-success">You have successfully reset your password, please log in here.
                     </div>
                 </div>
+                <div th:if="${param.no_permissions}">
+                    <div class="alert alert-success">You have not permission to enter this page, first please log in here.
+                    </div>
+                </div>
                 <!--      PARAM ALERTS ENDS       -->
 
                 <div class="bg-secondary rounded p-4 p-sm-5 my-4 mx-3">

@@ -41,12 +41,6 @@ public class UserService {
     @Transactional
     public User save(User user) {
         log.info("Trying save user to database, user: [{}]", user);
-        if (user.getRole().getRole().equals(Keys.Role.CANDIDATE.getName())) {
-            candidateService.save(user);
-        }
-        if (user.getRole().getRole().equals(Keys.Role.EMPLOYER.getName())) {
-            employerService.save(user);
-        }
         return userDAO.save(user);
     }
 

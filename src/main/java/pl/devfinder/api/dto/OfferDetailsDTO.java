@@ -18,7 +18,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class OfferDetailsDTO {
     Long offerId;
-    String offerUUId;
+    String offerUuid;
     String title;
     String description;
     String otherSkills;

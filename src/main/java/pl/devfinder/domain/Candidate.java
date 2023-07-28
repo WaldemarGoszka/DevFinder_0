@@ -9,12 +9,12 @@ import java.util.Set;
 @With
 @Value
 @Builder
-@EqualsAndHashCode(of = "candidateUUId")
-@ToString(of = {"candidateId", "candidateUUId", "firstName", "lastName", "emailContact"})
+@EqualsAndHashCode(of = "candidateUuid")
+@ToString(of = {"candidateId", "candidateUuid", "firstName", "lastName", "emailContact"})
 public class Candidate {
 
     Long candidateId;
-    String candidateUUId;
+    String candidateUuid;
     String firstName;
     String lastName;
     String emailContact;

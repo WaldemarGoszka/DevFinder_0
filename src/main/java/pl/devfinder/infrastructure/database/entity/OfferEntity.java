@@ -11,8 +11,8 @@ import java.util.Set;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of = "offerUUId")
-@ToString(of = {"offerId", "offerUUId", "title", "description", "createdAt", "status"})
+@EqualsAndHashCode(of = "offerUuid")
+@ToString(of = {"offerId", "offerUuid", "title", "description", "createdAt", "status"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,8 +24,8 @@ public class OfferEntity {
     @Column(name = "offer_id")
     private Long offerId;
 
-    @Column(name = "offer_uuid", nullable = false)
-    private String offerUUId;
+    @Column(name = "offer_uuid", unique = true, nullable = false)
+    private String offerUuid;
 
     @Column(name = "title", nullable = false)
     private String title;

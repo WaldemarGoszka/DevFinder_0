@@ -9,8 +9,8 @@ import java.util.Set;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of = "candidateUUId")
-@ToString(of = {"candidateId", "candidateUUId", "firstName", "lastName", "phoneNumber", "createdAt", "status"})
+@EqualsAndHashCode(of = "candidateUuid")
+@ToString(of = {"candidateId", "candidateUuid", "firstName", "lastName", "phoneNumber", "createdAt", "status"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,8 +22,8 @@ public class CandidateEntity {
     @Column(name = "candidate_id")
     private Long candidateId;
 
-    @Column(name = "candidate_uuid", nullable = false)
-    private String candidateUUId;
+    @Column(name = "candidate_uuid", unique = true, nullable = false)
+    private String candidateUuid;
 
     @Column(name = "first_name")
     private String firstName;

@@ -7,8 +7,8 @@ import java.time.OffsetDateTime;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of = "employerUUId")
-@ToString(of = {"employerId", "employerUUId", "companyName", "phoneNumber"})
+@EqualsAndHashCode(of = "employerUuid")
+@ToString(of = {"employerId", "employerUuid", "companyName", "phoneNumber"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,8 +20,8 @@ public class EmployerEntity {
     @Column(name = "employer_id")
     private Long employerId;
 
-    @Column(name = "employer_uuid", nullable = false)
-    private String employerUUId;
+    @Column(name = "employer_uuid", unique = true, nullable = false)
+    private String employerUuid;
 
     @Column(name = "company_name", unique = true, nullable = false)
     private String companyName;

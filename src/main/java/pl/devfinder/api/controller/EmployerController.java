@@ -6,17 +6,21 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import pl.devfinder.api.dto.*;
 import pl.devfinder.api.dto.mapper.*;
 import pl.devfinder.business.*;
 import pl.devfinder.business.management.Keys;
 import pl.devfinder.business.management.Utility;
+import pl.devfinder.domain.Candidate;
+import pl.devfinder.domain.Employer;
+import pl.devfinder.domain.User;
+import pl.devfinder.domain.exception.NotFoundException;
 import pl.devfinder.domain.search.CandidateSearchCriteria;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
@@ -25,6 +29,9 @@ public class EmployerController {
 
     public static final String EMPLOYER_PROFILE = "/profile";
     public static final String EMPLOYER_EDIT_PROFILE = "/edit_profile";
+    public static final String EMPLOYER_UPDATE_PROFILE = "/update";
+    public static final String EMPLOYER_NEW_PROFILE = "/new";
+    public static final String EMPLOYER_DELETE_PROFILE = "/delete";
     public static final String MATCHED_CANDIDATE = "/matched_candidate";
     public static final String CANDIDATES_LIST = "/candidates";
     public static final String CANDIDATE_DETAIL = "/candidate";
@@ -44,6 +51,7 @@ public class EmployerController {
     private final SkillMapper skillMapper;
     private final EmployerService employerService;
     private final EmployerRowMapper employerRowMapper;
+    private final EmployerDetailsMapper employerDetailsMapper;
 
     @GetMapping()
     public String homePage(Model model) {
@@ -51,11 +59,11 @@ public class EmployerController {
         return "employer/portal";
     }
 
-    @GetMapping(value = EMPLOYER_PROFILE)
-    public String getProfile(Model model) {
-// getEmpoyerProfile
-        return "employer/profile";
-    }
+//    @GetMapping(value = EMPLOYER_PROFILE)
+//    public String getProfile(Model model) {
+//// getEmpoyerProfile
+//        return "employer/profile";
+//    }
 
     @GetMapping(value = CANDIDATE_DETAIL+"/{candidateId}")
     public String getCandidateDetails(@PathVariable Long candidateId, Model model, Authentication authentication) {
@@ -115,5 +123,55 @@ public class EmployerController {
         return "employer/candidates";
     }
 
+    @GetMapping(value = EMPLOYER_PROFILE)
+    public String getEmployerProfile(Model model, Authentication authentication) {
+        Optional<User> user = Utility.putUserDataToModel(authentication, userService, model);
+        String userUuid = user.orElseThrow(() -> new NotFoundException("Could not find user by UUID")).getUserUuid();
+        Optional<Employer> employer = employerService.findByEmployerUuid(userUuid);
+        if (employer.isEmpty()) {
+            return "redirect:employer/profile?not_exist";
+        }
+        EmployerDetailsDTO employerDetailsDTO = employer.map(employerDetailsMapper::map).orElseThrow();
 
+        model.addAttribute("employerDetailsDTO", employerDetailsDTO);
+        return "employer/profile";
+    }
+    @GetMapping(value = EMPLOYER_EDIT_PROFILE)
+    public String getEmployerEditProfile(Model model, Authentication authentication) {
+        User user = Utility.putUserDataToModel(authentication, userService, model)
+                .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
+//        if (user.getRole().getRole().equals(Keys.Role.EMPLOYER.getName())) {
+//            employerService.save(user);
+//        }
+        return "employer/edit_profile";
+    }
+    @PutMapping(value = EMPLOYER_UPDATE_PROFILE)
+    public String updateEmployerProfile(@ModelAttribute EmployerDetailsDTO candidateDetailsDTO,
+                                         BindingResult bindingResult,
+                                         Model model,
+                                         Authentication authentication) {
+        if (bindingResult.hasErrors()) {
+            return "error";
+        }
+
+        return "employer/profile?update";
+    }
+
+    @PostMapping(value = EMPLOYER_NEW_PROFILE)
+    public String newEmployerProfile(@ModelAttribute EmployerDetailsDTO candidateDetailsDTO,
+                                      BindingResult bindingResult,
+                                      Model model,
+                                      Authentication authentication) {
+        if (bindingResult.hasErrors()) {
+            return "error";
+        }
+
+        return "employer/profile?new";
+    }
+
+    @DeleteMapping(value = EMPLOYER_DELETE_PROFILE)
+    public String deleteEmployerProfile() {
+
+        return "employer/profile?delete";
+    }
 }

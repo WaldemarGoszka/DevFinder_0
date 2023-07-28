@@ -15,4 +15,5 @@ public interface CandidateDAO {
 
     Optional<Candidate> findById(Long candidateId);
 
+    Optional<Candidate> findByCandidateUuid(String uuid);
 }

@@ -34,4 +34,9 @@ public class EmployerRepository implements EmployerDAO {
     public Optional<Employer> findById(Long employerId) {
         return employerJpaRepository.findById(employerId).map(employerEntityMapper::mapFromEntity);
     }
+
+    @Override
+    public Optional<Employer> findByEmployerUuid(String uuid) {
+        return employerJpaRepository.findByEmployerUuid(uuid).map(employerEntityMapper::mapFromEntity);
+    }
 }

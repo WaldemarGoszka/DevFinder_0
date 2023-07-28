@@ -7,14 +7,13 @@ import org.springframework.stereotype.Service;
 import pl.devfinder.business.dao.CandidateDAO;
 import pl.devfinder.business.management.Keys;
 import pl.devfinder.domain.Candidate;
-import pl.devfinder.domain.Employer;
-import pl.devfinder.domain.User;
 import pl.devfinder.domain.exception.NotFoundException;
 import pl.devfinder.domain.search.CandidateSearchCriteria;
 import pl.devfinder.infrastructure.database.repository.criteria.CandidateCriteriaRepository;
 
-import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -28,14 +27,14 @@ public class CandidateService {
         return allAvailableCandidates;
     }
 
-    public void save(User user) {
-        Candidate candidate = Candidate.builder()
-                .candidateUUId(user.getUserUuid())
-                .createdAt(OffsetDateTime.now())
-                .status(Keys.CandidateState.ACTIVE.getName())
-                .build();
-        candidateDAO.save(candidate);
-    }
+//    public void save(User user) {
+//        Candidate candidate = Candidate.builder()
+//                .candidateUuid(user.getUserUuid())
+//                .createdAt(OffsetDateTime.now())
+//                .status(Keys.CandidateState.ACTIVE.getName())
+//                .build();
+//        candidateDAO.save(candidate);
+//    }
 
     public Page<Candidate> findAllByCriteria(CandidateSearchCriteria candidateSearchCriteria) {
         return candidateCriteriaRepository.findAllByCriteria(candidateSearchCriteria);
@@ -47,4 +46,17 @@ public class CandidateService {
             return candidateDAO.findById(candidateId).orElseThrow(() -> new NotFoundException(
                     "Could not find candidate by Id [%s]".formatted(candidateId)));
         }
+
+    public Optional<Candidate> findByCandidateUuid(String uuid) {
+        return candidateDAO.findByCandidateUuid(uuid);
+    }
+
+    public void createNewCustomer(Candidate candidate) {
+        log.info("Create new Candidate");
+        candidateDAO.save(candidate);
+    }
+    public void updateCustomer(Candidate candidate) {
+        log.info("Update candidate nr: "+ candidate.getCandidateId());
+        candidateDAO.save(candidate);
+    }
 }

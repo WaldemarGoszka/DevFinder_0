@@ -7,11 +7,11 @@ import java.time.OffsetDateTime;
 @With
 @Value
 @Builder
-@EqualsAndHashCode(of = "employerUUId")
-@ToString(of = {"employerId", "employerUUId", "companyName", "emailContact"})
+@EqualsAndHashCode(of = "employerUuid")
+@ToString(of = {"employerId", "employerUuid", "companyName", "emailContact"})
 public class Employer {
     Long employerId;
-    String employerUUId;
+    String employerUuid;
     String companyName;
     String emailContact;
     String phoneNumber;

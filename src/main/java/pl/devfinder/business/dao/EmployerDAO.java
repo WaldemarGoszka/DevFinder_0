@@ -13,4 +13,5 @@ public interface EmployerDAO {
 
     Optional<Employer> findById(Long employerId);
 
+    Optional<Employer> findByEmployerUuid(String uuid);
 }

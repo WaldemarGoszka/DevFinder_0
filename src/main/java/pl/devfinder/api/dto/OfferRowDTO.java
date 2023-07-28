@@ -18,7 +18,7 @@ import java.util.Set;
 public class OfferRowDTO {
     Long offerId;
     String title;
-    String offerUUId;
+    String offerUuid;
     String remoteWorkFormatted;
     String experienceLevel;
     String salaryRange;

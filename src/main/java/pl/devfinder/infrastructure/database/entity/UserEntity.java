@@ -19,16 +19,16 @@ public class UserEntity {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(name = "user_name")
+    @Column(name = "user_name", nullable = false)
     private String userName;
 
-    @Column(name = "user_uuid")
+    @Column(name = "user_uuid", unique = true, nullable = false)
     private String userUuid;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "is_enabled", nullable = false)

@@ -10,11 +10,11 @@ import java.util.Set;
 @With
 @Value
 @Builder
-@EqualsAndHashCode(of = "offerUUId")
-@ToString(of = {"offerId", "offerUUId", "title"})
+@EqualsAndHashCode(of = "offerUuid")
+@ToString(of = {"offerId", "offerUuid", "title"})
 public class Offer {
     Long offerId;
-    String offerUUId;
+    String offerUuid;
     String title;
     String description;
     String otherSkills;

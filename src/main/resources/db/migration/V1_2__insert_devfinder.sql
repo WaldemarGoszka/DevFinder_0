@@ -721,6 +721,7 @@ values
 insert into devfinder_user (user_name, user_uuid, email, password, is_enabled, role_id)
 values
 ('jan', '5e8dd047-7b07-44fb-bbd6-1f15db0f6a8c', 'jan.kowalski@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
+('jan2', 'galj446f-68jb-ljfb-dhj6-1485dfcc7ag6', 'jan.kowalski2@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
 ('anna', '9c6d5a77-7250-4d4e-b0c9-af65fdd1c3b3', 'anna.nowak@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
 ('michal', '7f7b1e1b-8c5c-4c71-bc3a-1485dfcc7ac4', 'michal.wisniewski@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
 ('daniel', '2d6c9a0d-350e-4dbb-a3c0-ef334d8fcd34', 'daniel.lewandowski@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
@@ -752,6 +753,7 @@ values
 ('tomasz', 'skuutstt-w15v-l32u-r752-vrssttuukw', 'tomasz.wojcik@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
 ('monika', 'tlvvutuu-x26w-m43v-s863-wsttuuvvxl', 'monika.krawczyk@example.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 1),
 ('abccorp', '11d3a76b-d2ff-4e9d-aa2b-5f8c9484cc9b', 'kontakt@abccorp.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),
+('abccorp2', '36hi8tsvb-d2ff-4e9d-aa2b-6gu8rf4dfjj', 'kontakt2@abccorp.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),
 ('xyztech', '69752da4-71da-4c0e-b738-5213d6e4b6da', 'info@xyztech.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),
 ('acmeindustries', 'a0b673fe-7e74-47c4-bb19-d07e8506ff14', 'hr@acmeindustries.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),
 ('techsolutions', 'ddd4c00a-1773-42d7-bba4-12679140a428', 'info@techsolutions.com', '$2a$12$TwQsp1IusXTDl7LwZqL0qeu49Ypr6vRdEzRq2vAsgb.zvOtrnzm5G', true, 2),

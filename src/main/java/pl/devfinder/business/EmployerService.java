@@ -15,6 +15,7 @@ import pl.devfinder.infrastructure.database.repository.criteria.EmployerCriteria
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -40,7 +41,7 @@ public class EmployerService {
     public void save(User user) {
         //TODO
         Employer employer = Employer.builder()
-                .employerUUId(user.getUserUuid())
+                .employerUuid(user.getUserUuid())
                 .createdAt(OffsetDateTime.now())
                 .build();
         employerDAO.save(employer);
@@ -48,5 +49,9 @@ public class EmployerService {
 
     public Page<Employer> findAllByCriteria(EmployerSearchCriteria employerSearchCriteria) {
         return employerCriteriaRepository.findAllByCriteria(employerSearchCriteria);
+    }
+
+    public Optional<Employer> findByEmployerUuid(String uuid) {
+        return employerDAO.findByEmployerUuid(uuid);
     }
 }
