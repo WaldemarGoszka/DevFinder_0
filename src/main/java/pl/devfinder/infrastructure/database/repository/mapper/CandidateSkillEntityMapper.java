@@ -9,6 +9,7 @@ import pl.devfinder.infrastructure.database.entity.CandidateSkillEntity;
 public interface CandidateSkillEntityMapper {
 
     CandidateSkill mapFromEntity(CandidateSkillEntity candidateSkillEntity);
+    CandidateSkillEntity mapToEntity(CandidateSkill candidateSkillEntity);
 
 
 }

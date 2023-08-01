@@ -1,23 +1,27 @@
-package pl.devfinder.domain;
+package pl.devfinder.api.dto;
 
-import lombok.*;
+import jakarta.validation.constraints.Email;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.Set;
 
-@With
-@Value
+@Data
 @Builder
-@EqualsAndHashCode(of = "candidateUuid")
-@ToString(of = {"candidateId", "candidateUuid", "firstName", "lastName", "emailContact"})
-public class Candidate {
-
+@NoArgsConstructor
+@AllArgsConstructor
+public class CandidateRequestDTO {
     Long candidateId;
     String candidateUuid;
     String firstName;
     String lastName;
+    @Email
+            //TODO add validate other pool
     String emailContact;
     String phoneNumber;
     OffsetDateTime createdAt;
@@ -34,13 +38,9 @@ public class Candidate {
     Integer yearsOfExperience;
     BigDecimal salaryMin;
     Boolean openToRemoteJob;
-    Employer employer;
-    City residenceCityId;
-    Set<CandidateSkill> candidateSkills;
-
-//    String residenceCityName;
-//    Set<String> nameCandidateSkills;
-//    MultipartFile filePhoto;
-//    MultipartFile fileCv;
-
+    String employerName;
+    Set<String> candidateSkillsNames;
+    String residenceCityName;
+    MultipartFile filePhoto;
+    MultipartFile fileCv;
 }

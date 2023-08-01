@@ -20,7 +20,6 @@ public class CandidateRowDTO {
     String experienceLevel;
     Integer yearsOfExperience;
     BigDecimal salaryMin;
-    City desiredJobCityId;
     City residenceCityId;
     Set<CandidateSkill> candidateSkills;
 }

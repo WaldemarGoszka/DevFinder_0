@@ -19,7 +19,7 @@ public class EmployerDetailsDTO {
     String emailContact;
     String phoneNumber;
     String description;
-    String logoFile;
+    String logoFilename;
     String website;
     Integer numberOfEmployees;
     Integer amountOfAvailableOffers;

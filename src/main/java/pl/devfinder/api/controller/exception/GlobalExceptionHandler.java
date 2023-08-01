@@ -1,6 +1,5 @@
 package pl.devfinder.api.controller.exception;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
@@ -9,6 +8,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
+import pl.devfinder.domain.exception.FileUploadToProfileException;
+import pl.devfinder.domain.exception.NotFoundException;
 
 import java.util.Optional;
 
@@ -23,12 +24,21 @@ public class GlobalExceptionHandler {
         modelView.addObject("errorMessage", message);
         return modelView;
     }
-    @ExceptionHandler(EntityNotFoundException.class)
+    @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ModelAndView handleNoResourceFound(EntityNotFoundException ex) {
+    public ModelAndView handleNoResourceFound(NotFoundException ex) {
         String message = String.format("Could not find a resource: [%s]", ex.getMessage());
         log.error(message, ex);
         ModelAndView modelView = new ModelAndView("404");
+        modelView.addObject("errorMessage", message);
+        return modelView;
+    }
+    @ExceptionHandler(FileUploadToProfileException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ModelAndView handleFileUploadException(FileUploadToProfileException ex) {
+        String message = String.format("Could not upload file: [%s]", ex.getMessage());
+        log.error(message, ex);
+        ModelAndView modelView = new ModelAndView("500");
         modelView.addObject("errorMessage", message);
         return modelView;
     }
@@ -43,4 +53,5 @@ public class GlobalExceptionHandler {
         modelView.addObject("errorMessage", message);
         return modelView;
     }
+
 }

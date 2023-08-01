@@ -224,7 +224,7 @@
                                     </thead>
                                     <tbody>
                                     <tr th:each="employer : ${allEmployersDTOs}">
-                                        <td th:text="${employer.getLogoFile()}"></td>
+                                        <td th:text="${employer.getLogoFilename()}"></td>
                                         <td th:text="${employer.getCompanyName()}"></td>
                                         <td th:text="${employer.getNumberOfEmployees()}"></td>
                                         <td th:text="${employer.getCityId().getCityName()}"></td>

@@ -7,6 +7,7 @@ import lombok.*;
 @Builder
 @EqualsAndHashCode(of = "candidateSkillId")
 @ToString(of = {"candidateSkillId", "candidateId", "skillId"})
+@AllArgsConstructor
 public class CandidateSkill {
 
     Long candidateSkillId;

@@ -12,9 +12,8 @@ import java.util.Set;
 public class City {
     Long cityId;
     String cityName;
-    Set<Employer> employerCities;
-    Set<Offer> offerCities;
-    Set<Candidate> candidateDesiredJobCities;
-    Set<Candidate> candidateResidenceCities;
+//    Set<Employer> employerCities;
+//    Set<Offer> offerCities;
+//    Set<Candidate> candidateResidenceCities;
 
 }

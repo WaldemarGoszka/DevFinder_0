@@ -9,6 +9,7 @@ import pl.devfinder.infrastructure.database.repository.jpa.CityJpaRepository;
 import pl.devfinder.infrastructure.database.repository.mapper.CityEntityMapper;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
@@ -18,5 +19,15 @@ private final CityEntityMapper cityEntityMapper;
     @Override
     public List<City> findAll() {
         return cityJpaRepository.findAll().stream().map(cityEntityMapper::mapFromEntity).toList();
+    }
+
+    @Override
+    public Optional<City> findByCityName(String cityName) {
+        return cityJpaRepository.findByCityName(cityName).map(cityEntityMapper::mapFromEntity);
+    }
+
+    @Override
+    public City saveAnfFlush(City city) {
+        return cityEntityMapper.mapFromEntity(cityJpaRepository.saveAndFlush(cityEntityMapper.mapToEntity(city)));
     }
 }

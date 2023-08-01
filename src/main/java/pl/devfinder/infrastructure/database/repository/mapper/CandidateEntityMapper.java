@@ -13,14 +13,10 @@ import java.util.stream.Collectors;
 public interface CandidateEntityMapper {
 
     @Mapping(source = "candidateSkills", target = "candidateSkills", qualifiedByName = "mapCandidateSkills")
-    @Mapping(target = "desiredJobCityId.employerCities", ignore = true)
-    @Mapping(target = "desiredJobCityId.offerCities", ignore = true)
-    @Mapping(target = "desiredJobCityId.candidateDesiredJobCities", ignore = true)
-    @Mapping(target = "desiredJobCityId.candidateResidenceCities", ignore = true)
-    @Mapping(target = "residenceCityId.employerCities", ignore = true)
-    @Mapping(target = "residenceCityId.offerCities", ignore = true)
-    @Mapping(target = "residenceCityId.candidateDesiredJobCities", ignore = true)
-    @Mapping(target = "residenceCityId.candidateResidenceCities", ignore = true)
+//    @Mapping(target = "residenceCityId.employerCities", ignore = true)
+//    @Mapping(target = "residenceCityId.offerCities", ignore = true)
+//    @Mapping(target = "residenceCityId.candidateDesiredJobCities", ignore = true)
+//    @Mapping(target = "residenceCityId.candidateResidenceCities", ignore = true)
     @Mapping(target = "employerId.cityId", ignore = true)
     Candidate mapFromEntity(CandidateEntity candidateEntity);
 
@@ -30,8 +26,8 @@ public interface CandidateEntityMapper {
     }
 
     @Mapping(target = "candidateId", ignore = true)
-    @Mapping(target = "skillId.candidateSkills", ignore = true)
-    @Mapping(target = "skillId.offerSkills", ignore = true)
+//    @Mapping(target = "skillId.candidateSkills", ignore = true)
+//    @Mapping(target = "skillId.offerSkills", ignore = true)
     CandidateSkill mapFromEntity(CandidateSkillEntity entity);
 
     CandidateEntity mapToEntity(Candidate candidate);

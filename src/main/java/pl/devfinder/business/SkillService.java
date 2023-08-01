@@ -7,6 +7,7 @@ import pl.devfinder.business.dao.SkillDAO;
 import pl.devfinder.domain.Skill;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -15,5 +16,9 @@ public class SkillService {
 
     public List<Skill> findAll() {
         return skillDAO.findAll();
+    }
+
+    public Optional<Skill> findBySkillName(String skillName) {
+        return skillDAO.findBySkillName(skillName);
     }
 }

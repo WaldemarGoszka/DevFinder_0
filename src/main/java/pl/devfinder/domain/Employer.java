@@ -16,7 +16,7 @@ public class Employer {
     String emailContact;
     String phoneNumber;
     String description;
-    String logoFile;
+    String logoFilename;
     String website;
     Integer numberOfEmployees;
     Integer amountOfAvailableOffers;

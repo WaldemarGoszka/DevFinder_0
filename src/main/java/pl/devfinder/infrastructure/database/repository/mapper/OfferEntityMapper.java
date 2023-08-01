@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface OfferEntityMapper {
-    @Mapping(target = "cityId.employerCities", ignore = true)
-    @Mapping(target = "cityId.offerCities", ignore = true)
-    @Mapping(target = "cityId.candidateDesiredJobCities", ignore = true)
-    @Mapping(target = "cityId.candidateResidenceCities", ignore = true)
+//    @Mapping(target = "cityId.employerCities", ignore = true)
+//    @Mapping(target = "cityId.offerCities", ignore = true)
+//    @Mapping(target = "cityId.candidateDesiredJobCities", ignore = true)
+//    @Mapping(target = "cityId.candidateResidenceCities", ignore = true)
     @Mapping(target = "employerId.cityId", ignore = true)
     @Mapping(source = "offerSkills", target = "offerSkills", qualifiedByName = "mapOfferSkills")
     Offer mapFromEntity(OfferEntity offerEntity);
@@ -30,7 +30,7 @@ public interface OfferEntityMapper {
         return entities.stream().map(this::mapFromEntity).collect(Collectors.toSet());
     }
     @Mapping(target = "offerId", ignore = true)
-    @Mapping(target = "skillId.candidateSkills", ignore = true)
-    @Mapping(target = "skillId.offerSkills", ignore = true)
+//    @Mapping(target = "skillId.candidateSkills", ignore = true)
+//    @Mapping(target = "skillId.offerSkills", ignore = true)
     OfferSkills mapFromEntity(OfferSkillEntity entity);
 }

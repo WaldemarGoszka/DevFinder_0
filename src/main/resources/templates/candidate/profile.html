@@ -31,9 +31,9 @@
             <div class="row g-4">
                 <div class="col-sm-12 col-xl-12">
                     <div class="bg-secondary rounded h-100 p-4">
-                        <div th:if="${param.not_exist}">
-                            <a th:href="@{/candidate/edit_profile?new}" class="btn  btn-info m-2">Create Profile</a>
-                        </div>
+<!--                        <div th:if="${param.not_exist}">-->
+<!--                            <a th:href="@{/candidate/edit_profile?new}" class="btn  btn-info m-2">Create Profile</a>-->
+<!--                        </div>-->
                         <div th:if="${param.created}">
                             <div class="alert alert-success">You created your profile</div>
                         </div>
@@ -57,9 +57,9 @@
                                 <dd th:if="${candidateDetailsDTO.employer != null}"
                                     th:text="${candidateDetailsDTO.employer}" class="col-sm-8"></dd>
 
-                                <dt th:if="${candidateDetailsDTO.pictureFile != null}" class="col-sm-4">Face photo</dt>
-                                <dd th:if="${candidateDetailsDTO.pictureFile != null}"
-                                    th:text="${candidateDetailsDTO.pictureFile}" class="col-sm-8"></dd>
+                                <dt th:if="${candidateDetailsDTO.getPhotoFilename != null}" class="col-sm-4">Face photo</dt>
+                                <dd th:if="${candidateDetailsDTO.getPhotoFilename != null}"
+                                    th:text="${candidateDetailsDTO.getPhotoFilename}" class="col-sm-8"></dd>
 
                                 <dt th:if="${candidateDetailsDTO.firstName != null}" class="col-sm-4">First name</dt>
                                 <dd th:if="${candidateDetailsDTO.firstName != null}"
@@ -131,10 +131,10 @@
                                 <span th:case="false">No</span>
                             </span></dd>
 
-                                <dt th:if="${candidateDetailsDTO.cvFile != null}" class="col-sm-4">Show CV File as PDF
+                                <dt th:if="${candidateDetailsDTO.getCvFilename != null}" class="col-sm-4">Show CV File as PDF
                                 </dt>
-                                <dd th:if="${candidateDetailsDTO.cvFile != null}"
-                                    th:text="${candidateDetailsDTO.cvFile}"
+                                <dd th:if="${candidateDetailsDTO.getCvFilename != null}"
+                                    th:text="${candidateDetailsDTO.getCvFilename}"
                                     class="col-sm-8"></dd>
 
                                 <dt th:if="${candidateDetailsDTO.linkedinLink != null}" class="col-sm-4">linkedin Link
@@ -175,17 +175,7 @@
                                 <dd th:text="${#temporals.format(candidateDetailsDTO.createdAt, 'dd-MM-yyyy')}"
                                     class="col-sm-8"></dd>
                             </dl>
-                            <div class="d-flex justify-content-between gap-4">
-                                <a th:href="@{/candidate/edit_profile}" class="btn  btn-info m-2">Edit Profile</a>
-                                <form
-                                        th:action="@{/candidate/delete/{candidateId}(candidateId=${candidateDetailsDTO.candidateId})}"
-                                        th:method="DELETE"
-                                >
-                                    <!--                                <input type="hidden" name="_method" value="delete" />-->
-                                    <a class="btn btn-info m-2" type="submit">
-                                        Delete Profile</a>
-                                </form>
-                            </div>
+                            <a th:href="@{/candidate/edit_profile}" class="btn  btn-info m-2">Edit Profile</a>
                         </div>
                     </div>
                 </div>
@@ -206,11 +196,7 @@
 </div>
 
 <div th:replace="~{fragments :: js_}"></div>
-<script th:inline="javascript">
-    function confirmDelete() {
-        return confirm("Confirm to delete your profile");
-    }
-</script>
+
 </body>
 
 </html>

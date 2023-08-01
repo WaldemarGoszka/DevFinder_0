@@ -8,11 +8,11 @@ import java.time.OffsetDateTime;
 import java.util.Set;
 
 @With
-@Value
+@Data
 @Builder
 @EqualsAndHashCode(of = "candidateUuid")
 @ToString(of = {"candidateId", "candidateUuid", "firstName", "lastName", "emailContact"})
-public class Candidate {
+public class CandidateUpdateRequest {
 
     Long candidateId;
     String candidateUuid;
@@ -34,13 +34,11 @@ public class Candidate {
     Integer yearsOfExperience;
     BigDecimal salaryMin;
     Boolean openToRemoteJob;
-    Employer employer;
-    City residenceCityId;
-    Set<CandidateSkill> candidateSkills;
 
-//    String residenceCityName;
-//    Set<String> nameCandidateSkills;
-//    MultipartFile filePhoto;
-//    MultipartFile fileCv;
+    String employerName;
+    String residenceCityName;
+    Set<String> nameCandidateSkills;
+    MultipartFile filePhoto;
+    MultipartFile fileCv;
 
 }

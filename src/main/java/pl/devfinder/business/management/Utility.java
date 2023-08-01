@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import pl.devfinder.business.CandidateService;
 import pl.devfinder.business.EmployerService;
 import pl.devfinder.business.UserService;
-import pl.devfinder.domain.Candidate;
 import pl.devfinder.domain.User;
 
 import java.util.Optional;
@@ -16,6 +15,7 @@ import java.util.UUID;
 
 @UtilityClass
 public final class Utility {
+    public static final String USER_DATA_DIR = "\"static/user_data\"";
 
     public static String generateUUID(){
         return UUID.randomUUID().toString();
@@ -43,7 +43,7 @@ public final class Utility {
         return Optional.empty();
     }
 
-    public static void putUserPictureToModel(User user, CandidateService candidateService, EmployerService employerService, Model model) {
+    public static void putUserPhotoToModel(User user, CandidateService candidateService, EmployerService employerService, Model model) {
         if(user.getRole().getRole().equals(Keys.Role.CANDIDATE.getName())){
 //            Candidate candidate = candidateService.findByCandidateUuid(user.getUserUuid()).orElseThrow();
 //                model.addAttribute("picture",candidate.getPictureFile());

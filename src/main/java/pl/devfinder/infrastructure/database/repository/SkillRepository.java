@@ -10,6 +10,7 @@ import pl.devfinder.infrastructure.database.repository.jpa.SkillJpaRepository;
 import pl.devfinder.infrastructure.database.repository.mapper.SkillEntityMapper;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
@@ -20,5 +21,10 @@ public class SkillRepository implements SkillDAO {
     @Override
     public List<Skill> findAll() {
         return skillJpaRepository.findAll().stream().map(skillEntityMapper::mapFromEntity).toList();
+    }
+
+    @Override
+    public Optional<Skill> findBySkillName(String skillName) {
+        return skillJpaRepository.findBySkillName(skillName).map(skillEntityMapper::mapFromEntity);
     }
 }

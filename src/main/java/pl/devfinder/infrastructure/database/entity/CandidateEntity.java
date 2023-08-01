@@ -55,8 +55,8 @@ public class CandidateEntity {
     @Column(name = "foreign_language")
     private String foreignLanguage;
 
-    @Column(name = "cv_file")
-    private String cvFile;
+    @Column(name = "cv_filename")
+    private String cvFilename;
 
     @Column(name = "github_link")
     private String githubLink;
@@ -64,8 +64,8 @@ public class CandidateEntity {
     @Column(name = "linkedin_link")
     private String linkedinLink;
 
-    @Column(name = "picture_file")
-    private String pictureFile;
+    @Column(name = "photo_filename")
+    private String photoFilename;
 
     @Column(name = "experience_level")
     private String experienceLevel;

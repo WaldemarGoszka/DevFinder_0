@@ -12,7 +12,7 @@ import java.util.Set;
 public class Skill {
     Long skillId;
     String skillName;
-    Set<CandidateSkill> candidateSkills;
-    Set<OfferSkills> offerSkills;
+//    Set<CandidateSkill> candidateSkills;
+//    Set<OfferSkills> offerSkills;
 
 }

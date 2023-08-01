@@ -27,27 +27,79 @@
         <!-- Navbar End -->
 
         <!-- Content Side Start -->
-        <form
-                th:action="@{/candidate/update}"
-                th:method="POST"
-                th:object="${candidateDetailsDTO}"
-                enctype="multipart/form-data"
-        >
-            <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-sm-12 col-xl-12">
-                        <div class="bg-secondary rounded h-100 p-4">
+        <div class="container-fluid pt-4 px-4">
+            <div class="row g-4">
+                <div class="col-sm-12 col-xl-12">
+                    <div class="bg-secondary rounded h-100 p-4">
 
-                            <div th:if="${param.new}">
-                                <h3 class="mb-4">Create Your Profile</h3>
-                            </div>
-                            <div th:unless="${param.new}">
-                                <h3 class="mb-4">Edit Your Profile</h3>
-                            </div>
+                        <div th:if="${param.new}">
+                            <h3 class="mb-4">You don't have profile page. Fill out your profile</h3>
+                        </div>
+                        <div th:unless="${param.new}">
+                            <h3 class="mb-4">Edit Your Profile</h3>
+                        </div>
 
-                            <!--                        <h6 class="mb-4"-->
-                            <!--                            th:text="'Candidate nr '+ ${candidateDetailsDTO.candidateId} + ' Id: '+ ${candidateDetailsDTO.candidateUuid} + ''"></h6>-->
+                        <!--                        FACE PHOTO-->
+                        <form action="#"
+                              th:action="@{/candidate/edit_profile/delete_photoFile}"
+                              th:method="DELETE"
+                              id="cvFileForm">
+                            <dl class="row mb-0" th:if="${photoFileLink != null}">
+                                <dt class="col-sm-4">Actual face photo:</dt>
+                                <dd class="col-sm-8">
+                                    [[${photoFileLink}]]
+                                    <a class="btn  btn-info m-2">Download</a>
+                                    <button type="submit" form="cvFileForm" class="btn  btn-info m-2">Delete
+                                    </button>
+                                </dd>
+                            </dl>
+                        </form>
+                        <!--                            CV FILE-->
+                        <form action="#"
+                              th:action="@{/candidate/edit_profile/delete_cvFile}"
+                              th:method="DELETE"
+                              id="photoFileForm">
+                            <dl class="row mb-0" th:if="${cvFileLink != null}">
+                                <dt class="col-sm-4">Actual cv file</dt>
+                                <dd class="col-sm-8">
+                                    [[${cvFileLink}]]
+                                    <a class="btn  btn-info m-2">Download</a>
+                                    <button type="submit" form="photoFileForm" class="btn  btn-info m-2">Delete
+                                    </button>
+                                </dd>
+                            </dl>
+                        </form>
+                        <form
+                                th:action="@{/candidate/update}"
+                                th:method="POST"
+                                th:object="${candidateDetailsDTO}"
+                                enctype="multipart/form-data"
+                                id="editForm"
+                        >
                             <dl class="row mb-0">
+
+                                <dt class="col-sm-4">Upload face photo</dt>
+                                <dd class="col-sm-8">
+                                    <div class="mb-3">
+                                        <input class="form-control bg-dark"
+                                               th:field="*{filePhoto}"
+                                               accept="image/png, image/jpeg"
+                                               type="file"
+                                               id="photoFile">
+                                    </div>
+                                </dd>
+
+                                <dt class="col-sm-4">Upload CV File as PDF</dt>
+                                <dd class="col-sm-8">
+                                    <div class="mb-3">
+                                        <input class="form-control bg-dark"
+                                               th:field="*{fileCv}"
+                                               accept="application/pdf"
+                                               type="file"
+                                               id="cvFile">
+                                    </div>
+                                </dd>
+
                                 <dt class="col-sm-4">Status</dt>
                                 <dd class="col-sm-8">
                                     <div class="form-check form-check-inline">
@@ -82,14 +134,6 @@
                                     </div>
                                 </dd>
 
-                                <dt class="col-sm-4">Face photo</dt>
-                                <dd class="col-sm-8">
-                                    <div class="mb-3">
-                                        <label for="photoFile" class="form-label">Upload your face photo(.jpg max size
-                                            2MB)</label>
-                                        <input class="form-control bg-dark"  th:field="*{photoFile}" type="file" id="photoFile">
-                                    </div>
-                                </dd>
 
                                 <dt class="col-sm-4">First name</dt>
                                 <dd class="col-sm-8">
@@ -114,7 +158,9 @@
                                     <input
                                             type="text"
                                             class="form-control"
-                                            th:field="*{residenceCityId.cityName}"
+                                            th:name="residenceCityName"
+                                            th:text="${candidateDetailsDTO.residenceCityId.cityName}"
+                                            th:value="${candidateDetailsDTO.residenceCityId.cityName}"
                                     >
                                 </dd>
 
@@ -241,22 +287,6 @@
                                     </div>
                                 </dd>
 
-                                <dt class="col-sm-4">Show CV File as PDF</dt>
-                                <dd class="col-sm-8">
-                                    <div class="mb-3">
-                                        <label for="cvFile" class="form-label">Upload your CV as pdf file.</label>
-                                        <input class="form-control bg-dark" th:field="*{pdfCvFile}" type="file" id="cvFile">
-                                        <div th:if="${candidateDetailsDTO.cvFile != null}" class="form-text"> Uploaded file: [[${candidateDetailsDTO.cvFile}]]
-                                            <form action="#"
-                                                    th:action="@{/candidate/edit_profile/delete_cvFile}"
-                                                  th:method="DELETE"
-                                                  id="cvFileForm">
-                                            <button type="submit" form="cvFileForm" th:href="@{'/candidate/edit_profile'+'?delete_cvFile'}" class="btn  btn-info m-2">Delete CV file</button>
-<!--                                            <a th:href="@{'/candidate/edit_profile'+'?delete_cvFile'}" class="btn  btn-info m-2">Delete CV file</a>-->
-                                            </form>
-                                        </div>
-                                    </div>
-                                </dd>
 
                                 <dt class="col-sm-4">Linkedin link</dt>
                                 <dd class="col-sm-8">
@@ -303,29 +333,45 @@
                                     >
                                 </dd>
                             </dl>
-                            <div th:if="${param.new}">
-                                <button class="btn  btn-info m-2" type="submit">Create</button>
-                            </div>
-                            <div th:unless="${param.new}">
-                                <button class="btn  btn-info m-2" type="submit">Update</button>
-                            </div>
-                            <!--                        <div class="d-flex justify-content-between gap-4">-->
-                            <!--                            <a th:href="@{/candidate/edit_profile}" class="btn  btn-info m-2">Edit Profile</a>-->
-                            <!--                            <form-->
-                            <!--                                    th:action="@{/candidate/delete/{candidateId}(candidateId=${candidateDetailsDTO.candidateId})}"-->
-                            <!--                                    th:method="DELETE"-->
+                            <div class="d-flex justify-content-between gap-4">
 
-                            <!--                            >-->
-                            <!--                                &lt;!&ndash;                                <input type="hidden" name="_method" value="delete" />&ndash;&gt;-->
-                            <!--                                <a class="btn btn-info m-2" type="submit">-->
-                            <!--                                    Delete Profile</a>-->
-                            <!--                            </form>-->
-                            <!--                        </div>-->
-                        </div>
+                                <div th:if="${param.new}">
+                                    <button class="btn btn-info m-2" form="editForm" type="submit">Create</button>
+                                </div>
+                                <div th:unless="${param.new}">
+                                    <button class="btn btn-info m-2" form="editForm" type="submit">Update</button>
+                                </div>
+                                <a class="btn  btn-info m-2" th:href="@{/candidate/profile}">Back To Profile</a>
+
+                            </div>
+                        </form>
+                        <form
+                                action="#"
+                                th:action="@{/candidate/delete/{candidateId}(candidateId=${candidateDetailsDTO.candidateId})}"
+                                th:method="DELETE"
+                                id="deleteProfile"
+                        >
+                            <button form="deleteProfile" class="btn justify-content-center btn-danger m-2"  type="submit">
+                                Delete Profile</button>
+                        </form>
+
+
+                        <!--                        <div class="d-flex justify-content-between gap-4">-->
+                        <!--                            <a th:href="@{/candidate/edit_profile}" class="btn  btn-info m-2">Edit Profile</a>-->
+                        <!--                            <form-->
+                        <!--                                    th:action="@{/candidate/delete/{candidateId}(candidateId=${candidateDetailsDTO.candidateId})}"-->
+                        <!--                                    th:method="DELETE"-->
+
+                        <!--                            >-->
+                        <!--                                &lt;!&ndash;                                <input type="hidden" name="_method" value="delete" />&ndash;&gt;-->
+                        <!--                                <a class="btn btn-info m-2" type="submit">-->
+                        <!--                                    Delete Profile</a>-->
+                        <!--                            </form>-->
+                        <!--                        </div>-->
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
         <!-- Content Side End -->
 
 

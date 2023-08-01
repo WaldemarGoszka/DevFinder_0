@@ -9,10 +9,11 @@ import pl.devfinder.infrastructure.database.entity.CityEntity;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface CityEntityMapper {
-    @Mapping(target = "employerCities", ignore = true)
-    @Mapping(target = "offerCities", ignore = true)
-    @Mapping(target = "candidateDesiredJobCities", ignore = true)
-    @Mapping(target = "candidateResidenceCities", ignore = true)
+//    @Mapping(target = "employerCities", ignore = true)
+//    @Mapping(target = "offerCities", ignore = true)
+//    @Mapping(target = "candidateDesiredJobCities", ignore = true)
+//    @Mapping(target = "candidateResidenceCities", ignore = true)
     City mapFromEntity(CityEntity cityEntity);
 
+    CityEntity mapToEntity(City city);
 }

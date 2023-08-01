@@ -35,8 +35,8 @@ public class EmployerEntity {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "logo_file")
-    private String logoFile;
+    @Column(name = "logo_filename")
+    private String logoFilename;
 
     @Column(name = "website")
     private String website;

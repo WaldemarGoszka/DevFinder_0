@@ -1,15 +1,15 @@
 package pl.devfinder.api.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import pl.devfinder.api.dto.*;
 import pl.devfinder.api.dto.mapper.*;
@@ -17,17 +17,14 @@ import pl.devfinder.business.*;
 import pl.devfinder.business.management.Keys;
 import pl.devfinder.business.management.Utility;
 import pl.devfinder.domain.Candidate;
+import pl.devfinder.domain.CandidateUpdateRequest;
 import pl.devfinder.domain.User;
 import pl.devfinder.domain.exception.NotFoundException;
 import pl.devfinder.domain.search.EmployerSearchCriteria;
 import pl.devfinder.domain.search.OfferSearchCriteria;
 
-import java.time.OffsetDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import java.util.*;
+@Slf4j
 @Controller
 @AllArgsConstructor
 @RequestMapping("/candidate")
@@ -35,11 +32,11 @@ public class CandidateController {
 
     public static final String CANDIDATE_PROFILE = "/profile";
     public static final String CANDIDATE_EDIT_PROFILE = "/edit_profile";
+    public static final String CANDIDATE_DELETE_PROFILE = "/delete";
     public static final String CANDIDATE_DELETE_CV_FILE = "/edit_profile/delete_cvFile";
     public static final String CANDIDATE_DELETE_PHOTO_FILE = "/edit_profile/delete_photoFile";
     public static final String CANDIDATE_UPDATE_PROFILE = "/update";
     public static final String CANDIDATE_NEW_PROFILE = "/new";
-    public static final String CANDIDATE_DELETE_PROFILE = "/delete";
 
     public static final String OFFERS_LIST = "/offers";
     public static final String OFFER_DETAILS = "/offer";
@@ -66,6 +63,7 @@ public class CandidateController {
     private final EmployerDetailsMapper employerDetailsMapper;
     private final CandidateService candidateService;
     private final CandidateDetailsMapper candidateDetailsMapper;
+    private final CandidateRequestMapper candidateRequestMapper;
 
 
     @GetMapping()
@@ -216,7 +214,7 @@ public class CandidateController {
         String userUuid = user.orElseThrow(() -> new NotFoundException("Could not find user by or authorization failed")).getUserUuid();
         Optional<Candidate> candidate = candidateService.findByCandidateUuid(userUuid);
         if (candidate.isEmpty()) {
-            return "redirect:candidate/profile?not_exist";
+            return "redirect:candidate/edit_profile?new";
         }
         CandidateDetailsDTO candidateDetailsDTO = candidate.map(candidateDetailsMapper::map).orElseThrow();
         model.addAttribute("candidateDetailsDTO", candidateDetailsDTO);
@@ -227,7 +225,7 @@ public class CandidateController {
     public String getCandidateEditProfile(Model model, Authentication authentication) {
         User user = Utility.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
-        Utility.putUserPictureToModel(user, candidateService, employerService, model);
+        Utility.putUserPhotoToModel(user, candidateService, employerService, model);
         //TODO putUserPictureToModel do wszykich metod get
         String userUuid = user.getUserUuid();
         Optional<Candidate> candidate = candidateService.findByCandidateUuid(userUuid);
@@ -245,71 +243,89 @@ public class CandidateController {
         model.addAttribute("expLevelEnumMid", Keys.Experience.MID.getName());
         model.addAttribute("expLevelEnumSenior", Keys.Experience.SENIOR.getName());
 
+        model.addAttribute("cvFileLink", candidateDetailsDTO.getCvFilename());
+        model.addAttribute("photoFileLink", candidateDetailsDTO.getPhotoFilename());
+
         model.addAttribute("skillChecked", candidateDetailsDTO.getCandidateSkills()
                 .stream().map(skill -> skill.getSkillId().getSkillName()).toList());
-
 
         List<SkillDTO> allSkills = skillService.findAll().stream().map(skillMapper::map).toList();
         model.addAttribute("allSkillsDTOs", allSkills);
 
-
-
-
         return "candidate/edit_profile";
     }
+
     @DeleteMapping(value = CANDIDATE_DELETE_CV_FILE)
-    public String deleteCvFile(@ModelAttribute CandidateDetailsDTO candidateDetailsDTO,
-                                         BindingResult bindingResult,
-                                         Authentication authentication) {
-        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-        return "redirect:candidate/edit_profile";
+    public String deleteCvFile() {
+        System.out.println("Delete cv file ");
+        return "redirect:/";
     }
 
-    @PutMapping(value = CANDIDATE_UPDATE_PROFILE)
-    public String updateCandidateProfile(@ModelAttribute CandidateDetailsDTO candidateDetailsDTO,
+    @DeleteMapping(value = CANDIDATE_DELETE_PHOTO_FILE)
+    public String deletePhotoFile() {
+        System.out.println("Delete photo file ");
+        return "redirect:/";
+    }
+
+    @PostMapping(value = CANDIDATE_UPDATE_PROFILE)
+    public String updateCandidateProfile(@Valid @ModelAttribute CandidateRequestDTO candidateDetailsRequestDTO,
                                          BindingResult bindingResult,
                                          Model model,
                                          Authentication authentication) {
         if (bindingResult.hasErrors()) {
             return "error";
         }
-
-        MultipartFile cvFile = candidateDetailsDTO.getPdfCvFile();
-        MultipartFile photoFile = candidateDetailsDTO.getPhotoFile();
-
-//        candidateService.updateCustomer();
-
-        return "redirect:candidate/profile?updated";
-    }
-
-    @PostMapping(value = CANDIDATE_NEW_PROFILE)
-    public String newCandidateProfile(@ModelAttribute CandidateDetailsDTO candidateDetailsDTO,
-                                      BindingResult bindingResult,
-                                      Model model,
-                                      Authentication authentication) {
-        if (bindingResult.hasErrors()) {
-            return "error";
-        }
         User user = Utility.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
-        Utility.putUserPictureToModel(user, candidateService, employerService, model);
-        //TODO putUserPictureToModel do wszykich metod get
-//        String userUuid = user.getUserUuid();
-        Candidate candidate = candidateDetailsMapper.map(candidateDetailsDTO)
-                .withCandidateUuid(user.getUserUuid())
-                .withCreatedAt(OffsetDateTime.now());
+//        Utility.putUserPhotoToModel(user, candidateService, employerService, model);
+        String userUuid = user.getUserUuid();
+        Candidate candidate = candidateService.findByCandidateUuid(userUuid).orElseThrow();
 
+        CandidateUpdateRequest candidateUpdateRequest = candidateRequestMapper.map(candidateDetailsRequestDTO);
+        if (Objects.isNull(candidate.getCandidateUuid())) {
+            log.info("Process new candidate profile");
+            candidateService.newCandidateProfile(candidateUpdateRequest,candidate,user);
+            return "candidate/profile?created";
+        } else {
+            log.info("Process update candidate profile");
+            candidateService.updateCandidateProfile(candidateUpdateRequest,candidate);
+            return "candidate/profile?updated";
+        }
 
-        candidateService.createNewCustomer(candidate);
-//        if (user.getRole().getRole().equals(Keys.Role.CANDIDATE.getName())) {
-//            candidateService.save(user);
-//        }
+//        MultipartFile cvFile = candidateDetailsDTO.getFileCv();
+//        MultipartFile photoFile = candidateDetailsDTO.getFilePhoto();
 
-        return "redirect:candidate/profile?created";
+//        candidateService.updateCustomer();
     }
 
-    @DeleteMapping(value = CANDIDATE_DELETE_PROFILE+"/{candidateId}")
+
+//    @PostMapping(value = CANDIDATE_NEW_PROFILE)
+//    public String newCandidateProfile(@ModelAttribute CandidateDetailsDTO candidateDetailsDTO,
+//                                      BindingResult bindingResult,
+//                                      Model model,
+//                                      Authentication authentication) {
+//        if (bindingResult.hasErrors()) {
+//            return "error";
+//        }
+//        User user = Utility.putUserDataToModel(authentication, userService, model)
+//                .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
+//        //TODO putUserPictureToModel do wszykich metod get
+////        String userUuid = user.getUserUuid();
+//        Candidate candidate = candidateDetailsMapper.map(candidateDetailsDTO)
+//                .withCandidateUuid(user.getUserUuid())
+//                .withCreatedAt(OffsetDateTime.now());
+//
+//
+////        if (user.getRole().getRole().equals(Keys.Role.CANDIDATE.getName())) {
+////            candidateService.save(user);
+////        }
+//
+//        return "redirect:candidate/profile?created";
+//    }
+
+    @DeleteMapping(value = CANDIDATE_DELETE_PROFILE + "/{candidateId}")
     public String deleteCandidateProfile(@PathVariable String candidateId) {
+        System.out.println("Delete profile for candidate nr :" + candidateId);
 
         return "redirect:candidate/profile?delete";
     }

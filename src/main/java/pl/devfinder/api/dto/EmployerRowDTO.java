@@ -13,7 +13,7 @@ import pl.devfinder.domain.City;
 public class EmployerRowDTO {
     Long employerId;
     String companyName;
-    String logoFile;
+    String logoFilename;
     String website;
     Integer numberOfEmployees;
     City cityId;

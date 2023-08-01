@@ -33,10 +33,10 @@ public class CandidateDetailsDTO {
     String otherSkills;
     String hobby;
     String foreignLanguage;
-    String cvFile;
+    String cvFilename;
     String githubLink;
     String linkedinLink;
-    String pictureFile;
+    String photoFilename;
     String experienceLevel;
     Integer yearsOfExperience;
     BigDecimal salaryMin;
@@ -44,7 +44,9 @@ public class CandidateDetailsDTO {
     Employer employer;
     City residenceCityId;
     Set<CandidateSkill> candidateSkills;
-    Set<String> nameCandidateSkills;
-    MultipartFile photoFile;
-    MultipartFile pdfCvFile;
+
+//    Set<String> candidateSkillsNames;
+//    String residenceCityName;
+//    MultipartFile filePhoto;
+//    MultipartFile fileCv;
 }

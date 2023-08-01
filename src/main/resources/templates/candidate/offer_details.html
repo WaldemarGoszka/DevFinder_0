@@ -103,10 +103,10 @@
                                 <dl class="row">
                                     <dt class="col-sm-4">Name</dt>
                                     <dd th:text="${offerDetailsDTO.employerId.companyName}" class="col-sm-8"></dd>
-                                    <dt th:if="${offerDetailsDTO.employerId.logoFile != null}" class="col-sm-4">Logo
+                                    <dt th:if="${offerDetailsDTO.employerId.getLogoFilename != null}" class="col-sm-4">Logo
                                     </dt>
-                                    <dd th:if="${offerDetailsDTO.employerId.logoFile != null}"
-                                        th:text="${offerDetailsDTO.employerId.logoFile}" class="col-sm-8"></dd>
+                                    <dd th:if="${offerDetailsDTO.employerId.getLogoFilename != null}"
+                                        th:text="${offerDetailsDTO.employerId.getLogoFilename}" class="col-sm-8"></dd>
                                     <dt th:if="${offerDetailsDTO.employerId.website != null}" class="col-sm-4">Website
                                     </dt>
                                     <dd th:if="${offerDetailsDTO.employerId.website != null}"

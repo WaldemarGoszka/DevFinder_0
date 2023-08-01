@@ -5,7 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import pl.devfinder.infrastructure.database.entity.CityEntity;
 
+import java.util.Optional;
+
 @Repository
 public interface CityJpaRepository extends JpaRepository<CityEntity, Long> {
 
+    Optional<CityEntity> findByCityName(String cityName);
 }

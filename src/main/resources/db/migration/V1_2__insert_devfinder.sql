@@ -133,7 +133,7 @@ values ('Python'),
        ('Maven'),
        ('Gradle');
 
-insert into employer (employer_uuid, company_name, email_contact, phone_number, description, logo_file, website,
+insert into employer (employer_uuid, company_name, email_contact, phone_number, description, logo_filename, website,
                       number_of_employees, created_at, city_id)
 values ('11d3a76b-d2ff-4e9d-aa2b-5f8c9484cc9b', 'ABC Sp. z o.o.', 'kontakt@abccorp.com', '555-123-4567',
         'Jesteśmy międzynarodową korporacją specjalizującą się w tworzeniu oprogramowania.', 'logo1.png',
@@ -197,8 +197,8 @@ values ('11d3a76b-d2ff-4e9d-aa2b-5f8c9484cc9b', 'ABC Sp. z o.o.', 'kontakt@abcco
         '2021-09-03 19:32:43', 2);
 
 insert into candidate (candidate_uuid, first_name, last_name, phone_number, residence_city_id,
-                       created_at, education, hobby, foreign_language, cv_file, github_link, linkedin_link,
-                       picture_file, experience_level, years_of_experience, salary_min,
+                       created_at, education, hobby, foreign_language, cv_filename, github_link, linkedin_link,
+                       photo_filename, experience_level, years_of_experience, salary_min,
                        open_to_remote_job, email_contact, status)
 values ('5e8dd047-7b07-44fb-bbd6-1f15db0f6a8c', 'Jan', 'Kowalski', '123456789', 1, '2023-05-01', 'Mgr inż. Informatyki', 'Gra na gitarze', 'Angielski', 'jan_kowalski_cv.pdf', 'https://github.com/jankowalski', 'https://linkedin.com/in/jankowalski', 'jan_kowalski_zdjecie.jpg', 'JUNIOR', 3, 5000.00, false, 'jan.kowalski@example.com', 'EMPLOYED'),
        ('9c6d5a77-7250-4d4e-b0c9-af65fdd1c3b3', 'Anna', 'Nowak', '987654321', 2, '2023-05-02', 'Inż. informatyki', 'Fotografia', 'Francuski', 'anna_nowak_cv.pdf', 'https://github.com/annanowak', 'https://linkedin.com/in/annanowak', 'anna_nowak_zdjecie.jpg', 'JUNIOR',3 , 4000.00, true, 'anna.nowak@example.com', 'INACTIVE'),

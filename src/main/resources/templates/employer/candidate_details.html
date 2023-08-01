@@ -40,8 +40,8 @@
                             <dt th:if="${candidateDetailsDTO.employer != null}" class="col-sm-4">Employer</dt>
                             <dd th:if="${candidateDetailsDTO.employer != null}" th:text="${candidateDetailsDTO.employer}" class="col-sm-8"></dd>
 
-                            <dt th:if="${candidateDetailsDTO.pictureFile != null}" class="col-sm-4">Face photo</dt>
-                            <dd th:if="${candidateDetailsDTO.pictureFile != null}" th:text="${candidateDetailsDTO.pictureFile}" class="col-sm-8"></dd>
+                            <dt th:if="${candidateDetailsDTO.getPhotoFilename != null}" class="col-sm-4">Face photo</dt>
+                            <dd th:if="${candidateDetailsDTO.getPhotoFilename != null}" th:text="${candidateDetailsDTO.getPhotoFilename}" class="col-sm-8"></dd>
 
                             <dt th:if="${candidateDetailsDTO.firstName != null}" class="col-sm-4">First name</dt>
                             <dd th:if="${candidateDetailsDTO.firstName != null}" th:text="${candidateDetailsDTO.firstName}" class="col-sm-8"></dd>
@@ -90,8 +90,8 @@
                                 <span th:case="false">No</span>
                             </span></dd>
 
-                            <dt th:if="${candidateDetailsDTO.cvFile != null}" class="col-sm-4">Show CV File as PDF</dt>
-                            <dd th:if="${candidateDetailsDTO.cvFile != null}" th:text="${candidateDetailsDTO.cvFile}"
+                            <dt th:if="${candidateDetailsDTO.getCvFilename != null}" class="col-sm-4">Show CV File as PDF</dt>
+                            <dd th:if="${candidateDetailsDTO.getCvFilename != null}" th:text="${candidateDetailsDTO.getCvFilename}"
                                 class="col-sm-8"></dd>
 
                             <dt th:if="${candidateDetailsDTO.linkedinLink != null}" class="col-sm-4">linkedin Link</dt>
