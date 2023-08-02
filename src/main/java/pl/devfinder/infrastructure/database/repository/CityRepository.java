@@ -30,4 +30,9 @@ private final CityEntityMapper cityEntityMapper;
     public City saveAnfFlush(City city) {
         return cityEntityMapper.mapFromEntity(cityJpaRepository.saveAndFlush(cityEntityMapper.mapToEntity(city)));
     }
+
+    @Override
+    public void deleteByCityName(String cityName) {
+        cityJpaRepository.deleteByCityName(cityName);
+    }
 }

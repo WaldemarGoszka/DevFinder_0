@@ -41,4 +41,14 @@ public class CandidateRepository implements CandidateDAO {
         return candidateJpaRepository.findByCandidateUuid(uuid).map(candidateEntityMapper::mapFromEntity);
     }
 
+    @Override
+    public void deleteById(Long candidateId) {
+        candidateJpaRepository.deleteById(candidateId);
+    }
+
+    @Override
+    public long countByCityName(String cityName) {
+        return candidateJpaRepository.countByCityName(cityName);
+    }
+
 }

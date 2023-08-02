@@ -15,7 +15,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CandidateRequestDTO {
+public class CandidateUpdateRequestDTO {
     Long candidateId;
     String candidateUuid;
     String firstName;

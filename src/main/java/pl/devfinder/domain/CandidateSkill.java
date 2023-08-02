@@ -5,7 +5,7 @@ import lombok.*;
 @With
 @Value
 @Builder
-@EqualsAndHashCode(of = "candidateSkillId")
+@EqualsAndHashCode(of = {"candidateSkillId", "candidateId", "skillId"})
 @ToString(of = {"candidateSkillId", "candidateId", "skillId"})
 @AllArgsConstructor
 public class CandidateSkill {

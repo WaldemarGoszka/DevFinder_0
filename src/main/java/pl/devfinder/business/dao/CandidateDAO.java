@@ -16,4 +16,7 @@ public interface CandidateDAO {
     Optional<Candidate> findById(Long candidateId);
 
     Optional<Candidate> findByCandidateUuid(String uuid);
+
+    void deleteById(Long candidateId);
+    long countByCityName(String cityName);
 }

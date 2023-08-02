@@ -13,4 +13,6 @@ public interface CityDAO {
     Optional<City> findByCityName(String cityName);
 
     City saveAnfFlush(City city);
+
+    void deleteByCityName(String cityName);
 }

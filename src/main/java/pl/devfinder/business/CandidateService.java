@@ -3,14 +3,14 @@ package pl.devfinder.business;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import pl.devfinder.business.dao.CandidateDAO;
 import pl.devfinder.business.management.Keys;
-import pl.devfinder.business.management.Utility;
 import pl.devfinder.domain.*;
 import pl.devfinder.domain.exception.FileUploadToProfileException;
 import pl.devfinder.domain.exception.NotFoundException;
@@ -35,6 +35,7 @@ public class CandidateService {
     private final SkillService skillService;
     private final CandidateSkillService candidateSkillService;
     private final EmployerService employerService;
+    private final OfferService offerService;
 
     public List<Candidate> findAllByState(Keys.CandidateState state) {
         List<Candidate> allAvailableCandidates = candidateDAO.findAllByState(state);
@@ -42,14 +43,6 @@ public class CandidateService {
         return allAvailableCandidates;
     }
 
-//    public void save(User user) {
-//        Candidate candidate = Candidate.builder()
-//                .candidateUuid(user.getUserUuid())
-//                .createdAt(OffsetDateTime.now())
-//                .status(Keys.CandidateState.ACTIVE.getName())
-//                .build();
-//        candidateDAO.save(candidate);
-//    }
 
     public Page<Candidate> findAllByCriteria(CandidateSearchCriteria candidateSearchCriteria) {
         return candidateCriteriaRepository.findAllByCriteria(candidateSearchCriteria);
@@ -63,34 +56,37 @@ public class CandidateService {
     }
 
     public Optional<Candidate> findByCandidateUuid(String uuid) {
+        log.info("Process finding candidate by uuid: [{}]", uuid);
         return candidateDAO.findByCandidateUuid(uuid);
     }
 
 
-    public void updateCustomer(Candidate candidate) {
-        log.info("Update candidate nr: [{}]", candidate.getCandidateId());
-        candidateDAO.save(candidate);
-    }
+//    public void updateCustomer(Candidate candidate) {
+//        log.info("Update candidate nr: [{}]", candidate.getCandidateId());
+//        candidateDAO.save(candidate);
+//    }
 
     @Transactional
     public void updateCandidateProfile(CandidateUpdateRequest candidateUpdateRequest, Candidate candidate) {
-        if(nonCityExist(candidateUpdateRequest.getResidenceCityName())) {
+        if (nonCityExist(candidateUpdateRequest.getResidenceCityName())) {
             cityService.save(candidateUpdateRequest.getResidenceCityName());
         }
         City city = cityService.findByCityName(candidateUpdateRequest.getResidenceCityName()).orElseThrow();
 
-        validateIfSkillsExist(candidateUpdateRequest.getNameCandidateSkills());
+        validateIfSkillsExist(candidateUpdateRequest.getCandidateSkillsNames());
         candidateSkillService.deleteAllByCandidate(candidate);
 
         Candidate updateCandidate = buildUpdatedCandidate(candidateUpdateRequest, candidate, city);
-
-        Set<CandidateSkill> candidateSkillToSave = buildCandidateSkills(updateCandidate, candidateUpdateRequest);
-        candidateSkillService.saveAll(candidateSkillToSave);
+        if (Objects.nonNull(candidateUpdateRequest.getCandidateSkillsNames())) {
+            Set<CandidateSkill> candidateSkillToSave = buildCandidateSkills(updateCandidate, candidateUpdateRequest);
+            candidateSkillService.saveAll(candidateSkillToSave);
+        }
         candidateDAO.save(updateCandidate);
     }
 
     private Candidate buildUpdatedCandidate(CandidateUpdateRequest candidateUpdateRequest, Candidate candidate, City city) {
         return Candidate.builder()
+                .candidateId(candidate.getCandidateId())
                 .candidateUuid(candidate.getCandidateUuid())
                 .createdAt(candidate.getCreatedAt())
                 .firstName(candidateUpdateRequest.getFirstName())
@@ -102,8 +98,8 @@ public class CandidateService {
                 .otherSkills(candidateUpdateRequest.getOtherSkills())
                 .hobby(candidateUpdateRequest.getHobby())
                 .foreignLanguage(candidateUpdateRequest.getForeignLanguage())
-                .cvFilename(processCvFile(candidateUpdateRequest, candidate))
-                .photoFilename(processPhotoFile(candidateUpdateRequest, candidate))
+                .cvFilename(processUpdateCvFile(candidateUpdateRequest, candidate))
+                .photoFilename(processUpdatePhotoFile(candidateUpdateRequest, candidate))
                 .githubLink(candidateUpdateRequest.getGithubLink())
                 .linkedinLink(candidateUpdateRequest.getLinkedinLink())
                 .experienceLevel(candidateUpdateRequest.getExperienceLevel())
@@ -116,24 +112,24 @@ public class CandidateService {
     }
 
     @Transactional
-    public void newCandidateProfile(CandidateUpdateRequest candidateUpdateRequest, Candidate candidate, User user) {
-        if(nonCityExist(candidateUpdateRequest.getResidenceCityName())) {
+    public void newCandidateProfile(CandidateUpdateRequest candidateUpdateRequest, User user) {
+        if (nonCityExist(candidateUpdateRequest.getResidenceCityName())) {
             cityService.save(candidateUpdateRequest.getResidenceCityName());
         }
         City city = cityService.findByCityName(candidateUpdateRequest.getResidenceCityName()).orElseThrow();
 
-        validateIfSkillsExist(candidateUpdateRequest.getNameCandidateSkills());
-        candidateSkillService.deleteAllByCandidate(candidate);
+        validateIfSkillsExist(candidateUpdateRequest.getCandidateSkillsNames());
+        Candidate createNewCandidate = buildNewCandidate(candidateUpdateRequest, user, city);
 
-        Candidate createNewCandidate = buildNewCandidate(candidateUpdateRequest, candidate, user, city);
-
-        Set<CandidateSkill> candidateSkillToSave = buildCandidateSkills(createNewCandidate, candidateUpdateRequest);
-        candidateSkillService.saveAll(candidateSkillToSave);
+        if (Objects.nonNull(candidateUpdateRequest.getCandidateSkillsNames())) {
+            Set<CandidateSkill> candidateSkillToSave = buildCandidateSkills(createNewCandidate, candidateUpdateRequest);
+            candidateSkillService.saveAll(candidateSkillToSave);
+        }
         candidateDAO.save(createNewCandidate);
 
     }
 
-    private Candidate buildNewCandidate(CandidateUpdateRequest candidateUpdateRequest, Candidate candidate, User user, City city) {
+    private Candidate buildNewCandidate(CandidateUpdateRequest candidateUpdateRequest, User user, City city) {
         return Candidate.builder()
                 .candidateUuid(user.getUserUuid())
                 .createdAt(OffsetDateTime.now())
@@ -146,8 +142,8 @@ public class CandidateService {
                 .otherSkills(candidateUpdateRequest.getOtherSkills())
                 .hobby(candidateUpdateRequest.getHobby())
                 .foreignLanguage(candidateUpdateRequest.getForeignLanguage())
-                .cvFilename(processCvFile(candidateUpdateRequest, candidate))
-                .photoFilename(processPhotoFile(candidateUpdateRequest, candidate))
+                .cvFilename(processNewCvFile(candidateUpdateRequest, user))
+                .photoFilename(processNewPhotoFile(candidateUpdateRequest, user))
                 .githubLink(candidateUpdateRequest.getGithubLink())
                 .linkedinLink(candidateUpdateRequest.getLinkedinLink())
                 .experienceLevel(candidateUpdateRequest.getExperienceLevel())
@@ -159,6 +155,26 @@ public class CandidateService {
                 .build();
     }
 
+    private String processNewPhotoFile(CandidateUpdateRequest candidateUpdateRequest, User user) {
+        if (!candidateUpdateRequest.getFileCv().isEmpty()) {
+            log.info("Process update cv file : [{}]", candidateUpdateRequest.getFilePhoto().getOriginalFilename());
+            return saveFileToDisc(user.getUserUuid(), candidateUpdateRequest.getFilePhoto());
+        } else {
+            return null;
+        }
+
+    }
+
+    private String processNewCvFile(CandidateUpdateRequest candidateUpdateRequest, User user) {
+        if (!candidateUpdateRequest.getFileCv().isEmpty()) {
+            log.info("Process new cv file : [{}]", candidateUpdateRequest.getFileCv().getOriginalFilename());
+            return saveFileToDisc(user.getUserUuid(), candidateUpdateRequest.getFileCv());
+        } else {
+            return null;
+        }
+
+    }
+
     private Employer buildEmployer(Long employerId) {
 
         if (Objects.nonNull(employerId)) {
@@ -168,18 +184,18 @@ public class CandidateService {
     }
 
     private void validateIfSkillsExist(Collection<String> skills) {
-        skills.forEach(skillName -> skillService.findBySkillName(skillName)
-                .orElseThrow(() -> new NotFoundException("Could not find skill, skillName: " + skillName)));
+        if (Objects.nonNull(skills)) {
+            skills.forEach(skillName -> skillService.findBySkillName(skillName)
+                    .orElseThrow(() -> new NotFoundException("Could not find skill, skillName: " + skillName)));
+        }
     }
 
     private Set<CandidateSkill> buildCandidateSkills(Candidate candidateToSave, CandidateUpdateRequest candidateUpdateRequest) {
         Set<CandidateSkill> candidateSkillToSave = new HashSet<>();
-        candidateUpdateRequest.getNameCandidateSkills()
+        candidateUpdateRequest.getCandidateSkillsNames()
                 .forEach(skillName -> candidateSkillToSave.add(CandidateSkill.builder()
                         .candidateId(candidateToSave)
-                        .skillId(Skill.builder()
-                                .skillName(skillName)
-                                .build())
+                        .skillId(skillService.buildSkill(skillName))
                         .build()));
         return candidateSkillToSave;
     }
@@ -191,14 +207,16 @@ public class CandidateService {
     }
 
 
-    private static String processCvFile(CandidateUpdateRequest candidateUpdateRequest, Candidate candidate) {
-        if (Objects.nonNull(candidateUpdateRequest.getFileCv())) {
+    private String processUpdateCvFile(CandidateUpdateRequest candidateUpdateRequest, Candidate candidate) {
+        if (!candidateUpdateRequest.getFileCv().isEmpty()) {
+            log.info("Process update cv file : [{}]", candidateUpdateRequest.getFileCv().getOriginalFilename());
             try {
                 if (oldFileExist(candidate.getCandidateUuid(), candidate.getCvFilename())) {
                     deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getCvFilename());
                 }
             } catch (IOException e) {
-                throw new FileUploadToProfileException("Could not delete file: " + candidate.getCvFilename());
+                log.error("Could not delete file: [{}]", candidate.getCvFilename());
+                //throw new FileUploadToProfileException("Could not delete file: " + candidate.getCvFilename());
             }
             return saveFileToDisc(candidate.getCandidateUuid(), candidateUpdateRequest.getFileCv());
         } else {
@@ -206,14 +224,16 @@ public class CandidateService {
         }
     }
 
-    private static String processPhotoFile(CandidateUpdateRequest candidateUpdateRequest, Candidate candidate) {
-        if (Objects.nonNull(candidateUpdateRequest.getFilePhoto())) {
+    private  String processUpdatePhotoFile(CandidateUpdateRequest candidateUpdateRequest, Candidate candidate) {
+        if (!candidateUpdateRequest.getFilePhoto().isEmpty()) {
+            log.info("Process update photo file : [{}]", candidateUpdateRequest.getFilePhoto().getOriginalFilename());
             try {
                 if (oldFileExist(candidate.getCandidateUuid(), candidate.getPhotoFilename())) {
                     deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getPhotoFilename());
                 }
             } catch (IOException e) {
-                throw new FileUploadToProfileException("Could not delete file: " + candidate.getPhotoFilename());
+                log.error("Could not delete file: [{}]", candidate.getCvFilename());
+                //throw new FileUploadToProfileException("Could not delete file: " + candidate.getPhotoFilename());
             }
             return saveFileToDisc(candidate.getCandidateUuid(), candidateUpdateRequest.getFilePhoto());
         } else {
@@ -221,7 +241,7 @@ public class CandidateService {
         }
     }
 
-    private static String saveFileToDisc(String candidateUuid, MultipartFile file) {
+    private  String saveFileToDisc(String candidateUuid, MultipartFile file) {
 
         try {
             String filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
@@ -242,20 +262,53 @@ public class CandidateService {
         }
     }
 
-    private static String getUploadDir(String candidateUuid, String filename) throws IOException {
-        return new ClassPathResource(Utility.USER_DATA_DIR).getFile().toPath() +
-                File.separator +
-                candidateUuid +
-                filename;
+    private String getUploadDir(String candidateUuid, String filename) throws IOException {
+        ClassLoader classLoader = getClass().getClassLoader();
+
+        File userDataDirectory = new File(Objects.requireNonNull(classLoader.getResource("user_data")).getFile());
+
+        if (!userDataDirectory.exists()) {
+            userDataDirectory.mkdir();
+        }
+        String userDataFolderPath = userDataDirectory.getAbsolutePath();
+
+        String filePath = userDataFolderPath + File.separator + candidateUuid + filename;
+        return filePath;
+//                return createDirectoryAndReturnPath(filePath);
+
     }
 
-    private static void deleteFileFromDisc(String uuid, String filename) throws IOException {
+    private  void deleteFileFromDisc(String uuid, String filename) throws IOException {
+        log.info("Process delete file from disc, direction: [{}]", getUploadDir(uuid, filename));
         Files.deleteIfExists(Paths.get(getUploadDir(uuid, filename)));
     }
 
-    private static boolean oldFileExist(String uuid, String filename) throws IOException {
-        System.out.println("***********************upload dir " + getUploadDir(uuid, filename));
+    private  boolean oldFileExist(String uuid, String filename) throws IOException {
+        log.info("Checked if file exist in diresction: [{}]", getUploadDir(uuid, filename));
         return Files.exists(Paths.get(getUploadDir(uuid, filename)));
     }
 
+    @Transactional
+    public void deleteCandidateProfile(String candidateId) {
+        Candidate candidate = this.findById(Long.valueOf(candidateId));
+        if (countUsesOfCityName(candidate) <= 1) {
+            log.info("City No Longer nessesery. Delete city : [{}]", candidate.getResidenceCityId().getCityName());
+            cityService.deleteByCityName(candidate.getResidenceCityId().getCityName());
+        }
+        candidateSkillService.deleteAllByCandidate(candidate);
+        log.info("Delete candidate profile, candidateId: [{}]", candidate.getCandidateId());
+        candidateDAO.deleteById(Long.valueOf(candidateId));
+    }
+
+    private long countUsesOfCityName(Candidate candidate) {
+        long counter = this.countByCityName(candidate.getResidenceCityId().getCityName());
+        counter += offerService.countByCityName(candidate.getResidenceCityId().getCityName());
+        counter += employerService.countByCityName(candidate.getResidenceCityId().getCityName());
+        return counter;
+        //TODO przetestować dodanie miasta i usunięcie gdy nie jesyt już wużywane
+    }
+
+    public long countByCityName(String cityName) {
+        return candidateDAO.countByCityName(cityName);
+    }
 }

@@ -28,6 +28,11 @@ public class CityService {
         return cityDAO.saveAnfFlush(city);
     }
 
+    public void deleteByCityName(String cityName) {
+        cityDAO.deleteByCityName(cityName);
+    }
+
+
 
     //TODO jeśli nie będzie takiego miasta to dodaj miasto
 //    if(City == null){

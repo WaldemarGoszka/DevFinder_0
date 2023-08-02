@@ -29,6 +29,10 @@ public class OfferService {
     private final OfferDAO offerDAO;
     private final OfferCriteriaRepository offerCriteriaRepository;
 
+    public long countByCityName(String cityName){
+        return offerDAO.countByCityName(cityName);
+    }
+
 
     public Page<Offer> findAllByCriteria(OfferSearchCriteria offerSearchCriteria) {
         return offerCriteriaRepository.findAllByCriteria(offerSearchCriteria);

@@ -54,4 +54,8 @@ public class EmployerService {
     public Optional<Employer> findByEmployerUuid(String uuid) {
         return employerDAO.findByEmployerUuid(uuid);
     }
+
+    public long countByCityName(String cityName) {
+        return employerDAO.countByCityName(cityName);
+    }
 }

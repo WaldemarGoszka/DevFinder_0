@@ -5,7 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.Set;
+import java.util.List;
 
 @With
 @Data
@@ -37,7 +37,7 @@ public class CandidateUpdateRequest {
 
     String employerName;
     String residenceCityName;
-    Set<String> nameCandidateSkills;
+    List<String> candidateSkillsNames;
     MultipartFile filePhoto;
     MultipartFile fileCv;
 

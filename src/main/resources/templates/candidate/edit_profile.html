@@ -156,11 +156,20 @@
                                 <dt class="col-sm-4">Residence City</dt>
                                 <dd class="col-sm-8">
                                     <input
+                                            th:if="${candidateDetailsDTO.residenceCityId != null}"
+
                                             type="text"
                                             class="form-control"
                                             th:name="residenceCityName"
                                             th:text="${candidateDetailsDTO.residenceCityId.cityName}"
                                             th:value="${candidateDetailsDTO.residenceCityId.cityName}"
+                                    >
+                                    <input
+                                            th:if="${candidateDetailsDTO.residenceCityId == null}"
+                                        type="text"
+                                            class="form-control"
+                                            th:name="residenceCityName"
+                                            th:field="*{residenceCityName}"
                                     >
                                 </dd>
 
@@ -201,9 +210,11 @@
                                 <dt class="col-sm-4">Years of experience</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            type="text"
+                                            type="number"
                                             class="form-control"
                                             th:field="*{yearsOfExperience}"
+                                            min="0"
+                                            step="1"
                                     >
                                 </dd>
 
@@ -214,7 +225,7 @@
                                             <input type="checkbox"
                                                    th:value="${skill.skillName}"
                                                    th:id="${skill.skillId}"
-                                                   th:name="nameCandidateSkills"
+                                                   th:name="candidateSkillsNames"
                                                    th:checked="${candidateDetailsDTO.candidateSkills != null} ? ${skillChecked.contains(skill.skillName)} : false"
                                                    class="btn-check"
                                                    autocomplete="on">
@@ -258,9 +269,10 @@
                                 <dt class="col-sm-4">Minimum expected payout</dt>
                                 <dd class="col-sm-8">
                                     <div class="input-group mb-3">
-                                        <input type="text"
+                                        <input type="number"
                                                class="form-control"
                                                th:field="*{salaryMin}"
+
                                         >
                                     </div>
                                 </dd>
@@ -351,7 +363,8 @@
                                 th:method="DELETE"
                                 id="deleteProfile"
                         >
-                            <button form="deleteProfile" class="btn justify-content-center btn-danger m-2"  type="submit">
+                            <button th:unless="${param.new}"
+                                    form="deleteProfile" class="btn justify-content-center btn-danger m-2"  type="submit">
                                 Delete Profile</button>
                         </form>
 

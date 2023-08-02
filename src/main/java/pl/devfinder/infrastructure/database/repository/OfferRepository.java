@@ -30,7 +30,7 @@ public class OfferRepository implements OfferDAO {
 
     @Override
     public Page<Offer> findAllByState(Keys.OfferState state, Pageable pageable) {
-        return offerJpaRepository.findAllByState(state.getName(),pageable).map(offerEntityMapper::mapFromEntity);
+        return offerJpaRepository.findAllByState(state.getName(), pageable).map(offerEntityMapper::mapFromEntity);
     }
 
     @Override
@@ -43,10 +43,14 @@ public class OfferRepository implements OfferDAO {
         return offerJpaRepository.findById(offerId).map(offerEntityMapper::mapFromEntity);
     }
 
-//    @Override
+    //    @Override
 //    public Page<Offer> findAllByStatePaginated(Integer pageNumber, Integer pageSize, Keys.OfferState state) {
 //        return offerJpaRepository.findAll();
 //    }
+    @Override
+    public long countByCityName(String cityName) {
+        return offerJpaRepository.countByCityName(cityName);
+    }
 
 
 }

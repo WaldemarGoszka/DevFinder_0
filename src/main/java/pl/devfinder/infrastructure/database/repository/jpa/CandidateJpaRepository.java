@@ -18,4 +18,9 @@ public interface CandidateJpaRepository extends JpaRepository<CandidateEntity, L
     List<CandidateEntity> findAllByState(String state);
 
     Optional<CandidateEntity> findByCandidateUuid(String uuid);
+    @Query("""
+    SELECT COUNT(o) FROM CandidateEntity o JOIN o.residenceCityId c WHERE c.cityName = :cityName
+    """)
+    long countByCityName(String cityName);
+
 }

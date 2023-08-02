@@ -1,10 +1,7 @@
 package pl.devfinder.api.dto;
 
 import jakarta.validation.constraints.Email;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.devfinder.domain.CandidateSkill;
 import pl.devfinder.domain.City;
@@ -15,6 +12,7 @@ import java.time.OffsetDateTime;
 import java.util.Set;
 
 @Data
+@With
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -45,8 +43,8 @@ public class CandidateDetailsDTO {
     City residenceCityId;
     Set<CandidateSkill> candidateSkills;
 
-//    Set<String> candidateSkillsNames;
-//    String residenceCityName;
-//    MultipartFile filePhoto;
-//    MultipartFile fileCv;
+    Set<String> candidateSkillsNames;
+    String residenceCityName;
+    MultipartFile filePhoto;
+    MultipartFile fileCv;
 }

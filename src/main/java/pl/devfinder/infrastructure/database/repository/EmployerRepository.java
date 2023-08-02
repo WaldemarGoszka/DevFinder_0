@@ -39,4 +39,9 @@ public class EmployerRepository implements EmployerDAO {
     public Optional<Employer> findByEmployerUuid(String uuid) {
         return employerJpaRepository.findByEmployerUuid(uuid).map(employerEntityMapper::mapFromEntity);
     }
+
+    @Override
+    public long countByCityName(String cityName) {
+        return employerJpaRepository.countByCityName(cityName);
+    }
 }

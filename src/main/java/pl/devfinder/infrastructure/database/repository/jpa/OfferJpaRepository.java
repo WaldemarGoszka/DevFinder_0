@@ -27,6 +27,9 @@ public interface OfferJpaRepository extends JpaRepository<OfferEntity, Long> {
             SELECT offer FROM OfferEntity offer WHERE offer.status LIKE :state
             """)
     Page<OfferEntity> findAllByState(String state, Pageable pageable);
-
+    @Query("""
+    SELECT COUNT(o) FROM OfferEntity o JOIN o.cityId c WHERE c.cityName = :cityName
+    """)
+    long countByCityName(String cityName);
 
 }
