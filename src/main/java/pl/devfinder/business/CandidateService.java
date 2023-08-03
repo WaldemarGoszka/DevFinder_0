@@ -3,8 +3,7 @@ package pl.devfinder.business;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -20,6 +19,7 @@ import pl.devfinder.infrastructure.database.repository.criteria.CandidateCriteri
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.OffsetDateTime;
@@ -36,6 +36,8 @@ public class CandidateService {
     private final CandidateSkillService candidateSkillService;
     private final EmployerService employerService;
     private final OfferService offerService;
+    private final Environment environment;
+
 
     public List<Candidate> findAllByState(Keys.CandidateState state) {
         List<Candidate> allAvailableCandidates = candidateDAO.findAllByState(state);
@@ -156,8 +158,8 @@ public class CandidateService {
     }
 
     private String processNewPhotoFile(CandidateUpdateRequest candidateUpdateRequest, User user) {
-        if (!candidateUpdateRequest.getFileCv().isEmpty()) {
-            log.info("Process update cv file : [{}]", candidateUpdateRequest.getFilePhoto().getOriginalFilename());
+        if (!candidateUpdateRequest.getFilePhoto().isEmpty()) {
+            log.info("Process upload new photo file : [{}]", candidateUpdateRequest.getFilePhoto().getOriginalFilename());
             return saveFileToDisc(user.getUserUuid(), candidateUpdateRequest.getFilePhoto());
         } else {
             return null;
@@ -167,7 +169,7 @@ public class CandidateService {
 
     private String processNewCvFile(CandidateUpdateRequest candidateUpdateRequest, User user) {
         if (!candidateUpdateRequest.getFileCv().isEmpty()) {
-            log.info("Process new cv file : [{}]", candidateUpdateRequest.getFileCv().getOriginalFilename());
+            log.info("Process upload new cv file : [{}]", candidateUpdateRequest.getFileCv().getOriginalFilename());
             return saveFileToDisc(user.getUserUuid(), candidateUpdateRequest.getFileCv());
         } else {
             return null;
@@ -209,14 +211,14 @@ public class CandidateService {
 
     private String processUpdateCvFile(CandidateUpdateRequest candidateUpdateRequest, Candidate candidate) {
         if (!candidateUpdateRequest.getFileCv().isEmpty()) {
-            log.info("Process update cv file : [{}]", candidateUpdateRequest.getFileCv().getOriginalFilename());
+            log.info("Process upload update cv file : [{}]", candidateUpdateRequest.getFileCv().getOriginalFilename());
             try {
                 if (oldFileExist(candidate.getCandidateUuid(), candidate.getCvFilename())) {
                     deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getCvFilename());
                 }
             } catch (IOException e) {
                 log.error("Could not delete file: [{}]", candidate.getCvFilename());
-                //throw new FileUploadToProfileException("Could not delete file: " + candidate.getCvFilename());
+                throw new FileUploadToProfileException("Could not delete file: " + candidate.getCvFilename());
             }
             return saveFileToDisc(candidate.getCandidateUuid(), candidateUpdateRequest.getFileCv());
         } else {
@@ -224,16 +226,16 @@ public class CandidateService {
         }
     }
 
-    private  String processUpdatePhotoFile(CandidateUpdateRequest candidateUpdateRequest, Candidate candidate) {
+    private String processUpdatePhotoFile(CandidateUpdateRequest candidateUpdateRequest, Candidate candidate) {
         if (!candidateUpdateRequest.getFilePhoto().isEmpty()) {
-            log.info("Process update photo file : [{}]", candidateUpdateRequest.getFilePhoto().getOriginalFilename());
+            log.info("Process upload update photo file : [{}]", candidateUpdateRequest.getFilePhoto().getOriginalFilename());
             try {
                 if (oldFileExist(candidate.getCandidateUuid(), candidate.getPhotoFilename())) {
                     deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getPhotoFilename());
                 }
             } catch (IOException e) {
                 log.error("Could not delete file: [{}]", candidate.getCvFilename());
-                //throw new FileUploadToProfileException("Could not delete file: " + candidate.getPhotoFilename());
+                throw new FileUploadToProfileException("Could not delete file: " + candidate.getPhotoFilename());
             }
             return saveFileToDisc(candidate.getCandidateUuid(), candidateUpdateRequest.getFilePhoto());
         } else {
@@ -241,13 +243,10 @@ public class CandidateService {
         }
     }
 
-    private  String saveFileToDisc(String candidateUuid, MultipartFile file) {
+    private String saveFileToDisc(String candidateUuid, MultipartFile file) {
 
         try {
             String filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-
-            System.out.println("saveFileToDisc " + filename);
-            System.out.println("saveFileToDisc 2 " + file.getOriginalFilename());
 
             String uploadDir = getUploadDir(candidateUuid, filename);
             log.info("Trying copy file to [{}] ", uploadDir);
@@ -262,29 +261,32 @@ public class CandidateService {
         }
     }
 
-    private String getUploadDir(String candidateUuid, String filename) throws IOException {
-        ClassLoader classLoader = getClass().getClassLoader();
+    public String getUploadDir(String candidateUuid, String filename) {
+        String userDataPath = environment.getProperty("devfinder-conf.user-data-path", String.class);
 
-        File userDataDirectory = new File(Objects.requireNonNull(classLoader.getResource("user_data")).getFile());
-
-        if (!userDataDirectory.exists()) {
-            userDataDirectory.mkdir();
+        assert userDataPath != null;
+        Path uploadPath = Paths.get(userDataPath);
+        if (!Files.exists(uploadPath)) {
+            try {
+                Files.createDirectories(uploadPath);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
-        String userDataFolderPath = userDataDirectory.getAbsolutePath();
-
-        String filePath = userDataFolderPath + File.separator + candidateUuid + filename;
-        return filePath;
-//                return createDirectoryAndReturnPath(filePath);
-
+        return uploadPath + File.separator + candidateUuid + filename;
     }
 
-    private  void deleteFileFromDisc(String uuid, String filename) throws IOException {
-        log.info("Process delete file from disc, direction: [{}]", getUploadDir(uuid, filename));
-        Files.deleteIfExists(Paths.get(getUploadDir(uuid, filename)));
+    public void deleteFileFromDisc(String uuid, String filename) {
+        try {
+            log.info("Process delete file from disc, direction: [{}]", getUploadDir(uuid, filename));
+            Files.deleteIfExists(Paths.get(getUploadDir(uuid, filename)));
+        } catch (IOException e) {
+            throw new FileUploadToProfileException("Could not delete file from disc");
+        }
     }
 
-    private  boolean oldFileExist(String uuid, String filename) throws IOException {
-        log.info("Checked if file exist in diresction: [{}]", getUploadDir(uuid, filename));
+    private boolean oldFileExist(String uuid, String filename) throws IOException {
+        log.info("Checked if file exist in direction: [{}]", getUploadDir(uuid, filename));
         return Files.exists(Paths.get(getUploadDir(uuid, filename)));
     }
 
@@ -296,6 +298,14 @@ public class CandidateService {
             cityService.deleteByCityName(candidate.getResidenceCityId().getCityName());
         }
         candidateSkillService.deleteAllByCandidate(candidate);
+
+        if (Objects.nonNull(candidate.getCvFilename())) {
+            deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getCvFilename());
+        }
+        if (Objects.nonNull(candidate.getPhotoFilename())) {
+            deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getPhotoFilename());
+        }
+
         log.info("Delete candidate profile, candidateId: [{}]", candidate.getCandidateId());
         candidateDAO.deleteById(Long.valueOf(candidateId));
     }
@@ -310,5 +320,19 @@ public class CandidateService {
 
     public long countByCityName(String cityName) {
         return candidateDAO.countByCityName(cityName);
+    }
+
+    public void deleteCvFile(Candidate candidate) {
+        log.info("Process delete cv file");
+        deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getCvFilename());
+        Candidate updateCandidate = candidate.withCvFilename(null);
+        candidateDAO.save(updateCandidate);
+    }
+
+    public void deletePhotoFile(Candidate candidate) {
+        log.info("Process delete photo file");
+        deleteFileFromDisc(candidate.getCandidateUuid(),candidate.getPhotoFilename());
+        Candidate updateCandidate = candidate.withPhotoFilename(null);
+        candidateDAO.save(updateCandidate);
     }
 }

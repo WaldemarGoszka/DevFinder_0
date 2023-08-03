@@ -20,6 +20,7 @@ import pl.devfinder.domain.exception.NotFoundException;
 import pl.devfinder.domain.search.CandidateSearchCriteria;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -55,19 +56,26 @@ public class EmployerController {
 
     @GetMapping()
     public String homePage(Model model) {
-
         return "employer/portal";
     }
 
-//    @GetMapping(value = EMPLOYER_PROFILE)
-//    public String getProfile(Model model) {
-//// getEmpoyerProfile
-//        return "employer/profile";
-//    }
 
-    @GetMapping(value = CANDIDATE_DETAIL+"/{candidateId}")
+    @GetMapping(value = CANDIDATE_DETAIL + "/{candidateId}")
     public String getCandidateDetails(@PathVariable Long candidateId, Model model, Authentication authentication) {
-        Utility.putUserDataToModel(authentication, userService, model);
+        User user = Utility.putUserDataToModel(authentication, userService, model)
+                .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
+        Candidate candidate = candidateService.findByCandidateUuid(user.getUserUuid())
+                .orElseThrow(() -> new NotFoundException("Could not find candidate by uuid"));
+
+        if (Objects.nonNull(candidate.getPhotoFilename())) {
+            String photoPath = "/user_data/" + candidate.getCandidateUuid() + candidate.getPhotoFilename();
+            model.addAttribute("photoDir", photoPath);
+        } else {
+            model.addAttribute("photoDir", "/img/user.jpg");
+        }
+        model.addAttribute("downloadCvFilePath", "/user_data/" + candidate.getCandidateUuid() + candidate.getCvFilename());
+
+
         CandidateDetailsDTO candidateDetailsDTO = candidateDetailsMapper.map(candidateService.findById(candidateId));
         model.addAttribute("candidateDetailsDTO", candidateDetailsDTO);
         return "employer/candidate_details";
@@ -136,6 +144,7 @@ public class EmployerController {
         model.addAttribute("employerDetailsDTO", employerDetailsDTO);
         return "employer/profile";
     }
+
     @GetMapping(value = EMPLOYER_EDIT_PROFILE)
     public String getEmployerEditProfile(Model model, Authentication authentication) {
         User user = Utility.putUserDataToModel(authentication, userService, model)
@@ -145,11 +154,12 @@ public class EmployerController {
 //        }
         return "employer/edit_profile";
     }
+
     @PutMapping(value = EMPLOYER_UPDATE_PROFILE)
     public String updateEmployerProfile(@ModelAttribute EmployerDetailsDTO candidateDetailsDTO,
-                                         BindingResult bindingResult,
-                                         Model model,
-                                         Authentication authentication) {
+                                        BindingResult bindingResult,
+                                        Model model,
+                                        Authentication authentication) {
         if (bindingResult.hasErrors()) {
             return "error";
         }
@@ -159,9 +169,9 @@ public class EmployerController {
 
     @PostMapping(value = EMPLOYER_NEW_PROFILE)
     public String newEmployerProfile(@ModelAttribute EmployerDetailsDTO candidateDetailsDTO,
-                                      BindingResult bindingResult,
-                                      Model model,
-                                      Authentication authentication) {
+                                     BindingResult bindingResult,
+                                     Model model,
+                                     Authentication authentication) {
         if (bindingResult.hasErrors()) {
             return "error";
         }

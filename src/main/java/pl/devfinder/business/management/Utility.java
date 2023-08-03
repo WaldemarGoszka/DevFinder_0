@@ -8,8 +8,10 @@ import org.springframework.ui.Model;
 import pl.devfinder.business.CandidateService;
 import pl.devfinder.business.EmployerService;
 import pl.devfinder.business.UserService;
+import pl.devfinder.domain.Candidate;
 import pl.devfinder.domain.User;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -43,13 +45,16 @@ public final class Utility {
         return Optional.empty();
     }
 
-    public static void putUserPhotoToModel(User user, CandidateService candidateService, EmployerService employerService, Model model) {
-        if(user.getRole().getRole().equals(Keys.Role.CANDIDATE.getName())){
-//            Candidate candidate = candidateService.findByCandidateUuid(user.getUserUuid()).orElseThrow();
-//                model.addAttribute("picture",candidate.getPictureFile());
-        }
-        if(user.getRole().getRole().equals(Keys.Role.EMPLOYER.getName())){
-//                model.addAttribute picture from server
-        }
+    public static void getUserPhotoPath(User user, CandidateService candidateService, EmployerService employerService, Model model) {
+//        if(user.getRole().getRole().equals(Keys.Role.CANDIDATE.getName())){
+//            Optional <Candidate> candidate = candidateService.findByCandidateUuid(user.getUserUuid());
+//            if(candidate.isPresent() && Objects.nonNull(candidate.get().getPhotoFilename())){
+//                model.addAttribute("photo",candidate.get().getPhotoFilename());
+//            }
+//
+//        }
+//        if(user.getRole().getRole().equals(Keys.Role.EMPLOYER.getName())){
+////                model.addAttribute picture from server
+//        }
     }
 }

@@ -157,12 +157,8 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import pl.devfinder.business.management.Keys;
@@ -204,8 +200,8 @@ public class SecurityConfiguration {
                         "/images/**",
                         "/img/**")
                 .permitAll()
-                .requestMatchers("/candidate/**").hasAuthority(Keys.Role.CANDIDATE.getName())
-                .requestMatchers("/employer/**").hasAuthority(Keys.Role.EMPLOYER.getName())
+                .requestMatchers("/candidate/**","/user_data/**").hasAuthority(Keys.Role.CANDIDATE.getName())
+                .requestMatchers("/employer/**","/user_data/**").hasAuthority(Keys.Role.EMPLOYER.getName())
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -232,18 +228,18 @@ public class SecurityConfiguration {
         return http.build();
     }
 
-    @Bean
-    public InMemoryUserDetailsManager userDetailsManager() {
-        UserDetails employer = User
-                .withUsername("employer")
-                .password(passwordEncoder().encode("12345678"))
-                .roles(Keys.Role.EMPLOYER.getName())
-                .build();
-        UserDetails candidate = User
-                .withUsername("candidate")
-                .password(passwordEncoder().encode("12345678"))
-                .roles(Keys.Role.CANDIDATE.getName())
-                .build();
-        return new InMemoryUserDetailsManager(employer, candidate);
-    }
+//    @Bean
+//    public InMemoryUserDetailsManager userDetailsManager() {
+//        UserDetails employer = User
+//                .withUsername("employer")
+//                .password(passwordEncoder().encode("12345678"))
+//                .roles(Keys.Role.EMPLOYER.getName())
+//                .build();
+//        UserDetails candidate = User
+//                .withUsername("candidate")
+//                .password(passwordEncoder().encode("12345678"))
+//                .roles(Keys.Role.CANDIDATE.getName())
+//                .build();
+//        return new InMemoryUserDetailsManager(employer, candidate);
+//    }
 }

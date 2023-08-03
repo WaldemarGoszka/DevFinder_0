@@ -33,6 +33,11 @@
                     <div class="bg-secondary rounded h-100 p-4">
                         <h6 class="mb-4"
                             th:text="'Candidate nr '+ ${candidateDetailsDTO.candidateId} + ' Id: '+ ${candidateDetailsDTO.candidateUuid} + ''"></h6>
+                        <div class=" text-center">
+                            <img class="img-fluid rounded-circle mx-auto mb-4"
+                                 th:src="@{${photoDir}}"
+                                 style="width: 100px; height: 100px;">
+                        </div>
                         <dl class="row mb-0">
                             <dt th:if="${candidateDetailsDTO.status != null}" class="col-sm-4">Status</dt>
                             <dd th:if="${candidateDetailsDTO.status != null}" th:text="${candidateDetailsDTO.status}" class="col-sm-8"></dd>
@@ -91,8 +96,13 @@
                             </span></dd>
 
                             <dt th:if="${candidateDetailsDTO.getCvFilename != null}" class="col-sm-4">Show CV File as PDF</dt>
-                            <dd th:if="${candidateDetailsDTO.getCvFilename != null}" th:text="${candidateDetailsDTO.getCvFilename}"
-                                class="col-sm-8"></dd>
+                            <dd th:if="${candidateDetailsDTO.getCvFilename != null}"
+                                class="col-sm-8">
+                                <a th:if="${candidateDetailsDTO.getCvFilename != null}"
+                                   th:href="@{${downloadCvFilePath}}"
+                                   th:text="${candidateDetailsDTO.getCvFilename}">
+                                </a>
+                            </dd>
 
                             <dt th:if="${candidateDetailsDTO.linkedinLink != null}" class="col-sm-4">linkedin Link</dt>
                             <dd class="col-sm-8">

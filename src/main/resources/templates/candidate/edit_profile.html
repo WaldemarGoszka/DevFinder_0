@@ -4,7 +4,7 @@
 
 <head>
     <title>DevFinder - Candidate - Edit Profile</title>
-    <link href="../img/favicon.ico" rel="icon">
+    <link th:href="@{/img/favicon.ico}" rel="icon">
     <div th:replace="~{fragments :: head_style_}"></div>
 </head>
 
@@ -38,6 +38,12 @@
                         <div th:unless="${param.new}">
                             <h3 class="mb-4">Edit Your Profile</h3>
                         </div>
+                        <div th:if="${param.delete_cv_file}">
+                            <div class="alert alert-success">You deleted CV file</div>
+                        </div>
+                        <div th:if="${param.delete_photo_file}">
+                            <div class="alert alert-success">You deleted photo file</div>
+                        </div>
 
                         <!--                        FACE PHOTO-->
                         <form action="#"
@@ -48,7 +54,6 @@
                                 <dt class="col-sm-4">Actual face photo:</dt>
                                 <dd class="col-sm-8">
                                     [[${photoFileLink}]]
-                                    <a class="btn  btn-info m-2">Download</a>
                                     <button type="submit" form="cvFileForm" class="btn  btn-info m-2">Delete
                                     </button>
                                 </dd>
@@ -63,7 +68,6 @@
                                 <dt class="col-sm-4">Actual cv file</dt>
                                 <dd class="col-sm-8">
                                     [[${cvFileLink}]]
-                                    <a class="btn  btn-info m-2">Download</a>
                                     <button type="submit" form="photoFileForm" class="btn  btn-info m-2">Delete
                                     </button>
                                 </dd>

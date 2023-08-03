@@ -3,8 +3,12 @@ package pl.devfinder.api.controller;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,10 +27,7 @@ import pl.devfinder.domain.exception.NotFoundException;
 import pl.devfinder.domain.search.EmployerSearchCriteria;
 import pl.devfinder.domain.search.OfferSearchCriteria;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -72,6 +73,7 @@ public class CandidateController {
 
     @GetMapping()
     public String homePage(Model model) {
+
         // to uzyć do sprawdzania autentykatora na każdej stronie z ecommerce project
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
@@ -98,7 +100,11 @@ public class CandidateController {
     public String getEmployersList(EmployerSearchCriteria employerSearchCriteria,
                                    Model model,
                                    Authentication authentication) {
-        Utility.putUserDataToModel(authentication, userService, model);
+        User user = Utility.putUserDataToModel(authentication, userService, model)
+                .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
+        ;
+        Optional<Candidate> candidate = candidateService.findByCandidateUuid(user.getUserUuid());
+        setCandidatePhotoToModel(model, candidate);
 
         Page<EmployerRowDTO> page = employerService.findAllByCriteria(employerSearchCriteria).map(employerRowMapper::map);
         List<EmployerRowDTO> allEmployers = page.getContent();
@@ -135,7 +141,11 @@ public class CandidateController {
             @ModelAttribute OfferSearchCriteria offerSearchCriteria,
             Model model,
             Authentication authentication) {
-        Utility.putUserDataToModel(authentication, userService, model);
+        User user = Utility.putUserDataToModel(authentication, userService, model)
+                .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
+        ;
+        Optional<Candidate> candidate = candidateService.findByCandidateUuid(user.getUserUuid());
+        setCandidatePhotoToModel(model, candidate);
 
         Map<String, ?> offersListData = prepareOffersListData(offerSearchCriteria);
 
@@ -193,7 +203,12 @@ public class CandidateController {
 
     @GetMapping(value = OFFER_DETAILS + "/{offerId}")
     public String getOfferDetails(@PathVariable Long offerId, Model model, Authentication authentication) {
-        Utility.putUserDataToModel(authentication, userService, model);
+        User user = Utility.putUserDataToModel(authentication, userService, model)
+                .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
+        ;
+        Optional<Candidate> candidate = candidateService.findByCandidateUuid(user.getUserUuid());
+        setCandidatePhotoToModel(model, candidate);
+
         OfferDetailsDTO offerDetailsDTO = offerDetailsMapper.map(offerService.findById(offerId));
         model.addAttribute("offerDetailsDTO", offerDetailsDTO);
         return "candidate/offer_details";
@@ -202,7 +217,12 @@ public class CandidateController {
 
     @GetMapping(value = EMPLOYER_DETAILS + "/{employerId}")
     public String getEmployerDetails(@PathVariable Long employerId, Model model, Authentication authentication) {
-        Utility.putUserDataToModel(authentication, userService, model);
+        User user = Utility.putUserDataToModel(authentication, userService, model)
+                .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
+        ;
+        Optional<Candidate> candidate = candidateService.findByCandidateUuid(user.getUserUuid());
+        setCandidatePhotoToModel(model, candidate);
+
         EmployerDetailsDTO employerDetailsDTO = employerDetailsMapper.map(employerService.findById(employerId));
         model.addAttribute("employerDetailsDTO", employerDetailsDTO);
         return "candidate/employer_details";
@@ -211,17 +231,22 @@ public class CandidateController {
 
     @GetMapping(value = CANDIDATE_PROFILE)
     public String getCandidateProfile(Model model, Authentication authentication) {
-        Optional<User> user = Utility.putUserDataToModel(authentication, userService, model);
-        if (user.isEmpty()) {
-            return "redirect:/login?no_permissions";
-        }
-        String userUuid = user.orElseThrow(() -> new NotFoundException("Could not find user by or authorization failed")).getUserUuid();
-        Optional<Candidate> candidate = candidateService.findByCandidateUuid(userUuid);
+        User user = Utility.putUserDataToModel(authentication, userService, model)
+                .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
+
+        Optional<Candidate> candidate = candidateService.findByCandidateUuid(user.getUserUuid());
+        setCandidatePhotoToModel(model, candidate);
+//        if (user) {
+//            return "redirect:/login?no_permissions";
+//        }
+//        String userUuid = user.orElseThrow(() -> new NotFoundException("Could not find user by or authorization failed")).getUserUuid();
         if (candidate.isEmpty()) {
             return "redirect:edit_profile?new";
         }
         CandidateDetailsDTO candidateDetailsDTO = candidate.map(candidateDetailsMapper::map).orElseThrow();
+
         model.addAttribute("candidateDetailsDTO", candidateDetailsDTO);
+        model.addAttribute("downloadCvFilePath", "/user_data/" + candidate.get().getCandidateUuid() + candidate.get().getCvFilename());
         return "candidate/profile";
     }
 
@@ -229,11 +254,12 @@ public class CandidateController {
     public String getCandidateEditProfile(Model model, Authentication authentication) {
         User user = Utility.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
-        Utility.putUserPhotoToModel(user, candidateService, employerService, model);
-        //TODO putUserPictureToModel do wszykich metod get
-        String userUuid = user.getUserUuid();
-        Optional<Candidate> candidate = candidateService.findByCandidateUuid(userUuid);
+//        Utility.getUserPhotoPath(user, candidateService, employerService, model);
+        Optional<Candidate> candidate = candidateService.findByCandidateUuid(user.getUserUuid());
+        setCandidatePhotoToModel(model, candidate);
 
+
+        //TODO putUserPictureToModel do wszykich metod get
         CandidateDetailsDTO candidateDetailsDTO = new CandidateDetailsDTO().withStatus(Keys.CandidateState.ACTIVE.getName());
         if (candidate.isPresent()) {
             log.info("Edit profile existing candidate id: [{}]", candidate.get().getCandidateId());
@@ -271,16 +297,35 @@ public class CandidateController {
         return "candidate/edit_profile";
     }
 
+    private void setCandidatePhotoToModel(Model model, Optional<Candidate> candidate) {
+        if (candidate.isPresent() && Objects.nonNull(candidate.get().getPhotoFilename())) {
+            String photoPath = "/user_data/" + candidate.get().getCandidateUuid() + candidate.get().getPhotoFilename();
+            model.addAttribute("photoDir", photoPath);
+        } else {
+            model.addAttribute("photoDir", "/img/user.jpg");
+        }
+    }
+
     @DeleteMapping(value = CANDIDATE_DELETE_CV_FILE)
-    public String deleteCvFile() {
-        System.out.println("Delete cv file ");
-        return "redirect:/";
+    public String deleteCvFile(Model model, Authentication authentication) {
+        User user = Utility.putUserDataToModel(authentication, userService, model)
+                .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
+        Candidate candidate = candidateService.findByCandidateUuid(user.getUserUuid())
+                .orElseThrow(() -> new NotFoundException("Could not find candidate by uuid"));
+
+        candidateService.deleteCvFile(candidate);
+        return "redirect:../edit_profile?delete_cv_file";
     }
 
     @DeleteMapping(value = CANDIDATE_DELETE_PHOTO_FILE)
-    public String deletePhotoFile() {
-        System.out.println("Delete photo file ");
-        return "redirect:/";
+    public String deletePhotoFile(Model model, Authentication authentication) {
+        User user = Utility.putUserDataToModel(authentication, userService, model)
+                .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
+        Candidate candidate = candidateService.findByCandidateUuid(user.getUserUuid())
+                .orElseThrow(() -> new NotFoundException("Could not find candidate by uuid"));
+
+        candidateService.deletePhotoFile(candidate);
+        return "redirect:../edit_profile?delete_photo_file";
     }
 
     @PostMapping(value = CANDIDATE_UPDATE_PROFILE)
@@ -293,9 +338,8 @@ public class CandidateController {
         }
         User user = Utility.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
-//        Utility.putUserPhotoToModel(user, candidateService, employerService, model);
-        String userUuid = user.getUserUuid();
-        Optional<Candidate> candidate = candidateService.findByCandidateUuid(userUuid);
+        ;
+        Optional<Candidate> candidate = candidateService.findByCandidateUuid(user.getUserUuid());
 
         CandidateUpdateRequest candidateUpdateRequest = candidateRequestMapper.map(candidateUpdateRequestDTO);
         if (candidate.isEmpty()) {
@@ -308,42 +352,24 @@ public class CandidateController {
             return "redirect:profile?updated";
         }
 
-//        MultipartFile cvFile = candidateDetailsDTO.getFileCv();
-//        MultipartFile photoFile = candidateDetailsDTO.getFilePhoto();
-
-//        candidateService.updateCustomer();
     }
-
-
-//    @PostMapping(value = CANDIDATE_NEW_PROFILE)
-//    public String newCandidateProfile(@ModelAttribute CandidateDetailsDTO candidateDetailsDTO,
-//                                      BindingResult bindingResult,
-//                                      Model model,
-//                                      Authentication authentication) {
-//        if (bindingResult.hasErrors()) {
-//            return "error";
-//        }
-//        User user = Utility.putUserDataToModel(authentication, userService, model)
-//                .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
-//        //TODO putUserPictureToModel do wszykich metod get
-////        String userUuid = user.getUserUuid();
-//        Candidate candidate = candidateDetailsMapper.map(candidateDetailsDTO)
-//                .withCandidateUuid(user.getUserUuid())
-//                .withCreatedAt(OffsetDateTime.now());
-//
-//
-////        if (user.getRole().getRole().equals(Keys.Role.CANDIDATE.getName())) {
-////            candidateService.save(user);
-////        }
-//
-//        return "redirect:candidate/profile?created";
-//    }
 
     @DeleteMapping(value = CANDIDATE_DELETE_PROFILE + "/{candidateId}")
     public String deleteCandidateProfile(@PathVariable String candidateId) {
         log.info("Processing delete profile for candidate nr :" + candidateId);
         candidateService.deleteCandidateProfile(candidateId);
         return "redirect:../profile?delete";
+    }
+
+    @GetMapping("/download_cv_file")
+    public ResponseEntity<Resource> downloadImage() {
+        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+        ClassPathResource resource = new ClassPathResource("/user_data/5e8dd047-7b07-44fb-bbd6-1f15db0f6a8ccv.pdf");
+
+        System.out.println(resource.getFilename());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"5e8dd047-7b07-44fb-bbd6-1f15db0f6a8ccv.pdf\"")
+                .body(resource);
     }
 }
 

@@ -1,5 +1,7 @@
 devfinder-conf:
   enable-email-verification: false
+  user-data-path : "src/main/resources/static/user_data/"
+
 
 server:
   port: 8190

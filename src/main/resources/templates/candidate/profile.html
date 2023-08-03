@@ -47,7 +47,14 @@
 
                             <h6 class="mb-4"
                                 th:text="'Candidate nr '+ ${candidateDetailsDTO.candidateId} + ' Id: '+ ${candidateDetailsDTO.candidateUuid} + ''"></h6>
+                            <div class=" text-center">
+                                <img class="img-fluid rounded-circle mx-auto mb-4"
+                                     th:src="@{${photoDir}}"
+                                     style="width: 100px; height: 100px;">
+                            </div>
+
                             <dl class="row mb-0">
+
                                 <dt th:if="${candidateDetailsDTO.status != null}" class="col-sm-4">Status</dt>
                                 <dd th:if="${candidateDetailsDTO.status != null}"
                                     th:text="${candidateDetailsDTO.status}"
@@ -57,9 +64,9 @@
                                 <dd th:if="${candidateDetailsDTO.employer != null}"
                                     th:text="${candidateDetailsDTO.employer}" class="col-sm-8"></dd>
 
-                                <dt th:if="${candidateDetailsDTO.getPhotoFilename != null}" class="col-sm-4">Face photo</dt>
-                                <dd th:if="${candidateDetailsDTO.getPhotoFilename != null}"
-                                    th:text="${candidateDetailsDTO.getPhotoFilename}" class="col-sm-8"></dd>
+<!--                                <dt th:if="${candidateDetailsDTO.getPhotoFilename != null}" class="col-sm-4">Face photo</dt>-->
+<!--                                <dd th:if="${candidateDetailsDTO.getPhotoFilename != null}"-->
+<!--                                    th:text="${candidateDetailsDTO.getPhotoFilename}" class="col-sm-8"></dd>-->
 
                                 <dt th:if="${candidateDetailsDTO.firstName != null}" class="col-sm-4">First name</dt>
                                 <dd th:if="${candidateDetailsDTO.firstName != null}"
@@ -134,8 +141,12 @@
                                 <dt th:if="${candidateDetailsDTO.getCvFilename != null}" class="col-sm-4">Show CV File as PDF
                                 </dt>
                                 <dd th:if="${candidateDetailsDTO.getCvFilename != null}"
-                                    th:text="${candidateDetailsDTO.getCvFilename}"
-                                    class="col-sm-8"></dd>
+                                    class="col-sm-8">
+                                    <a th:if="${candidateDetailsDTO.getCvFilename != null}"
+                                       th:href="@{${downloadCvFilePath}}"
+                                       th:text="${candidateDetailsDTO.getCvFilename}">
+                                    </a>
+                                </dd>
 
                                 <dt th:if="${candidateDetailsDTO.linkedinLink != null}" class="col-sm-4">linkedin Link
                                 </dt>
