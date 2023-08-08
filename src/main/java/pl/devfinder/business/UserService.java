@@ -26,27 +26,27 @@ public class UserService {
 
     @Transactional
     public Optional<User> findByEmail(String email) {
-        log.info("Trying find user by email: [{}]", email);
+        log.info("Process find user by email: [{}]", email);
         Optional<User> user = userDAO.findByEmail(email);
         return user;//.orElseThrow(() -> new NotFoundException("Could not find user by email: [%s]".formatted(email)));
     }
 
     @Transactional
     public Optional<User> findByUserName(String userName) {
-        log.info("Trying find user by userName: [{}]", userName);
+        log.info("Process find user by userName: [{}]", userName);
         Optional<User> user = userDAO.findByUserName(userName);
         return user;//.orElseThrow(() -> new NotFoundException("Could not find user by userName: [%s]".formatted(userName)));
     }
 
     @Transactional
     public User save(User user) {
-        log.info("Trying save user to database, user: [{}]", user);
+        log.info("Process save user to database, user: [{}]", user);
         return userDAO.save(user);
     }
 
     @Transactional
     public void deleteUserById(Long userId) {
-        log.info("Trying delete user By Id : [{}]", userId);
+        log.info("Process delete user By Id : [{}]", userId);
         Optional<User> user1 = userDAO.findById(userId);
         user1.ifPresent(user -> emailVerificationTokenDAO.deleteByUserId(user.getId()));
         userDAO.deleteById(userId);
@@ -54,12 +54,12 @@ public class UserService {
 
     @Transactional
     public void updateUser(String userName, String email, Long id) {
-        log.info("Trying update user, email : [{}]", email);
+        log.info("Process update user, email : [{}]", email);
         userDAO.update(userName, email, id);
     }
 
     public User findById(Long userId) {
-        log.info("Trying find user by Id: [{}]", userId);
+        log.info("Process find user by Id: [{}]", userId);
         Optional<User> user = userDAO.findById(userId);
         return user.orElseThrow(() -> new NotFoundException("Could not find user by Id: [%s]".formatted(userId)));
     }

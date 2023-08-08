@@ -17,6 +17,8 @@ public class CandidateSearchCriteria {
     String city;
     List<String> openToRemoteJob = new ArrayList<>();
     BigDecimal salaryMax;
+    String employer;
+
 
     Integer pageNumber = 1;
     Integer pageSize = 5;

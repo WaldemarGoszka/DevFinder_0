@@ -36,7 +36,7 @@ public class CandidateCriteriaRepository {
 
     public Page<Candidate> findAllByCriteria(CandidateSearchCriteria candidateSearchCriteria) {
         //TODO tu wstawić CriteriaBuilder builder = entityManager.getCriteriaBuilder(); zamiast w konktruktorze
-        log.info("Trying Find Candidate By Criteria");
+        log.info("Process Find Candidate By Criteria: [{}]",candidateSearchCriteria);
         CriteriaQuery<CandidateEntity> criteriaQuery = criteriaBuilder.createQuery(CandidateEntity.class);
         Root<CandidateEntity> candidateEntityRoot = criteriaQuery.from(CandidateEntity.class);
         Predicate predicate = getPredicate(candidateSearchCriteria, candidateEntityRoot, criteriaQuery);
@@ -157,6 +157,12 @@ public class CandidateCriteriaRepository {
             }
         }
 
+        // Warunek dla employer
+        String employer = candidateSearchCriteria.getEmployer();
+        if (Objects.nonNull(employer) && !employer.isBlank()) {
+            predicates.add(criteriaBuilder.equal(candidateRoot.get(Keys.OfferFilterBy.employerId.getName())
+                    .get(Keys.OfferFilterBy.companyName.getName()), employer));
+        }
 
 //         Warunek dla listy status
         List<String> status = candidateSearchCriteria.getStatus();

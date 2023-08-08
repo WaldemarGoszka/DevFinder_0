@@ -3,9 +3,9 @@
 >
 
 <head>
-    <title>DevFinder - Candidate - Offers</title>
+    <title>DevFinder - Offer Details</title>
     <link href="../img/favicon.ico" rel="icon">
-    <div th:replace="~{fragments :: head_style__}"></div>
+    <div th:replace="~{fragments :: head_style_}"></div>
 </head>
 
 <body>
@@ -118,14 +118,14 @@
                                         th:text="${offerDetailsDTO.employerId.numberOfEmployees} + ' employees'"
                                         class="col-sm-8"></dd>
                                     <dt class="col-sm-4">
-                                        <a th:href="@{/candidate/employer/{employerId}(employerId=${offerDetailsDTO.employerId.employerId})}">
+                                        <a th:href="@{/employer_portal/{employerId}(employerId=${offerDetailsDTO.employerId.employerId})}">
                                             <button
                                                     class="btn btn-sm btn-primary" type="button">Employer Details
                                             </button>
                                         </a>
                                     </dt>
                                     <dd class="col-sm-8">
-                                        <a th:href="@{/candidate/offers?employer={companyName}(companyName=${offerDetailsDTO.employerId.companyName})}">
+                                        <a th:href="@{/offers?employer={companyName}(companyName=${offerDetailsDTO.employerId.companyName})}">
                                             <button
                                                     class="btn btn-sm btn-primary" type="button">Job offers of this
                                                 employer
@@ -160,7 +160,7 @@
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 </div>
 
-<div th:replace="~{fragments :: js__}"></div>
+<div th:replace="~{fragments :: js_}"></div>
 </body>
 
 </html>

@@ -32,17 +32,23 @@
                     <h3 sec:authorize="${isAuthenticated()}">Instructions for users</h3>
                     <!--                    TODO DELETE THIS IN PRODUCTION-->
                     <br>
-                    <div>Candidate<br>
-                        <a th:href="@{/candidate/offers}"><i></i>Find an Offers</a><br>
-                        <a th:href="@{/candidate/employers}"><i></i>Find an Employer</a><br>
-                        <a th:href="@{/candidate/applications}"><i></i>Your applications</a><br>
+
+                    <div>
+                        All
+                        <br>
+                        <a th:href="@{/offers}"><i></i>Find an Offers</a><br>
+                        <a th:href="@{/employers}"><i></i>Find an Employer</a><br>
+                        <a th:href="@{/candidates}"><i></i>Find a candidate</a><br>
+                        Candidate
+                        <br>
+                        <a th:href="@{/candidate_portal/applications}"><i></i>Your applications</a><br>
                         <a th:href="@{/candidate/my_employer}"><i></i>My Employer</a><br>
                         <br>
-                        Employer<br>
-                        <a th:href="@{/employer/candidates}"><i></i>Find a candidate</a><br>
-                        <a th:href="@{/employer/post_job}"><i></i>Post a job</a><br>
-                        <a th:href="@{/employer/my_posted_offers}"><i></i>My Posted Offers</a><br>
-                        <a th:href="@{/employer/employee}"><i></i>My Employee</a><br>
+                        Employer
+                        <br>
+                        <a th:href="@{/offers_of_employer/new_form}"><i></i>Post a new job</a><br>
+                        <a th:href="@{/offers_of_employer/offers}"><i></i>My Posted Offers</a><br>
+                        <a th:href="@{/employer_portal/employee}"><i></i>My Employee</a><br>
                         <!--                       TODO DELETE THIS IN PRODUCTION -->
                     </div>
                 </div>

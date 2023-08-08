@@ -6,7 +6,7 @@ import pl.devfinder.domain.CandidateUpdateRequest;
 
 @Mapper(componentModel = "spring")
 
-public interface CandidateRequestMapper {
-    CandidateUpdateRequest map(final CandidateUpdateRequestDTO candidateDetailsRequestDTO);
+public interface CandidateUpdateRequestMapper {
+    CandidateUpdateRequest map(final CandidateUpdateRequestDTO candidateUpdateRequestDTO);
 
 }

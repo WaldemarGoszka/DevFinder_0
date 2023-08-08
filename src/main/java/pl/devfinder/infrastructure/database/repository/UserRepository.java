@@ -32,7 +32,7 @@ public class UserRepository implements UserDAO {
 
 
     public User save(User user) {
-        log.info("Trying save user: [{}]", user);
+        log.info("Process save user: [{}]", user);
         UserEntity userEntity = userEntityMapper.mapToEntity(user);
         return userEntityMapper.mapFromEntity(userJpaRepository.save(userEntity));
     }

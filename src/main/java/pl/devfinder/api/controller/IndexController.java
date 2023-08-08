@@ -24,34 +24,17 @@ public class IndexController {
     static final String INDEX = "/";
 
     private final UserService userService;
-    private final CandidateService candidateService;
-    private final EmployerService employerService;
+    private final UserController userController;
 
 
     @GetMapping(INDEX)
     public String homePage(Model model, Authentication authentication) {
         Optional<User> user = Utility.putUserDataToModel(authentication, userService, model);
-        if (user.isEmpty()) {
-            return "/login";
-        }
-        if (user.get().getRole().getRole().equals(Keys.Role.CANDIDATE.getName())) {
-            Optional<Candidate> candidate = candidateService.findByCandidateUuid(user.get().getUserUuid());
-            if (candidate.isPresent() && Objects.nonNull(candidate.get().getPhotoFilename())) {
-                model.addAttribute("photoDir", "/user_data/" + candidate.get().getCandidateUuid() + candidate.get().getPhotoFilename());
-            } else {
-                model.addAttribute("photoDir", "/img/user.jpg");
-            }
-        }
-        if (user.get().getRole().getRole().equals(Keys.Role.EMPLOYER.getName())) {
-            Optional<Employer> employer = employerService.findByEmployerUuid(user.get().getUserUuid());
-            if (employer.isPresent() && Objects.nonNull(employer.get().getLogoFilename())) {
-                model.addAttribute("photoDir", "/user_data/" + employer.get().getEmployerUuid() + employer.get().getLogoFilename());
-            } else {
-                model.addAttribute("photoDir", "/img/user.jpg");
-            }
-        }
+        userController.setUserPhotoToModel(model, user);
         return "index";
     }
+
+
 
     //    @GetMapping("/index")
 //    public String homePage2() {

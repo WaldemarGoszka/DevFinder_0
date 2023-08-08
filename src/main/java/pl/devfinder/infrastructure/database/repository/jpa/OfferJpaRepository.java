@@ -6,9 +6,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import pl.devfinder.infrastructure.database.entity.EmployerEntity;
 import pl.devfinder.infrastructure.database.entity.OfferEntity;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface OfferJpaRepository extends JpaRepository<OfferEntity, Long> {
@@ -32,4 +35,9 @@ public interface OfferJpaRepository extends JpaRepository<OfferEntity, Long> {
     """)
     long countByCityName(String cityName);
 
+    Optional<OfferEntity> findByOfferIdAndEmployerId(Long offerId, EmployerEntity employerEntity);
+
+    void deleteAllByEmployerId(EmployerEntity employerEntity);
+
+    List<OfferEntity> findAllByEmployerId(EmployerEntity employerEntity);
 }

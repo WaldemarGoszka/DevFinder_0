@@ -19,7 +19,7 @@ public class EmailVerificationTokenService {
     private final UserService userService;
 
     public String validateToken(String token) {
-        log.info("Trying validate email verification token: [{}]", token);
+        log.info("Process validate email verification token: [{}]", token);
         Optional<EmailVerificationToken> emailVerificationToken = emailVerificationTokenDAO.findByToken(token);
         if (emailVerificationToken.isEmpty()){
             return Keys.TokenStatus.INVALID.getName();
@@ -33,7 +33,7 @@ public class EmailVerificationTokenService {
     }
 
     public void saveVerificationTokenForUser(User user, String token) {
-        log.info("Trying save to DB email verification token: [{}] , for user [{}]", token,user);
+        log.info("Process save email verification token: [{}] , for user [{}]", token,user);
         EmailVerificationToken emailVerificationToken = EmailVerificationToken.builder()
                 .token(token)
                 .user(user)
@@ -43,12 +43,12 @@ public class EmailVerificationTokenService {
     }
 
     public Optional<EmailVerificationToken> findByToken(String token) {
-        log.info("Trying find email verification token: [{}]", token);
+        log.info("Process find email verification token: [{}]", token);
         return emailVerificationTokenDAO.findByToken(token);
     }
 
     public void deleteUserEmailVerificationToken(Long tokenId) {
-        log.info("Trying delete email verification token Id: [{}]", tokenId);
+        log.info("Process delete email verification token Id: [{}]", tokenId);
         emailVerificationTokenDAO.deleteByUserId(tokenId);
     }
 }

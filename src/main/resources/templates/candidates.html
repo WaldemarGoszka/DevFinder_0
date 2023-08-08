@@ -6,7 +6,7 @@
 <head>
     <title>DevFinder - Candidates</title>
     <link href="../img/favicon.ico" rel="icon">
-    <div th:replace="~{fragments :: head_style_}"></div>
+    <div th:replace="~{fragments :: head_style}"></div>
 
 </head>
 
@@ -182,7 +182,7 @@
                                                         th:onclick="'setPageNumber(' + 1 + ')'"
                                                         type="submit">Search
                                                 </button>
-                                                <a th:href="@{/employer/candidates}"
+                                                <a th:href="@{/employer_portal/candidates}"
                                                    class="btn btn-block btn-info w-50 m-2" type="button">Reset
                                                     Filters</a>
                                             </div>
@@ -311,7 +311,8 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="candidate : ${allCandidatesDTOs}">
+                                    <tr th:each="candidate : ${allCandidatesDTOs}"
+                                        th:class="${candidate.status != 'ACTIVE'} ? 'text-dark' : ''">
                                         <td th:text="${candidate.getFirstName() + ' ' + {candidate.getLastName()}}"></td>
                                         <td th:text="${candidate.getExperienceLevel()}"></td>
                                         <td th:text="${candidate.getYearsOfExperience()}"></td>
@@ -339,7 +340,6 @@
         </form>
         <!-- Content Side End -->
 
-
         <!-- Footer Start -->
         <div th:replace="~{fragments :: footer}"></div>
         <!-- Footer End -->
@@ -350,7 +350,7 @@
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 </div>
-<div th:replace="~{fragments :: js_}"></div>
+<div th:replace="~{fragments :: js}"></div>
 <script th:inline="javascript">
     function decreasePageNumber() {
         var pageNumberInput = document.getElementsByName('pageNumber')[0];

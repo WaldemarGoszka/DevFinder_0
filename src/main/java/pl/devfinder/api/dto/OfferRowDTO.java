@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.devfinder.domain.City;
 import pl.devfinder.domain.Employer;
-import pl.devfinder.domain.OfferSkills;
+import pl.devfinder.domain.OfferSkill;
 
 import java.time.OffsetDateTime;
 import java.util.Set;
@@ -25,6 +25,7 @@ public class OfferRowDTO {
     OffsetDateTime createdAt;
     Employer employerId;
     City cityId;
+    String status;
     String daysSinceCreated;
-    Set<OfferSkills> offerSkills;
+    Set<OfferSkill> offerSkills;
 }

@@ -21,5 +21,6 @@ public class CandidateRowDTO {
     Integer yearsOfExperience;
     BigDecimal salaryMin;
     City residenceCityId;
+    String status;
     Set<CandidateSkill> candidateSkills;
 }

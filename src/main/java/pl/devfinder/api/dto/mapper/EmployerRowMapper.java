@@ -1,11 +1,7 @@
 package pl.devfinder.api.dto.mapper;
 
 import org.mapstruct.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import pl.devfinder.api.dto.EmployerDetailsDTO;
 import pl.devfinder.api.dto.EmployerRowDTO;
-import pl.devfinder.business.OfferService;
-import pl.devfinder.business.management.Keys;
 import pl.devfinder.domain.Employer;
 
 @Mapper(componentModel = "spring")

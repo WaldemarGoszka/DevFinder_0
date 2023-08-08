@@ -1,6 +1,7 @@
 package pl.devfinder.infrastructure.database.repository;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import pl.devfinder.business.dao.EmployerDAO;
 import pl.devfinder.domain.Employer;
@@ -10,7 +11,7 @@ import pl.devfinder.infrastructure.database.repository.mapper.EmployerEntityMapp
 
 import java.util.List;
 import java.util.Optional;
-
+@Slf4j
 @Repository
 @AllArgsConstructor
 public class EmployerRepository implements EmployerDAO {
@@ -26,6 +27,7 @@ public class EmployerRepository implements EmployerDAO {
 
     @Override
     public void save(Employer employer) {
+        log.info("Process save employer : [{}]",employer);
         EmployerEntity employerEntity = employerEntityMapper.mapToEntity(employer);
         employerJpaRepository.save(employerEntity);
     }
@@ -44,4 +46,26 @@ public class EmployerRepository implements EmployerDAO {
     public long countByCityName(String cityName) {
         return employerJpaRepository.countByCityName(cityName);
     }
+
+    @Override
+    public void deleteById(Long employerId) {
+        employerJpaRepository.deleteById(employerId);
+    }
+
+    @Override
+    public void deleteEmployerFromAllCandidatesAndChangeStatus(Employer employer) {
+        employerJpaRepository.deleteEmployerFromAllCandidatesAndChangeStatus(employerEntityMapper.mapToEntity(employer));
+    }
+
+    @Override
+    public void assignEmployerToCandidateAndChangeStatus(Employer employer, Long candidateId) {
+        employerJpaRepository.assignEmployerToCandidateAndChangeStatus(employerEntityMapper.mapToEntity(employer),candidateId);
+    }
+
+    @Override
+    public void deleteAssignEmployerToCandidateAndChangeStatus(Long candidateId) {
+        employerJpaRepository.deleteEmployerFromCandidateAndChangeStatus(candidateId);
+    }
+
+
 }

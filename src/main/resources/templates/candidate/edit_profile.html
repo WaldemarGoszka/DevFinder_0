@@ -31,23 +31,25 @@
             <div class="row g-4">
                 <div class="col-sm-12 col-xl-12">
                     <div class="bg-secondary rounded h-100 p-4">
-
-                        <div th:if="${param.new}">
-                            <h3 class="mb-4">You don't have profile page. Fill out your profile</h3>
-                        </div>
-                        <div th:unless="${param.new}">
-                            <h3 class="mb-4">Edit Your Profile</h3>
-                        </div>
                         <div th:if="${param.delete_cv_file}">
                             <div class="alert alert-success">You deleted CV file</div>
                         </div>
                         <div th:if="${param.delete_photo_file}">
                             <div class="alert alert-success">You deleted photo file</div>
                         </div>
+                        <div th:if="${param.delete}">
+                            <div class="alert alert-success">You deleted your profile</div>
+                        </div>
 
+                        <div th:if="${param.new} or ${param.delete}">
+                            <h3 class="mb-4">You don't have profile page. Fill out your profile</h3>
+                        </div>
+                        <div th:unless="${param.new} or ${param.delete}">
+                            <h3 class="mb-4">Edit Your Profile</h3>
+                        </div>
                         <!--                        FACE PHOTO-->
                         <form action="#"
-                              th:action="@{/candidate/edit_profile/delete_photoFile}"
+                              th:action="@{/candidate_portal/edit_profile/delete_photoFile}"
                               th:method="DELETE"
                               id="cvFileForm">
                             <dl class="row mb-0" th:if="${photoFileLink != null}">
@@ -61,7 +63,7 @@
                         </form>
                         <!--                            CV FILE-->
                         <form action="#"
-                              th:action="@{/candidate/edit_profile/delete_cvFile}"
+                              th:action="@{/candidate_portal/edit_profile/delete_cvFile}"
                               th:method="DELETE"
                               id="photoFileForm">
                             <dl class="row mb-0" th:if="${cvFileLink != null}">
@@ -74,7 +76,7 @@
                             </dl>
                         </form>
                         <form
-                                th:action="@{/candidate/update}"
+                                th:action="@{/candidate_portal/update}"
                                 th:method="POST"
                                 th:object="${candidateDetailsDTO}"
                                 enctype="multipart/form-data"
@@ -111,6 +113,7 @@
                                                type="radio"
                                                id="statusActive"
                                                th:value="${statusEnumActive}"
+                                               th:disabled="${candidateDetailsDTO.employerId == null} ? false : true"
                                                th:checked="${candidateDetailsDTO.status != null} ? ${candidateDetailsDTO.status} : true"
                                                th:field="*{status}">
                                         <label th:text="${statusEnumActive}" class="form-check-label"
@@ -120,6 +123,7 @@
                                         <input class="form-check-input"
                                                type="radio"
                                                id="statusInactive"
+                                               th:disabled="${candidateDetailsDTO.employerId == null} ? false : true"
                                                th:value="${statusEnumInactive}"
                                                th:checked="${candidateDetailsDTO.status != null} ? ${candidateDetailsDTO.status} : false"
                                                th:field="*{status}">
@@ -130,12 +134,14 @@
                                         <input class="form-check-input"
                                                type="radio"
                                                id="statusEmployed"
+                                               disabled
                                                th:value="${statusEnumEmployed}"
                                                th:checked="${candidateDetailsDTO.status != null} ? ${candidateDetailsDTO.status} : false"
                                                th:field="*{status}">
-                                        <label th:text="${statusEnumEmployed}" class="form-check-label"
-                                               for="statusEmployed"></label>
+                                        <label class="form-check-label"
+                                               for="statusEmployed">[[${statusEnumEmployed}]] (only employer can hire you)</label>
                                     </div>
+                                    <div th:if="${candidateDetailsDTO.employerId != null}"> If your employer makes you redundant you will be able to change your status</div>
                                 </dd>
 
 
@@ -357,15 +363,17 @@
                                 <div th:unless="${param.new}">
                                     <button class="btn btn-info m-2" form="editForm" type="submit">Update</button>
                                 </div>
-                                <a class="btn  btn-info m-2" th:href="@{/candidate/profile}">Back To Profile</a>
+                                <a class="btn  btn-info m-2" th:href="@{/candidate_portal/profile}">Back To Profile</a>
 
                             </div>
                         </form>
                         <form
                                 action="#"
-                                th:action="@{/candidate/delete/{candidateId}(candidateId=${candidateDetailsDTO.candidateId})}"
+                                th:action="@{/candidate_portal/delete_profile}"
                                 th:method="DELETE"
                                 id="deleteProfile"
+                                onsubmit="return confirm('Do you really want to delete your profile? Employers will stop seeing you');"
+
                         >
                             <button th:unless="${param.new}"
                                     form="deleteProfile" class="btn justify-content-center btn-danger m-2"  type="submit">
@@ -404,11 +412,7 @@
 </div>
 
 <div th:replace="~{fragments :: js_}"></div>
-<script th:inline="javascript">
-    function confirmDelete() {
-        return confirm("Confirm to delete your profile");
-    }
-</script>
+
 </body>
 
 </html>

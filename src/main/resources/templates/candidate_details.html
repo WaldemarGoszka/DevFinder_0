@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+>
+
+<head>
+    <title>DevFinder - Candidate Details</title>
+    <link href="../img/favicon.ico" rel="icon">
+    <div th:replace="~{fragments :: head_style_}"></div>
+</head>
+
+<body>
+<div class="container-fluid position-relative d-flex p-0">
+    <!-- Spinner Start -->
+    <div th:replace="~{fragments :: spinner}"></div>
+    <!-- Spinner End -->
+
+
+    <!-- Sidebar Start -->
+    <div th:replace="~{fragments :: sidebar}"></div>
+    <!-- Sidebar End -->
+
+
+    <!-- Content Start -->
+    <div class="content">
+        <!-- Navbar Start -->
+        <div th:replace="~{fragments :: navbar}"></div>
+        <!-- Navbar End -->
+
+        <!-- Content Side Start -->
+        <div class="container-fluid pt-4 px-4">
+            <div class="row g-4">
+                <div class="col-sm-12 col-xl-12">
+                    <div class="bg-secondary rounded h-100 p-4">
+                        <h6 class="mb-4"
+                            th:text="'Candidate nr '+ ${candidateDetailsDTO.candidateId} + ' Id: '+ ${candidateDetailsDTO.candidateUuid} + ''"></h6>
+                        <div class=" text-center">
+                            <img class="img-fluid rounded-circle mx-auto mb-4"
+                                 th:src="@{${photoDir}}"
+                                 style="width: 100px; height: 100px;">
+                        </div>
+                        <dl class="row mb-0">
+                            <dt th:if="${candidateDetailsDTO.status != null}" class="col-sm-4">Status</dt>
+                            <dd th:if="${candidateDetailsDTO.status != null}" th:text="${candidateDetailsDTO.status}"
+                                class="col-sm-8"></dd>
+
+                            <dt th:if="${candidateDetailsDTO.employerId != null}" class="col-sm-4">Employer</dt>
+                            <dd th:if="${candidateDetailsDTO.employerId != null}"
+                                th:text="${candidateDetailsDTO.employerId.companyName}" class="col-sm-8"></dd>
+
+                            <dt th:if="${candidateDetailsDTO.getPhotoFilename != null}" class="col-sm-4">Face photo</dt>
+                            <dd th:if="${candidateDetailsDTO.getPhotoFilename != null}"
+                                th:text="${candidateDetailsDTO.getPhotoFilename}" class="col-sm-8"></dd>
+
+                            <dt th:if="${candidateDetailsDTO.firstName != null}" class="col-sm-4">First name</dt>
+                            <dd th:if="${candidateDetailsDTO.firstName != null}"
+                                th:text="${candidateDetailsDTO.firstName}" class="col-sm-8"></dd>
+
+                            <dt th:if="${candidateDetailsDTO.lastName != null}" class="col-sm-4">Last name</dt>
+                            <dd th:if="${candidateDetailsDTO.lastName != null}"
+                                th:text="${candidateDetailsDTO.lastName}" class="col-sm-8"></dd>
+
+                            <dt th:if="${candidateDetailsDTO.residenceCityId.cityName != null}" class="col-sm-4">
+                                Residence City
+                            </dt>
+                            <dd th:if="${candidateDetailsDTO.residenceCityId.cityName != null}"
+                                th:text="${candidateDetailsDTO.residenceCityId.cityName}" class="col-sm-8"></dd>
+
+                            <dt th:if="${candidateDetailsDTO.experienceLevel != null}" class="col-sm-4">Experience
+                                level
+                            </dt>
+                            <dd th:if="${candidateDetailsDTO.experienceLevel != null}"
+                                th:text="${candidateDetailsDTO.experienceLevel}" class="col-sm-8"></dd>
+
+                            <dt th:if="${candidateDetailsDTO.yearsOfExperience != null}" class="col-sm-4">Years of
+                                experience
+                            </dt>
+                            <dd th:if="${candidateDetailsDTO.yearsOfExperience != null}"
+                                th:text="${candidateDetailsDTO.yearsOfExperience}" class="col-sm-8"></dd>
+
+                            <dt th:if="${candidateDetailsDTO.candidateSkills != null}" class="col-sm-4">Tech Stack</dt>
+                            <dd class="col-sm-8">
+                                <div th:each="skill : ${candidateDetailsDTO.candidateSkills}"
+                                     th:text="${skill.skillId.skillName}">
+                                </div>
+                            </dd>
+
+                            <dt th:if="${candidateDetailsDTO.otherSkills != null}" class="col-sm-4">Other Skills</dt>
+                            <dd th:if="${candidateDetailsDTO.otherSkills != null}"
+                                th:text="${candidateDetailsDTO.otherSkills}"
+                                class="col-sm-8"></dd>
+
+                            <dt th:if="${candidateDetailsDTO.education != null}" class="col-sm-4">Education</dt>
+                            <dd th:if="${candidateDetailsDTO.education != null}"
+                                th:text="${candidateDetailsDTO.education}"
+                                class="col-sm-8"></dd>
+
+                            <dt th:if="${candidateDetailsDTO.foreignLanguage != null}" class="col-sm-4">Foreign
+                                Language
+                            </dt>
+                            <dd th:if="${candidateDetailsDTO.foreignLanguage != null}"
+                                th:text="${candidateDetailsDTO.foreignLanguage}"
+                                class="col-sm-8"></dd>
+
+                            <dt th:if="${candidateDetailsDTO.salaryMin != null}" class="col-sm-4">Minimum expected
+                                payout
+                            </dt>
+                            <dd th:if="${candidateDetailsDTO.salaryMin != null}"
+                                th:text="${candidateDetailsDTO.salaryMin}"
+                                class="col-sm-8"></dd>
+
+                            <dt th:if="${candidateDetailsDTO.openToRemoteJob != null}" class="col-sm-4">Open to remote
+                                job
+                            </dt>
+                            <dd th:if="${candidateDetailsDTO.openToRemoteJob != null}"
+                                class="col-sm-8"><span th:if="${candidateDetailsDTO.openToRemoteJob != null}"
+                                                       th:switch="${candidateDetailsDTO.openToRemoteJob}">
+                                <span th:case="true">Yes</span>
+                                <span th:case="false">No</span>
+                            </span></dd>
+
+                            <dt th:if="${candidateDetailsDTO.getCvFilename != null}" class="col-sm-4">Show CV File as
+                                PDF
+                            </dt>
+                            <dd th:if="${candidateDetailsDTO.getCvFilename != null}"
+                                class="col-sm-8">
+                                <a th:if="${candidateDetailsDTO.getCvFilename != null}"
+                                   th:href="@{${downloadCvFilePath}}"
+                                   th:text="${candidateDetailsDTO.getCvFilename}">
+                                </a>
+                            </dd>
+
+                            <dt th:if="${candidateDetailsDTO.linkedinLink != null}" class="col-sm-4">linkedin Link</dt>
+                            <dd class="col-sm-8">
+                                <a th:if="${candidateDetailsDTO.linkedinLink != null}"
+                                   th:href="${candidateDetailsDTO.linkedinLink}"
+                                   th:text="${candidateDetailsDTO.linkedinLink}"></a>
+                            </dd>
+
+                            <dt th:if="${candidateDetailsDTO.githubLink != null}" class="col-sm-4">Github / Gitlab
+                                Link
+                            </dt>
+                            <dd class="col-sm-8">
+                                <a th:if="${candidateDetailsDTO.githubLink != null}"
+                                   th:href="${candidateDetailsDTO.githubLink}"
+                                   th:text="${candidateDetailsDTO.githubLink}">
+                                </a>
+                            </dd>
+                            <dt th:if="${candidateDetailsDTO.hobby != null}" class="col-sm-4">Hobby</dt>
+                            <dd th:if="${candidateDetailsDTO.hobby != null}" th:text="${candidateDetailsDTO.hobby}"
+                                class="col-sm-8"></dd>
+
+                            <dt th:if="${candidateDetailsDTO.emailContact != null}" class="col-sm-4">Contact email</dt>
+                            <dd th:if="${candidateDetailsDTO.emailContact != null}"
+                                th:text="${candidateDetailsDTO.emailContact}"
+                                class="col-sm-8"></dd>
+
+                            <dt th:if="${candidateDetailsDTO.phoneNumber != null}" class="col-sm-4">Phone number</dt>
+                            <dd th:if="${candidateDetailsDTO.phoneNumber != null}"
+                                th:text="${candidateDetailsDTO.phoneNumber}"
+                                class="col-sm-8"></dd>
+
+                            <dt class="col-sm-4">Profil created at</dt>
+                            <dd th:text="${#temporals.format(candidateDetailsDTO.createdAt, 'dd-MM-yyyy')}"
+                                class="col-sm-8"></dd>
+                        </dl>
+                        <div sec:authorize="hasAuthority('EMPLOYER')"
+                             th:if="${candidateDetailsDTO.status == 'ACTIVE'}">
+                            <form
+                                    action="#"
+                                    th:action="@{/employer_portal/hire/{candidateId}(candidateId=${candidateDetailsDTO.candidateId})}"
+                                    th:method="PUT"
+                                    id="hireCandidate"
+                                    onsubmit="return confirm('Do you really want to hire this candidate ?');"
+                            >
+                                <button
+                                        form="hireCandidate" class="btn justify-content-center btn-danger m-2"
+                                        type="submit">
+                                    Hire This Candidate
+                                </button>
+                            </form>
+                        </div>
+                        <div sec:authorize="hasAuthority('EMPLOYER')"
+                             th:if="${isShowFireEmployeeButton}">
+                            <form
+                                    action="#"
+                                    th:action="@{/employer_portal/fire/{candidateId}(candidateId=${candidateDetailsDTO.candidateId})}"
+                                    th:method="PUT"
+                                    id="fireEmployee"
+                                    onsubmit="return confirm('Do you really want to fire this employee ?');"
+                            >
+                                <button
+                                        form="fireEmployee" class="btn justify-content-center btn-danger m-2"
+                                        type="submit">
+                                    Fire This Employee
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Content Side End -->
+
+
+        <!-- Footer Start -->
+        <div th:replace="~{fragments :: footer}"></div>
+        <!-- Footer End -->
+    </div>
+    <!-- Content End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+</div>
+
+<div th:replace="~{fragments :: js_}"></div>
+</body>
+
+</html>

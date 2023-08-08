@@ -39,7 +39,7 @@ public class CandidateDetailsDTO {
     Integer yearsOfExperience;
     BigDecimal salaryMin;
     Boolean openToRemoteJob;
-    Employer employer;
+    Employer employerId;
     City residenceCityId;
     Set<CandidateSkill> candidateSkills;
 

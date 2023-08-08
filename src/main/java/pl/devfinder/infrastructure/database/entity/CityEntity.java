@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of = "cityId")
+@EqualsAndHashCode(of = "cityName")
 @ToString(of = {"cityName"})
 @Builder
 @NoArgsConstructor

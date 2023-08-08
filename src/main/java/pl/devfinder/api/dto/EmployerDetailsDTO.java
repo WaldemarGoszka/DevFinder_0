@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 import pl.devfinder.domain.City;
 
 import java.time.OffsetDateTime;
@@ -25,4 +26,7 @@ public class EmployerDetailsDTO {
     Integer amountOfAvailableOffers;
     OffsetDateTime createdAt;
     City cityId;
+
+    String cityName;
+    MultipartFile fileLogo;
 }

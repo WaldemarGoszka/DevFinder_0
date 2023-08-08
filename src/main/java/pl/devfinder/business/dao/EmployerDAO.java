@@ -16,4 +16,12 @@ public interface EmployerDAO {
     Optional<Employer> findByEmployerUuid(String uuid);
 
     long countByCityName(String cityName);
+
+    void deleteById(Long aLong);
+
+    void deleteEmployerFromAllCandidatesAndChangeStatus(Employer employer);
+
+    void assignEmployerToCandidateAndChangeStatus(Employer employerId, Long candidateId);
+
+    void deleteAssignEmployerToCandidateAndChangeStatus(Long candidateId);
 }

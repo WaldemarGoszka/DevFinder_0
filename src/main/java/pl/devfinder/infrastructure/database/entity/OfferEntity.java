@@ -30,7 +30,7 @@ public class OfferEntity {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description")
     private String description;
 
     @Column(name = "other_skills")
@@ -39,7 +39,7 @@ public class OfferEntity {
     @Column(name = "remote_work")
     private Integer remoteWork;
 
-    @Column(name = "experience_level", nullable = false)
+    @Column(name = "experience_level")
     private String experienceLevel;
 
     @Column(name = "years_of_experience")

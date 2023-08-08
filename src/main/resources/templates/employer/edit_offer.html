@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/"
+>
+
+<head>
+    <title>DevFinder - Employer - Edit Offer</title>
+    <link th:href="@{/img/favicon.ico}" rel="icon">
+    <div th:replace="~{fragments :: head_style__}"></div>
+</head>
+
+<body>
+<div class="container-fluid position-relative d-flex p-0">
+    <!-- Spinner Start -->
+    <div th:replace="~{fragments :: spinner}"></div>
+    <!-- Spinner End -->
+
+
+    <!-- Sidebar Start -->
+    <div th:replace="~{fragments :: sidebar}"></div>
+    <!-- Sidebar End -->
+
+
+    <!-- Content Start -->
+    <div class="content">
+        <!-- Navbar Start -->
+        <div th:replace="~{fragments :: navbar}"></div>
+        <!-- Navbar End -->
+
+        <!-- Content Side Start -->
+        <div class="container-fluid pt-4 px-4">
+            <div class="row g-4">
+                <div class="col-sm-12 col-xl-12">
+                    <div class="bg-secondary rounded h-100 p-4">
+
+                        <form
+                                th:action="@{/offers_of_employer/update}"
+                                th:method="PUT"
+                                th:object="${offerDetailsDTO}"
+                                id="editForm"
+                        >
+                            <input type="hidden" name="offerId" th:value="${offerDetailsDTO.offerId}"/>
+                            <dl class="row mb-0">
+
+                                <dt class="col-sm-4">Status</dt>
+                                <dd class="col-sm-8">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input"
+                                               type="radio"
+                                               id="statusActive"
+                                               th:value="${statusEnumActive}"
+                                               th:checked="${offerDetailsDTO.status != null} ? ${offerDetailsDTO.status} : true"
+                                               th:field="*{status}">
+                                        <label th:text="${statusEnumActive}" class="form-check-label"
+                                               for="statusActive"></label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input"
+                                               type="radio"
+                                               id="statusExpired"
+                                               th:value="${statusEnumExpired}"
+                                               th:checked="${offerDetailsDTO.status != null} ? ${offerDetailsDTO.status} : false"
+                                               th:field="*{status}">
+                                        <label th:text="${statusEnumExpired}" class="form-check-label"
+                                               for="statusExpired"></label>
+                                    </div>
+                                </dd>
+
+
+                                <dt class="col-sm-4">Title</dt>
+                                <dd class="col-sm-8">
+                                    <input
+                                            type="text"
+                                            class="form-control"
+                                            th:field="*{title}"
+                                            required
+                                    >
+                                </dd>
+
+                                <dt class="col-sm-4">Job description</dt>
+                                <dd class="col-sm-8">
+                                    <textarea
+                                            type="text"
+                                            class="form-control"
+                                            rows="4"
+                                            th:field="*{description}"
+                                    ></textarea>
+                                </dd>
+
+                                <dt class="col-sm-4">Required level of experience</dt>
+                                <dd class="col-sm-8">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input"
+                                               type="radio"
+                                               id="expJunior"
+                                               th:value="${expLevelEnumJunior}"
+                                               th:checked="${offerDetailsDTO.experienceLevel != null} ? ${offerDetailsDTO.experienceLevel} : true"
+                                               th:field="*{experienceLevel}">
+                                        <label th:text="${expLevelEnumJunior}" class="form-check-label"
+                                               for="expJunior"></label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input"
+                                               type="radio"
+                                               id="expMid"
+                                               th:value="${expLevelEnumMid}"
+                                               th:checked="${offerDetailsDTO.experienceLevel != null} ? ${offerDetailsDTO.experienceLevel} : false"
+                                               th:field="*{experienceLevel}">
+                                        <label th:text="${expLevelEnumMid}" class="form-check-label"
+                                               for="expMid"></label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input"
+                                               type="radio"
+                                               id="expSenior"
+                                               th:value="${expLevelEnumSenior}"
+                                               th:checked="${offerDetailsDTO.experienceLevel != null} ? ${offerDetailsDTO.experienceLevel} : false"
+                                               th:field="*{experienceLevel}">
+                                        <label th:text="${expLevelEnumSenior}" class="form-check-label"
+                                               for="expSenior"></label>
+                                    </div>
+                                </dd>
+
+                                <dt class="col-sm-4">Years of experience required</dt>
+                                <dd class="col-sm-8">
+                                    <input
+                                            type="number"
+                                            class="form-control"
+                                            th:field="*{yearsOfExperience}"
+                                            min="0"
+                                            step="1"
+                                    >
+                                </dd>
+
+                                <dt class="col-sm-4">Tech Stack</dt>
+                                <dd class="col-sm-8">
+                                    <div class="m-n2">
+                                        <span th:each="skill : ${allSkillsDTOs}">
+                                            <input type="checkbox"
+                                                   th:value="${skill.skillName}"
+                                                   th:id="${skill.skillId}"
+                                                   th:name="offerSkillsNames"
+                                                   th:checked="${offerDetailsDTO.offerSkills != null} ? ${skillChecked.contains(skill.skillName)} : false"
+                                                   class="btn-check"
+                                                   autocomplete="on">
+                                            <label type="checkbox"
+                                                   class="btn btn-outline-light m-2"
+                                                   th:for="${skill.skillId}"
+                                                   th:text="${skill.skillName}"
+                                            ></label>
+                                        </span>
+                                    </div>
+                                </dd>
+
+                                <dt class="col-sm-4">Other Skills</dt>
+                                <dd class="col-sm-8">
+                                    <input
+                                            type="text"
+                                            class="form-control"
+                                            th:field="*{otherSkills}"
+                                    >
+                                </dd>
+
+                                <dt class="col-sm-4">Percentage of remote work time (0-100)</dt>
+                                <dd class="col-sm-8">
+                                    <input
+                                            type="number"
+                                            class="form-control"
+                                            th:field="*{remoteWork}"
+                                            min="0"
+                                            step="1"
+                                            max="100"
+                                            required
+                                    >
+                                </dd>
+
+                                <dt class="col-sm-4">Minimum payout</dt>
+                                <dd class="col-sm-8">
+                                    <input
+                                            type="number"
+                                            class="form-control"
+                                            th:field="*{salaryMin}"
+                                            min="0"
+                                            step="1"
+                                    >
+                                </dd>
+
+                                <dt class="col-sm-4">Maximum payout</dt>
+                                <dd class="col-sm-8">
+                                    <input
+                                            type="number"
+                                            class="form-control"
+                                            th:field="*{salaryMax}"
+                                            min="0"
+                                            step="1"
+                                    >
+                                </dd>
+
+                                <dt class="col-sm-4">Benefits</dt>
+                                <dd class="col-sm-8">
+                                    <textarea
+                                            type="text"
+                                            class="form-control"
+                                            rows="4"
+                                            th:field="*{benefits}"
+                                    ></textarea>
+                                </dd>
+
+                                <dt class="col-sm-4">City</dt>
+                                <dd class="col-sm-8">
+                                    <input
+                                            th:if="${offerDetailsDTO.cityId != null}"
+
+                                            type="text"
+                                            class="form-control"
+                                            th:name="cityName"
+                                            th:value="${offerDetailsDTO.cityId.cityName}"
+                                    >
+                                    <input
+                                            th:if="${offerDetailsDTO.cityId == null}"
+                                            type="text"
+                                            class="form-control"
+                                            th:name="cityName"
+                                            th:field="*{cityName}"
+                                    >
+                                </dd>
+                            </dl>
+                            <div class="d-flex justify-content-between gap-4">
+                                <div>
+                                    <button class="btn btn-info m-2" form="editForm" type="submit">Update</button>
+                                </div>
+                                <a class="btn  btn-info m-2"
+                                   th:href="@{/offers_of_employer/offer/{offerId}(offerId=${offerDetailsDTO.offerId})}">
+                                    Back To Offer</a>
+                            </div>
+                        </form>
+                        <form
+                                action="#"
+                                th:action="@{/offers_of_employer/delete/{offerId}(offerId=${offerDetailsDTO.offerId})}"
+                                th:method="DELETE"
+                                id="deleteOffer"
+                                onsubmit="return confirm('Do you really want to delete offer?');"
+                        >
+                            <button
+                                    form="deleteOffer" class="btn justify-content-center btn-danger m-2"
+                                    type="submit">
+                                Delete Offer
+                            </button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Content Side End -->
+
+
+        <!-- Footer Start -->
+        <div th:replace="~{fragments :: footer}"></div>
+        <!-- Footer End -->
+    </div>
+    <!-- Content End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+</div>
+
+<div th:replace="~{fragments :: js__}"></div>
+
+</body>
+
+</html>

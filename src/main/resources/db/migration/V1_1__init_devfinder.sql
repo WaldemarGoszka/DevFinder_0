@@ -42,7 +42,7 @@ CREATE TABLE offer
     description         TEXT,
     other_skills        VARCHAR(256),
     remote_work         INTEGER CHECK (remote_work BETWEEN 0 AND 100),
-    experience_level    VARCHAR(16)  NOT NULL,
+    experience_level    VARCHAR(16),
     years_of_experience INTEGER,
     salary_min          NUMERIC(10, 2),
     salary_max          NUMERIC(10, 2),

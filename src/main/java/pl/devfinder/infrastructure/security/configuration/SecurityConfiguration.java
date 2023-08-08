@@ -198,10 +198,22 @@ public class SecurityConfiguration {
                         "/lib/**",
                         "/scss/**",
                         "/images/**",
-                        "/img/**")
+                        "/img/**",
+                        "/offers",
+                        "/offer/**",
+                        "/employers",
+                        "/employer/**",
+                        "/candidates",
+                        "/candidate/**",
+                        "/user_data/**")
                 .permitAll()
-                .requestMatchers("/candidate/**","/user_data/**").hasAuthority(Keys.Role.CANDIDATE.getName())
-                .requestMatchers("/employer/**","/user_data/**").hasAuthority(Keys.Role.EMPLOYER.getName())
+                .requestMatchers(
+                        "/candidate_portal/**")
+                .hasAuthority(Keys.Role.CANDIDATE.getName())
+                .requestMatchers(
+                        "/employer_portal/**",
+                        "/offers_of_employer/**")
+                .hasAuthority(Keys.Role.EMPLOYER.getName())
                 .anyRequest()
                 .authenticated()
                 .and()

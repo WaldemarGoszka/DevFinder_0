@@ -37,7 +37,7 @@ public class OfferCriteriaRepository {
     public Page<Offer> findAllByCriteria(OfferSearchCriteria offerSearchCriteria) {
         //TODO tu wstawić CriteriaBuilder builder = entityManager.getCriteriaBuilder(); zamiast w konktruktorze
 
-        log.info("Trying Find Offer By Criteria");
+        log.info("Process Find Offer By Criteria");
         CriteriaQuery<OfferEntity> criteriaQuery = criteriaBuilder.createQuery(OfferEntity.class);
         Root<OfferEntity> offerEntityRoot = criteriaQuery.from(OfferEntity.class);
         Predicate predicate = getPredicate(offerSearchCriteria, offerEntityRoot, criteriaQuery);

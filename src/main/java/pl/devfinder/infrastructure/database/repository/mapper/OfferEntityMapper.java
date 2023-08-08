@@ -5,13 +5,13 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
-import pl.devfinder.domain.CandidateSkill;
 import pl.devfinder.domain.Offer;
-import pl.devfinder.domain.OfferSkills;
-import pl.devfinder.infrastructure.database.entity.CandidateSkillEntity;
+import pl.devfinder.domain.OfferSkill;
 import pl.devfinder.infrastructure.database.entity.OfferEntity;
 import pl.devfinder.infrastructure.database.entity.OfferSkillEntity;
 
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,11 +26,16 @@ public interface OfferEntityMapper {
     Offer mapFromEntity(OfferEntity offerEntity);
 
     @Named("mapOfferSkills")
-    default Set<OfferSkills> mapOfferSkills(Set<OfferSkillEntity> entities) {
+    default Set<OfferSkill> mapOfferSkills(Set<OfferSkillEntity> entities) {
+        if(Objects.isNull(entities)){
+            return new HashSet<>();
+        }
         return entities.stream().map(this::mapFromEntity).collect(Collectors.toSet());
     }
     @Mapping(target = "offerId", ignore = true)
 //    @Mapping(target = "skillId.candidateSkills", ignore = true)
 //    @Mapping(target = "skillId.offerSkills", ignore = true)
-    OfferSkills mapFromEntity(OfferSkillEntity entity);
+    OfferSkill mapFromEntity(OfferSkillEntity entity);
+
+    OfferEntity mapToEntity(Offer offer);
 }

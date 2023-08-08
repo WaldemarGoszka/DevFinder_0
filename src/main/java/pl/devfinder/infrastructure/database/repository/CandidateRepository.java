@@ -1,6 +1,7 @@
 package pl.devfinder.infrastructure.database.repository;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import pl.devfinder.business.dao.CandidateDAO;
 import pl.devfinder.business.management.Keys;
@@ -11,7 +12,7 @@ import pl.devfinder.infrastructure.database.repository.mapper.CandidateEntityMap
 
 import java.util.List;
 import java.util.Optional;
-
+@Slf4j
 @Repository
 @AllArgsConstructor
 public class CandidateRepository implements CandidateDAO {
@@ -27,6 +28,7 @@ public class CandidateRepository implements CandidateDAO {
 
     @Override
     public void save(Candidate candidate) {
+        log.info("Process save candidate : [{}]",candidate);
         CandidateEntity candidateEntity = candidateEntityMapper.mapToEntity(candidate);
         candidateJpaRepository.saveAndFlush(candidateEntity);
     }

@@ -35,15 +35,16 @@ public class CandidateService {
     private final SkillService skillService;
     private final CandidateSkillService candidateSkillService;
     private final EmployerService employerService;
-    private final OfferService offerService;
-    private final Environment environment;
+
+    private final FileUploadService fileUploadService;
+    private final DataService dataService;
 
 
-    public List<Candidate> findAllByState(Keys.CandidateState state) {
-        List<Candidate> allAvailableCandidates = candidateDAO.findAllByState(state);
-        log.info("Available Candidate amount: [{}]", allAvailableCandidates.size());
-        return allAvailableCandidates;
-    }
+//    public List<Candidate> findAllByState(Keys.CandidateState state) {
+//        List<Candidate> allAvailableCandidates = candidateDAO.findAllByState(state);
+//        log.info("Available Candidate amount: [{}]", allAvailableCandidates.size());
+//        return allAvailableCandidates;
+//    }
 
 
     public Page<Candidate> findAllByCriteria(CandidateSearchCriteria candidateSearchCriteria) {
@@ -52,7 +53,7 @@ public class CandidateService {
 
 
     public Candidate findById(Long candidateId) {
-        log.info("Trying find candidateById, id: [{}]", candidateId);
+        log.info("Process find candidateById, id: [{}]", candidateId);
         return candidateDAO.findById(candidateId).orElseThrow(() -> new NotFoundException(
                 "Could not find candidate by Id [%s]".formatted(candidateId)));
     }
@@ -70,7 +71,7 @@ public class CandidateService {
 
     @Transactional
     public void updateCandidateProfile(CandidateUpdateRequest candidateUpdateRequest, Candidate candidate) {
-        if (nonCityExist(candidateUpdateRequest.getResidenceCityName())) {
+        if (cityService.nonCityExist(candidateUpdateRequest.getResidenceCityName())) {
             cityService.save(candidateUpdateRequest.getResidenceCityName());
         }
         City city = cityService.findByCityName(candidateUpdateRequest.getResidenceCityName()).orElseThrow();
@@ -108,14 +109,14 @@ public class CandidateService {
                 .yearsOfExperience(candidateUpdateRequest.getYearsOfExperience())
                 .salaryMin(candidateUpdateRequest.getSalaryMin())
                 .openToRemoteJob(candidateUpdateRequest.getOpenToRemoteJob())
-                .employer(buildEmployer(candidateUpdateRequest.getCandidateId()))
+                .employerId(buildEmployer(candidateUpdateRequest.getCandidateId()))
                 .residenceCityId(city)
                 .build();
     }
 
     @Transactional
     public void newCandidateProfile(CandidateUpdateRequest candidateUpdateRequest, User user) {
-        if (nonCityExist(candidateUpdateRequest.getResidenceCityName())) {
+        if (cityService.nonCityExist(candidateUpdateRequest.getResidenceCityName())) {
             cityService.save(candidateUpdateRequest.getResidenceCityName());
         }
         City city = cityService.findByCityName(candidateUpdateRequest.getResidenceCityName()).orElseThrow();
@@ -152,7 +153,7 @@ public class CandidateService {
                 .yearsOfExperience(candidateUpdateRequest.getYearsOfExperience())
                 .salaryMin(candidateUpdateRequest.getSalaryMin())
                 .openToRemoteJob(candidateUpdateRequest.getOpenToRemoteJob())
-                .employer(buildEmployer(candidateUpdateRequest.getCandidateId()))
+                .employerId(buildEmployer(candidateUpdateRequest.getCandidateId()))
                 .residenceCityId(city)
                 .build();
     }
@@ -160,7 +161,7 @@ public class CandidateService {
     private String processNewPhotoFile(CandidateUpdateRequest candidateUpdateRequest, User user) {
         if (!candidateUpdateRequest.getFilePhoto().isEmpty()) {
             log.info("Process upload new photo file : [{}]", candidateUpdateRequest.getFilePhoto().getOriginalFilename());
-            return saveFileToDisc(user.getUserUuid(), candidateUpdateRequest.getFilePhoto());
+            return fileUploadService.saveFileToDisc(user.getUserUuid(), candidateUpdateRequest.getFilePhoto());
         } else {
             return null;
         }
@@ -170,15 +171,13 @@ public class CandidateService {
     private String processNewCvFile(CandidateUpdateRequest candidateUpdateRequest, User user) {
         if (!candidateUpdateRequest.getFileCv().isEmpty()) {
             log.info("Process upload new cv file : [{}]", candidateUpdateRequest.getFileCv().getOriginalFilename());
-            return saveFileToDisc(user.getUserUuid(), candidateUpdateRequest.getFileCv());
+            return fileUploadService.saveFileToDisc(user.getUserUuid(), candidateUpdateRequest.getFileCv());
         } else {
             return null;
         }
-
     }
 
     private Employer buildEmployer(Long employerId) {
-
         if (Objects.nonNull(employerId)) {
             return employerService.findById(employerId);
         }
@@ -203,24 +202,21 @@ public class CandidateService {
     }
 
 
-    private Boolean nonCityExist(String cityName) {
-        Optional<City> city = cityService.findByCityName(cityName);
-        return city.isEmpty();
-    }
+
 
 
     private String processUpdateCvFile(CandidateUpdateRequest candidateUpdateRequest, Candidate candidate) {
         if (!candidateUpdateRequest.getFileCv().isEmpty()) {
             log.info("Process upload update cv file : [{}]", candidateUpdateRequest.getFileCv().getOriginalFilename());
             try {
-                if (oldFileExist(candidate.getCandidateUuid(), candidate.getCvFilename())) {
-                    deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getCvFilename());
+                if (fileUploadService.oldFileExist(candidate.getCandidateUuid(), candidate.getCvFilename())) {
+                    fileUploadService.deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getCvFilename());
                 }
             } catch (IOException e) {
                 log.error("Could not delete file: [{}]", candidate.getCvFilename());
                 throw new FileUploadToProfileException("Could not delete file: " + candidate.getCvFilename());
             }
-            return saveFileToDisc(candidate.getCandidateUuid(), candidateUpdateRequest.getFileCv());
+            return fileUploadService.saveFileToDisc(candidate.getCandidateUuid(), candidateUpdateRequest.getFileCv());
         } else {
             return candidate.getCvFilename();
         }
@@ -230,93 +226,42 @@ public class CandidateService {
         if (!candidateUpdateRequest.getFilePhoto().isEmpty()) {
             log.info("Process upload update photo file : [{}]", candidateUpdateRequest.getFilePhoto().getOriginalFilename());
             try {
-                if (oldFileExist(candidate.getCandidateUuid(), candidate.getPhotoFilename())) {
-                    deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getPhotoFilename());
+                if (fileUploadService.oldFileExist(candidate.getCandidateUuid(), candidate.getPhotoFilename())) {
+                    fileUploadService.deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getPhotoFilename());
                 }
             } catch (IOException e) {
-                log.error("Could not delete file: [{}]", candidate.getCvFilename());
+                log.error("Could not delete file: [{}]", candidate.getPhotoFilename());
                 throw new FileUploadToProfileException("Could not delete file: " + candidate.getPhotoFilename());
             }
-            return saveFileToDisc(candidate.getCandidateUuid(), candidateUpdateRequest.getFilePhoto());
+            return fileUploadService.saveFileToDisc(candidate.getCandidateUuid(), candidateUpdateRequest.getFilePhoto());
         } else {
             return candidate.getPhotoFilename();
         }
     }
 
-    private String saveFileToDisc(String candidateUuid, MultipartFile file) {
-
-        try {
-            String filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-
-            String uploadDir = getUploadDir(candidateUuid, filename);
-            log.info("Trying copy file to [{}] ", uploadDir);
-
-            Files.copy(file.getInputStream(), Paths.get(uploadDir), StandardCopyOption.REPLACE_EXISTING);
-
-            return filename;
-
-        } catch (IOException e) {
-            throw new FileUploadToProfileException(
-                    "Could not save file to disc: [%s]".formatted(file.getOriginalFilename()));
-        }
-    }
-
-    public String getUploadDir(String candidateUuid, String filename) {
-        String userDataPath = environment.getProperty("devfinder-conf.user-data-path", String.class);
-
-        assert userDataPath != null;
-        Path uploadPath = Paths.get(userDataPath);
-        if (!Files.exists(uploadPath)) {
-            try {
-                Files.createDirectories(uploadPath);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return uploadPath + File.separator + candidateUuid + filename;
-    }
-
-    public void deleteFileFromDisc(String uuid, String filename) {
-        try {
-            log.info("Process delete file from disc, direction: [{}]", getUploadDir(uuid, filename));
-            Files.deleteIfExists(Paths.get(getUploadDir(uuid, filename)));
-        } catch (IOException e) {
-            throw new FileUploadToProfileException("Could not delete file from disc");
-        }
-    }
-
-    private boolean oldFileExist(String uuid, String filename) throws IOException {
-        log.info("Checked if file exist in direction: [{}]", getUploadDir(uuid, filename));
-        return Files.exists(Paths.get(getUploadDir(uuid, filename)));
-    }
 
     @Transactional
-    public void deleteCandidateProfile(String candidateId) {
-        Candidate candidate = this.findById(Long.valueOf(candidateId));
-        if (countUsesOfCityName(candidate) <= 1) {
-            log.info("City No Longer nessesery. Delete city : [{}]", candidate.getResidenceCityId().getCityName());
-            cityService.deleteByCityName(candidate.getResidenceCityId().getCityName());
-        }
+    public void deleteCandidateProfile(Long candidateId) {
+        log.info("Process delete candidate profile, candidateId: [{}]", candidateId);
+        Candidate candidate = this.findById(candidateId);
+
         candidateSkillService.deleteAllByCandidate(candidate);
 
         if (Objects.nonNull(candidate.getCvFilename())) {
-            deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getCvFilename());
+            fileUploadService.deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getCvFilename());
         }
         if (Objects.nonNull(candidate.getPhotoFilename())) {
-            deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getPhotoFilename());
+            fileUploadService.deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getPhotoFilename());
         }
 
-        log.info("Delete candidate profile, candidateId: [{}]", candidate.getCandidateId());
-        candidateDAO.deleteById(Long.valueOf(candidateId));
+        candidateDAO.deleteById(candidateId);
+
+        if (dataService.countUsesOfCityName(candidate.getResidenceCityId().getCityName()) <= 1) {
+            log.info("City No Longer needed. Delete city : [{}]", candidate.getResidenceCityId().getCityName());
+            cityService.deleteByCityName(candidate.getResidenceCityId().getCityName());
+        }
     }
 
-    private long countUsesOfCityName(Candidate candidate) {
-        long counter = this.countByCityName(candidate.getResidenceCityId().getCityName());
-        counter += offerService.countByCityName(candidate.getResidenceCityId().getCityName());
-        counter += employerService.countByCityName(candidate.getResidenceCityId().getCityName());
-        return counter;
-        //TODO przetestować dodanie miasta i usunięcie gdy nie jesyt już wużywane
-    }
 
     public long countByCityName(String cityName) {
         return candidateDAO.countByCityName(cityName);
@@ -324,14 +269,14 @@ public class CandidateService {
 
     public void deleteCvFile(Candidate candidate) {
         log.info("Process delete cv file");
-        deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getCvFilename());
+        fileUploadService.deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getCvFilename());
         Candidate updateCandidate = candidate.withCvFilename(null);
         candidateDAO.save(updateCandidate);
     }
 
     public void deletePhotoFile(Candidate candidate) {
         log.info("Process delete photo file");
-        deleteFileFromDisc(candidate.getCandidateUuid(),candidate.getPhotoFilename());
+        fileUploadService.deleteFileFromDisc(candidate.getCandidateUuid(),candidate.getPhotoFilename());
         Candidate updateCandidate = candidate.withPhotoFilename(null);
         candidateDAO.save(updateCandidate);
     }

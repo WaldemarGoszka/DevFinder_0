@@ -94,7 +94,7 @@ public class UserRegistrationController {
 //            }
 
             UserDTO userDtoOnCondition = userDTO.withIsEnabled(!enableEmailVerification);
-            log.info("Trying register user, userDTO: [{}]", userDtoOnCondition);
+            log.info("Process register user, userDTO: [{}]", userDtoOnCondition);
             User user = userService.save(userMapper.mapFromDTO(userDtoOnCondition));
             if (Boolean.TRUE.equals(enableEmailVerification)) {
                 log.info("Send verification email to [{}]", userDTO.getEmail());
@@ -143,7 +143,7 @@ public class UserRegistrationController {
         //send password reset verification email to the user
         String url = Utility.getApplicationUrl(request) + "/register/password_reset_form?token=" + resetPasswordToken;
         try {
-            log.info("Trying send reset password verification email to [{}]", email);
+            log.info("Process send reset password verification email to [{}]", email);
             registrationCompleteEventListener.sendPasswordResetVerificationEmail(url, user.get());
         } catch (MessagingException | UnsupportedEncodingException e) {
             model.addAttribute("error", e.getMessage());
@@ -167,7 +167,7 @@ public class UserRegistrationController {
         }
         Optional<User> user = resetPasswordTokenService.findUserByResetPasswordToken(token);
         if (user.isPresent()) {
-            log.info("Trying reset password for [{}]", user.get().getEmail());
+            log.info("Process reset password for [{}]", user.get().getEmail());
             resetPasswordTokenService.resetPassword(user.get(), password);
             return "redirect:/login?reset_success";
         }

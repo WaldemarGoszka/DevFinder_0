@@ -13,6 +13,7 @@ import java.util.Optional;
 public class CityService {
     private final CityDAO cityDAO;
 
+
     public List<City> findAll() {
         return cityDAO.findAll();
     }
@@ -31,6 +32,12 @@ public class CityService {
     public void deleteByCityName(String cityName) {
         cityDAO.deleteByCityName(cityName);
     }
+
+    public Boolean nonCityExist(String cityName) {
+        Optional<City> city = findByCityName(cityName);
+        return city.isEmpty();
+    }
+
 
 
 

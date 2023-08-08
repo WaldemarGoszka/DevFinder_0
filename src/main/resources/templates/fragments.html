@@ -180,8 +180,8 @@
                 <span th:text="${#authentication.name}"></span>
             </a>
             <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
-                <a sec:authorize="hasAuthority('CANDIDATE')" th:href="@{/candidate/profile}" class="dropdown-item">My Profile</a>
-                <a sec:authorize="hasAuthority('EMPLOYER')" th:href="@{/employer/profile}" class="dropdown-item">My Profile</a>
+                <a sec:authorize="hasAuthority('CANDIDATE')" th:href="@{/candidate_portal/profile}" class="dropdown-item">My Profile</a>
+                <a sec:authorize="hasAuthority('EMPLOYER')" th:href="@{/employer_portal/profile}" class="dropdown-item">My Profile</a>
                 <a th:href="@{/user/settings}" class="dropdown-item">Settings</a>
                 <a th:href="@{/logout}" class="dropdown-item">Log Out</a>
             </div>
@@ -208,10 +208,11 @@
                         <span>Candidate</span>
                     </div>
                 </div>
-                <a th:href="@{/candidate/offers}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Find an Offers</a>
-                <a th:href="@{/candidate/employers}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Find an Employer</a>
-                <a th:href="@{/candidate/applications}" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Your applications</a>
-                <a th:href="@{/candidate/my_employer}" class="nav-item nav-link"><i class="fa-regular fa-address-card me-2"></i>My Employer</a>
+                <a th:href="@{/offers}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Find an Offers</a>
+                <a th:href="@{/employers}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Find an Employer</a>
+                <a th:href="@{/candidates}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Find an Candidate</a>
+<!--                <a th:href="@{/candidate/applications}" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Your applications</a>-->
+                <a th:href="@{/candidate_portal/my_employer}" class="nav-item nav-link"><i class="fa-regular fa-address-card me-2"></i>My Employer</a>
             </div>
             <div sec:authorize="hasAuthority('EMPLOYER')">
                 <div class="d-flex align-items-center ms-4 mb-4">
@@ -220,10 +221,12 @@
                         <span>Employer</span>
                     </div>
                 </div>
-                <a th:href="@{/employer/candidates}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Find a candidate</a>
-                <a th:href="@{/employer/post_job}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Post a job</a>
-                <a th:href="@{/employer/my_posted_offers}" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>My Posted Offers</a>
-                <a th:href="@{/employer/employee}" class="nav-item nav-link"><i class="fa-regular fa-address-card me-2"></i>My Employee</a>
+                <a th:href="@{/offers}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Find an Offers</a>
+                <a th:href="@{/employers}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Find an Employer</a>
+                <a th:href="@{/candidates}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Find an Candidate</a>
+                <a th:href="@{/offers_of_employer/new_form}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Post a job</a>
+                <a th:href="@{/offers_of_employer/offers}" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>My Posted Offers</a>
+                <a th:href="@{/employer_portal/employee}" class="nav-item nav-link"><i class="fa-regular fa-address-card me-2"></i>My Employee</a>
             </div>
 
             <a href="#" sec:authorize="${!isAuthenticated()}" class="nav-item nav-link"><i

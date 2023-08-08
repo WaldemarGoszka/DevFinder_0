@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.devfinder.domain.City;
 import pl.devfinder.domain.Employer;
-import pl.devfinder.domain.OfferSkills;
+import pl.devfinder.domain.OfferSkill;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -32,5 +32,8 @@ public class OfferDetailsDTO {
     String status;
     Employer employerId;
     City cityId;
-    Set<OfferSkills> offerSkills;
+    Set<OfferSkill> offerSkills;
+
+    City cityName;
+    Set<String> offerSkillsNames;
 }
