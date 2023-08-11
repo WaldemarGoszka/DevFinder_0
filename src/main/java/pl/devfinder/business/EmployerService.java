@@ -31,7 +31,6 @@ public class EmployerService {
     private final FileUploadService fileUploadService;
     private final OfferSkillService offerSkillService;
     private final DataService dataService;
-    private final CandidateDAO candidateDAO;
 
     public Employer findById(Long employerId) {
         log.info("Process find employerById, id: [{}]", employerId);
@@ -39,22 +38,20 @@ public class EmployerService {
                 "Could not find employer by Id [%s]".formatted(employerId)));
     }
 
-    @Transactional
-    public List<Employer> findAll() {
-        List<Employer> allEmployers = employerDAO.findAll();
-        log.info("Find all employers, ammount: [{}]", allEmployers.size());
-        return allEmployers;
+    public Employer findByCompanyName(String employerCompanyName) {
+        log.info("Process find employer by companyName: [{}]", employerCompanyName);
+        return employerDAO.findByCompanyName(employerCompanyName).orElseThrow(() -> new NotFoundException(
+                "Could not find employer companyName [%s]".formatted(employerCompanyName)));
     }
 
-//    public void save(User user) {
-//        Employer employer = Employer.builder()
-//                .employerUuid(user.getUserUuid())
-//                .createdAt(OffsetDateTime.now())
-//                .build();
-//        employerDAO.save(employer);
-//    }
+    @Transactional
+    public List<Employer> findAll() {
+        log.info("Process find all employers");
+        return employerDAO.findAll();
+    }
 
     public Page<Employer> findAllByCriteria(EmployerSearchCriteria employerSearchCriteria) {
+        log.info("Process finding all employer by criteria");
         return employerCriteriaRepository.findAllByCriteria(employerSearchCriteria);
     }
 

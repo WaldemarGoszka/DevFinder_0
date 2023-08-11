@@ -142,6 +142,8 @@
                                                for="statusEmployed">[[${statusEnumEmployed}]] (only employer can hire you)</label>
                                     </div>
                                     <div th:if="${candidateDetailsDTO.employerId != null}"> If your employer makes you redundant you will be able to change your status</div>
+                                <input type="hidden" th:if="${candidateDetailsDTO.employerId != null}" name="status" th:value="${statusEnumEmployed}">
+                                <input type="hidden" th:if="${candidateDetailsDTO.employerId != null}" name="employerName" th:value="${candidateDetailsDTO.employerId.companyName}">
                                 </dd>
 
 

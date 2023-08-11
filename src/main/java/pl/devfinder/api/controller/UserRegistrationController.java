@@ -9,9 +9,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import pl.devfinder.api.dto.UserDTO;
 import pl.devfinder.api.dto.mapper.UserMapper;
@@ -58,16 +55,12 @@ public class UserRegistrationController {
 
     @PostMapping("/save")
     public String postRegistrationPage(@Valid @ModelAttribute("user") UserDTO userDTO,
-                                       BindingResult bindingResult,
                                        Model model, HttpServletRequest request) {
         Boolean enableEmailVerification = environment.getProperty("devfinder-conf.enable-email-verification", Boolean.class);
         model.addAttribute("enableEmailVerification", enableEmailVerification);
         try {
             Optional<User> existing = userService.findByEmail(userDTO.getEmail());
             if (existing.isPresent()) {
-//                result.rejectValue("email"
-//                        , null
-//                        , "There is already an account registered with that email");
                 log.warn("User already registered with this email, userDTO: [{}]", userDTO);
                 return "redirect:/register/register_page?email_already_registered";
             }
@@ -75,25 +68,8 @@ public class UserRegistrationController {
                 log.error("The user has not selected a role");
                 return "redirect:/register/register_page?select_role";
             }
-//            if (bindingResult.hasErrors()) {
-//                log.error("Error in register user, userDTO: [{}]", userDTO);
-//                for (ObjectError error : bindingResult.getAllErrors()) {
-//                    if (error instanceof FieldError fieldError) {
-//                        String fieldName = fieldError.getField();
-//                        String errorMessage = fieldError.getDefaultMessage();
-//                        log.error("Error register form, field name: [{}], message: [{}]", fieldName, errorMessage);
-//                    } else {
-//                        String objectName = error.getObjectName();
-//                        String errorMessage = error.getDefaultMessage();
-//                        log.error("Error register form, object name: [{}], message: [{}]", objectName, errorMessage);
-//                    }
-//                }
-//                System.out.println(bindingResult.toString());
-//                model.addAttribute("user", userDTO);
-//                return "register";
-//            }
 
-            UserDTO userDtoOnCondition = userDTO.withIsEnabled(!enableEmailVerification);
+            UserDTO userDtoOnCondition = userDTO.withIsEnabled(Boolean.FALSE.equals(enableEmailVerification));
             log.info("Process register user, userDTO: [{}]", userDtoOnCondition);
             User user = userService.save(userMapper.mapFromDTO(userDtoOnCondition));
             if (Boolean.TRUE.equals(enableEmailVerification)) {
@@ -104,10 +80,8 @@ public class UserRegistrationController {
             return "redirect:/register/register_page?success";
         } catch (Exception e) {
             e.printStackTrace();
-//            model.addAttribute("error", "Server is error, try again later!");
             return "redirect:/register/register_page?server_error";
         }
-//        return "register";
     }
 
     @GetMapping("/verify_email")
@@ -117,11 +91,14 @@ public class UserRegistrationController {
             return "redirect:/login?verified";
         }
         String verificationResult = emailVerificationTokenService.validateToken(token);
-        return switch (Keys.TokenStatus.INVALID) {
-            case EXPIRED -> "redirect:/error?expired";
-            case VALID -> "redirect:/login?valid";
-            case INVALID -> "redirect:/error?invalid";
-        };
+        if (Keys.TokenStatus.EXPIRED.getName().equals(verificationResult)) {
+            return "redirect:/error?expired";
+        } else if (Keys.TokenStatus.VALID.getName().equals(verificationResult)) {
+            return "redirect:/login?valid";
+        } else if (Keys.TokenStatus.INVALID.getName().equals(verificationResult)) {
+            return "redirect:/error?invalid";
+        }
+        return "error";
     }
 
     @GetMapping("/forgot_password_form")
@@ -133,22 +110,16 @@ public class UserRegistrationController {
     public String resetPasswordRequest(HttpServletRequest request, Model model) {
         String email = request.getParameter("email");
         log.info("Forgot password request from [{}]", email);
-        Optional<User> user = userService.findByEmail(email);
-        if (user.isEmpty()) {
-            return "redirect:/register/forgot_password_form?not_fond";
+        Optional<User> userOptional = userService.findByEmail(email);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            String resetPasswordToken = Utility.generateUUID();
+            resetPasswordTokenService.createPasswordResetTokenForUser(user, resetPasswordToken);
+            log.info("Reset password token created for [{}]", email);
+            sendPasswordResetVerificationEmail(request, model, email, user, resetPasswordToken);
+            return "redirect:/register/forgot_password_form?success";
         }
-        String resetPasswordToken = Utility.generateUUID();
-        resetPasswordTokenService.createPasswordResetTokenForUser(user.get(), resetPasswordToken);
-        log.info("Reset password token created for [{}]", email);
-        //send password reset verification email to the user
-        String url = Utility.getApplicationUrl(request) + "/register/password_reset_form?token=" + resetPasswordToken;
-        try {
-            log.info("Process send reset password verification email to [{}]", email);
-            registrationCompleteEventListener.sendPasswordResetVerificationEmail(url, user.get());
-        } catch (MessagingException | UnsupportedEncodingException e) {
-            model.addAttribute("error", e.getMessage());
-        }
-        return "redirect:/register/forgot_password_form?success";
+        return "redirect:/register/forgot_password_form?not_fond";
     }
 
     @GetMapping("/password_reset_form")
@@ -172,5 +143,15 @@ public class UserRegistrationController {
             return "redirect:/login?reset_success";
         }
         return "redirect:/error?not_found";
+    }
+
+    private void sendPasswordResetVerificationEmail(HttpServletRequest request, Model model, String email, User user, String resetPasswordToken) {
+        String url = Utility.getApplicationUrl(request) + "/register/password_reset_form?token=" + resetPasswordToken;
+        try {
+            log.info("Process send reset password verification email to [{}]", email);
+            registrationCompleteEventListener.sendPasswordResetVerificationEmail(url, user);
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            model.addAttribute("error", e.getMessage());
+        }
     }
 }

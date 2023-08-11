@@ -2,6 +2,7 @@ package pl.devfinder.domain.search;
 
 import lombok.Data;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Component;
 import pl.devfinder.business.management.Keys;
 
 import java.math.BigDecimal;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Data
 public class CandidateSearchCriteria {
-    List<String> status = new ArrayList<>(List.of(Keys.CandidateState.ACTIVE.getName()));
+    List<String> status = new ArrayList<>();
     List<String> experienceLevels = new ArrayList<>();
     List<String> skills = new ArrayList<>();
     Integer minYearsOfExperience;
@@ -22,7 +23,7 @@ public class CandidateSearchCriteria {
 
     Integer pageNumber = 1;
     Integer pageSize = 5;
-    Sort.Direction sortDirection = Sort.Direction.DESC;
+    Sort.Direction sortDirection = Sort.Direction.ASC;
     String sortBy = "lastName";
 
 }

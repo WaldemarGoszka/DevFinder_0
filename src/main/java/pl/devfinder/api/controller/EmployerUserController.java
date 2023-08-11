@@ -66,7 +66,7 @@ public class EmployerUserController {
         setEmployerLogoToModel(model, employerOptional);
 
         candidateSearchCriteria.setEmployer(employer.getCompanyName());
-        candidateSearchCriteria.setStatus(new ArrayList<>());
+        //candidateSearchCriteria.setStatus(new ArrayList<>());
         Page<CandidateRowDTO> page = candidateService.findAllByCriteria(candidateSearchCriteria).map(candidateRowMapper::map);
         List<CandidateRowDTO> allCandidates = page.getContent();
 

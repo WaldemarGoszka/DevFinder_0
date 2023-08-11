@@ -37,7 +37,6 @@ public class EmployerCriteriaRepository {
 
     public Page<Employer> findAllByCriteria(EmployerSearchCriteria employerSearchCriteria) {
         //TODO tu wstawić CriteriaBuilder builder = entityManager.getCriteriaBuilder(); zamiast w konktruktorze
-        log.info("Process Find Employer By Criteria");
         CriteriaQuery<EmployerEntity> criteriaQuery = criteriaBuilder.createQuery(EmployerEntity.class);
         Root<EmployerEntity> employerEntityRoot = criteriaQuery.from(EmployerEntity.class);
         Predicate predicate = getPredicate(employerSearchCriteria, employerEntityRoot, criteriaQuery);

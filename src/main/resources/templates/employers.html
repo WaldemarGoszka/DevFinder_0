@@ -186,7 +186,6 @@
                                     <input type="hidden" name="sortDirection"
                                            th:value="${employerSearchCriteria.sortDirection}"/>
                                     <tr>
-                                        <th scope="col">Logo</th>
                                         <th scope="col"><a href="#" onclick="setSortParams('companyName')">
                                             <div><i
                                                     th:if="${sortBy == 'companyName'}"
@@ -224,7 +223,6 @@
                                     </thead>
                                     <tbody>
                                     <tr th:each="employer : ${allEmployersDTOs}">
-                                        <td th:text="${employer.getLogoFilename()}"></td>
                                         <td th:text="${employer.getCompanyName()}"></td>
                                         <td th:text="${employer.getNumberOfEmployees()}"></td>
                                         <td th:text="${employer.getCityId().getCityName()}"></td>

@@ -22,7 +22,7 @@ public class CandidateDetailsDTO {
     String firstName;
     String lastName;
     @Email
-            //TODO add validate other pool
+    //TODO add validate other pool
     String emailContact;
     String phoneNumber;
     OffsetDateTime createdAt;

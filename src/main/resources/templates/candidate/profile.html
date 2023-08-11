@@ -62,11 +62,13 @@
 
                                 <dt th:if="${candidateDetailsDTO.employerId != null}" class="col-sm-4">Employer</dt>
                                 <dd th:if="${candidateDetailsDTO.employerId != null}"
-                                    th:text="${candidateDetailsDTO.employerId}" class="col-sm-8"></dd>
-
-                                <!--                                <dt th:if="${candidateDetailsDTO.getPhotoFilename != null}" class="col-sm-4">Face photo</dt>-->
-                                <!--                                <dd th:if="${candidateDetailsDTO.getPhotoFilename != null}"-->
-                                <!--                                    th:text="${candidateDetailsDTO.getPhotoFilename}" class="col-sm-8"></dd>-->
+                                     class="col-sm-8">
+                                    [[${candidateDetailsDTO.employerId.companyName}]]
+                                    <a th:if="${candidateDetailsDTO.employerId.companyName != null}"
+                                       th:href="@{/employer/{employerId}(employerId=${candidateDetailsDTO.employerId.employerId})}"
+                                       class="btn btn-sm btn-primary" type="button">Employer Details
+                                    </a>
+                                </dd>
 
                                 <dt th:if="${candidateDetailsDTO.firstName != null}" class="col-sm-4">First name</dt>
                                 <dd th:if="${candidateDetailsDTO.firstName != null}"

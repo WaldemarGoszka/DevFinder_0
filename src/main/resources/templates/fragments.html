@@ -7,7 +7,6 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <!-- Favicon -->
-<!--    <link href="img/favicon.ico" rel="icon">-->
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -182,7 +181,6 @@
             <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
                 <a sec:authorize="hasAuthority('CANDIDATE')" th:href="@{/candidate_portal/profile}" class="dropdown-item">My Profile</a>
                 <a sec:authorize="hasAuthority('EMPLOYER')" th:href="@{/employer_portal/profile}" class="dropdown-item">My Profile</a>
-                <a th:href="@{/user/settings}" class="dropdown-item">Settings</a>
                 <a th:href="@{/logout}" class="dropdown-item">Log Out</a>
             </div>
         </div>
@@ -201,41 +199,31 @@
             <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>DevFinder</h3>
         </a>
         <div class="navbar-nav w-100">
-            <div sec:authorize="hasAuthority('CANDIDATE')">
-                <div class="d-flex align-items-center ms-4 mb-4">
-                    <div class="ms-3">
-                        <h6 th:text="${user.userName}" class="mb-0"></h6>
-                        <span>Candidate</span>
-                    </div>
+            <div sec:authorize="hasAuthority('CANDIDATE')"
+                 class="d-flex align-items-center ms-4 mb-4">
+                <div class="ms-3">
+                    <h6 th:text="${user.userName}" class="mb-0"></h6>
+                    <span>Candidate</span>
                 </div>
+            </div>
+            <div sec:authorize="hasAuthority('EMPLOYER')"
+                 class="d-flex align-items-center ms-4 mb-4">
+                <div class="ms-3">
+                    <h6 th:text="${user.userName}" class="mb-0"></h6>
+                    <span>Employer</span>
+                </div>
+            </div>
+            <div>
                 <a th:href="@{/offers}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Find an Offers</a>
                 <a th:href="@{/employers}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Find an Employer</a>
                 <a th:href="@{/candidates}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Find an Candidate</a>
-<!--                <a th:href="@{/candidate/applications}" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Your applications</a>-->
-                <a th:href="@{/candidate_portal/my_employer}" class="nav-item nav-link"><i class="fa-regular fa-address-card me-2"></i>My Employer</a>
             </div>
             <div sec:authorize="hasAuthority('EMPLOYER')">
-                <div class="d-flex align-items-center ms-4 mb-4">
-                    <div class="ms-3">
-                        <h6 th:text="${user.userName}" class="mb-0"></h6>
-                        <span>Employer</span>
-                    </div>
-                </div>
-                <a th:href="@{/offers}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Find an Offers</a>
-                <a th:href="@{/employers}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Find an Employer</a>
-                <a th:href="@{/candidates}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Find an Candidate</a>
                 <a th:href="@{/offers_of_employer/new_form}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Post a job</a>
                 <a th:href="@{/offers_of_employer/offers}" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>My Posted Offers</a>
                 <a th:href="@{/employer_portal/employee}" class="nav-item nav-link"><i class="fa-regular fa-address-card me-2"></i>My Employee</a>
             </div>
 
-            <a href="#" sec:authorize="${!isAuthenticated()}" class="nav-item nav-link"><i
-                    class="fa fa-th me-2"></i>Job Offers</a>
-            <a href="#" sec:authorize="${!isAuthenticated()}" class="nav-item nav-link"><i
-                    class="fa fa-th me-2"></i>Developers</a>
-            <hr class="mt-5 mb-5">
-            <a href="#" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Statistics</a>
-            <a href="#" class="nav-item nav-link"><i class="fa-regular fa-address-card me-2"></i>About Us</a>
         </div>
     </nav>
 </div>

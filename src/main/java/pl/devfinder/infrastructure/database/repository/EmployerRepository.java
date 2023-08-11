@@ -67,5 +67,10 @@ public class EmployerRepository implements EmployerDAO {
         employerJpaRepository.deleteEmployerFromCandidateAndChangeStatus(candidateId);
     }
 
+    @Override
+    public Optional<Employer> findByCompanyName(String employerCompanyName) {
+        return employerJpaRepository.findByCompanyName(employerCompanyName).map(employerEntityMapper::mapFromEntity);
+    }
+
 
 }

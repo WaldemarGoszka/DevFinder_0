@@ -24,4 +24,6 @@ public interface EmployerDAO {
     void assignEmployerToCandidateAndChangeStatus(Employer employerId, Long candidateId);
 
     void deleteAssignEmployerToCandidateAndChangeStatus(Long candidateId);
+
+    Optional<Employer> findByCompanyName(String employerCompanyName);
 }

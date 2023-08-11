@@ -21,7 +21,7 @@ public class UserDTO {
     private String email;
     //    @Size(min = 8)
     @NotEmpty(message = "Password should not be empty")
-    @Size(min = 8, max = 32, message = "Invalid password (too short)")
+    @Size(max = 32, message = "Invalid password")
     private String password;
     private Boolean isEnabled;
     @NotEmpty

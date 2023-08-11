@@ -35,4 +35,6 @@ public interface EmployerJpaRepository extends JpaRepository<EmployerEntity, Lon
             UPDATE CandidateEntity c SET c.employerId = null, c.status = 'ACTIVE' WHERE c.candidateId = :candidateId
             """)
     void deleteEmployerFromCandidateAndChangeStatus(Long candidateId);
+
+    Optional<EmployerEntity> findByCompanyName(String employerCompanyName);
 }

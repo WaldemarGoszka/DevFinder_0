@@ -205,7 +205,8 @@ public class SecurityConfiguration {
                         "/employer/**",
                         "/candidates",
                         "/candidate/**",
-                        "/user_data/**")
+                        "/user_data/**",
+                                "/api/**")
                 .permitAll()
                 .requestMatchers(
                         "/candidate_portal/**")
@@ -214,6 +215,8 @@ public class SecurityConfiguration {
                         "/employer_portal/**",
                         "/offers_of_employer/**")
                 .hasAuthority(Keys.Role.EMPLOYER.getName())
+//                .requestMatchers("/api/**").hasAnyAuthority("REST_API")
+
                 .anyRequest()
                 .authenticated()
                 .and()

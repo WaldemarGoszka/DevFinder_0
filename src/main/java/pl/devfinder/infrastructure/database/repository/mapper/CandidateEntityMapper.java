@@ -6,6 +6,8 @@ import pl.devfinder.domain.CandidateSkill;
 import pl.devfinder.infrastructure.database.entity.CandidateEntity;
 import pl.devfinder.infrastructure.database.entity.CandidateSkillEntity;
 
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -22,6 +24,9 @@ public interface CandidateEntityMapper {
 
     @Named("mapCandidateSkills")
     default Set<CandidateSkill> mapCandidateSkills(Set<CandidateSkillEntity> entities) {
+        if(Objects.isNull(entities)){
+            return new HashSet<>();
+        }
         return entities.stream().map(this::mapFromEntity).collect(Collectors.toSet());
     }
 

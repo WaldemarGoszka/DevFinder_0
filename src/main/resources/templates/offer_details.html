@@ -118,7 +118,7 @@
                                         th:text="${offerDetailsDTO.employerId.numberOfEmployees} + ' employees'"
                                         class="col-sm-8"></dd>
                                     <dt class="col-sm-4">
-                                        <a th:href="@{/employer_portal/{employerId}(employerId=${offerDetailsDTO.employerId.employerId})}">
+                                        <a th:href="@{/employer/{employerId}(employerId=${offerDetailsDTO.employerId.employerId})}">
                                             <button
                                                     class="btn btn-sm btn-primary" type="button">Employer Details
                                             </button>

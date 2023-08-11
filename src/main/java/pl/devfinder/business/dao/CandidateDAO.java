@@ -12,7 +12,7 @@ public interface CandidateDAO {
 
     List<Candidate> findAllByState(Keys.CandidateState state);
 
-    void save(Candidate candidate);
+    Candidate save(Candidate candidate);
 
     Optional<Candidate> findById(Long candidateId);
 

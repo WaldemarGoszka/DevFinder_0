@@ -109,7 +109,7 @@ public class CandidateService {
                 .yearsOfExperience(candidateUpdateRequest.getYearsOfExperience())
                 .salaryMin(candidateUpdateRequest.getSalaryMin())
                 .openToRemoteJob(candidateUpdateRequest.getOpenToRemoteJob())
-                .employerId(buildEmployer(candidateUpdateRequest.getCandidateId()))
+                .employerId(buildEmployer(candidateUpdateRequest.getEmployerName()))
                 .residenceCityId(city)
                 .build();
     }
@@ -124,11 +124,11 @@ public class CandidateService {
         validateIfSkillsExist(candidateUpdateRequest.getCandidateSkillsNames());
         Candidate createNewCandidate = buildNewCandidate(candidateUpdateRequest, user, city);
 
+        Candidate savedCandidate = candidateDAO.save(createNewCandidate);
         if (Objects.nonNull(candidateUpdateRequest.getCandidateSkillsNames())) {
-            Set<CandidateSkill> candidateSkillToSave = buildCandidateSkills(createNewCandidate, candidateUpdateRequest);
+            Set<CandidateSkill> candidateSkillToSave = buildCandidateSkills(savedCandidate, candidateUpdateRequest);
             candidateSkillService.saveAll(candidateSkillToSave);
         }
-        candidateDAO.save(createNewCandidate);
 
     }
 
@@ -153,7 +153,7 @@ public class CandidateService {
                 .yearsOfExperience(candidateUpdateRequest.getYearsOfExperience())
                 .salaryMin(candidateUpdateRequest.getSalaryMin())
                 .openToRemoteJob(candidateUpdateRequest.getOpenToRemoteJob())
-                .employerId(buildEmployer(candidateUpdateRequest.getCandidateId()))
+                .employerId(buildEmployer(candidateUpdateRequest.getEmployerName()))
                 .residenceCityId(city)
                 .build();
     }
@@ -177,9 +177,9 @@ public class CandidateService {
         }
     }
 
-    private Employer buildEmployer(Long employerId) {
-        if (Objects.nonNull(employerId)) {
-            return employerService.findById(employerId);
+    private Employer buildEmployer(String employerCompanyName) {
+        if (Objects.nonNull(employerCompanyName)) {
+            return employerService.findByCompanyName(employerCompanyName);
         }
         return null;
     }

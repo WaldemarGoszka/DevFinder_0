@@ -86,9 +86,9 @@ public class EmployerDataController {
         EmployerDetailsDTO employerDetailsDTO = employerDetailsMapper.map(employerService.findById(employerId));
         if (Objects.nonNull(employerDetailsDTO.getLogoFilename())) {
             String photoPath = "/user_data/" + employerDetailsDTO.getEmployerUuid() + employerDetailsDTO.getLogoFilename();
-            model.addAttribute("photoDir", photoPath);
+            model.addAttribute("photoProfileDir", photoPath);
         } else {
-            model.addAttribute("photoDir", "/img/user.jpg");
+            model.addAttribute("photoProfileDir", "/img/user.jpg");
         }
         model.addAttribute("employerDetailsDTO", employerDetailsDTO);
         return "employer_details";

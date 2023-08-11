@@ -42,17 +42,6 @@ public class OfferService {
         return offerCriteriaRepository.findAllByCriteria(offerSearchCriteria);
     }
 
-//    @Transactional
-//    public Long getNumberOfOffersByEmployerAndByState(Long employerId, Keys.OfferState state) {
-//        return offerDAO.getNumberOfOffersByEmployerAndByState(employerId, state);
-//    }
-
-//    @Transactional
-//    public List<Offer> findAllByState(Keys.OfferState state) {
-//        List<Offer> allOffers = offerDAO.findAllByState(state);
-//        log.info("Offers amount: [{}]", allOffers.size());
-//        return allOffers;
-//    }
 
     public String getDaysSinceDate(OffsetDateTime createdAt) {
         long days = Duration.between(createdAt, OffsetDateTime.now()).toDays();
@@ -79,16 +68,6 @@ public class OfferService {
                 "Could not find offer by Id [%s]".formatted(offerId)));
     }
 
-//    public Page<Offer> findAllByStatePaginated(
-//            OfferSearchCriteria offerSearchCriteria,
-//            Keys.OfferState state) {
-//        Sort sort = Sort.by(offerSearchCriteria.getSortDirection(), offerSearchCriteria.getSortBy());
-//        Pageable pageable = PageRequest.of(offerSearchCriteria.getPageNumber() - 1, offerSearchCriteria.getPageSize(), sort);
-//        Page<Offer> all = offerDAO.findAllByState(state, pageable);
-//        log.info("Offers paginated pageNumber: [{}], page size [{}], totalPages: [{}],  total elements: [{}]",
-//                offerSearchCriteria.getPageNumber(), offerSearchCriteria.getPageSize(), all.getTotalPages(), all.getTotalElements());
-//        return all;
-//    }
 
     public Offer findByOfferIdAndEmployerId(Long offerId, Employer employer) {
         log.info("Process finding offer id: [{}] where employer id is: [{}]", offerId, employer.getEmployerId());

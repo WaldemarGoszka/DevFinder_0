@@ -61,7 +61,7 @@ public class OfferUserController {
         Employer employer = employerOptional.orElseThrow(() -> new NotFoundException("Could not find employer by uuid"));
 
         offerSearchCriteria.setEmployer(employer.getCompanyName());
-        offerSearchCriteria.setStatus(new ArrayList<>());
+        //offerSearchCriteria.setStatus(new ArrayList<>());
 
         Map<String, ?> offersListData = prepareOffersListData(offerSearchCriteria);
 

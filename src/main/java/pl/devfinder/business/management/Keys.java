@@ -73,7 +73,8 @@ public interface Keys {
 
     enum Role {
         CANDIDATE("CANDIDATE"),
-        EMPLOYER("EMPLOYER");
+        EMPLOYER("EMPLOYER"),
+        REST_API("REST_API");
 
         private final String name;
 

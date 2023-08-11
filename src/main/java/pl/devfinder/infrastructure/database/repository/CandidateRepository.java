@@ -27,10 +27,9 @@ public class CandidateRepository implements CandidateDAO {
     }
 
     @Override
-    public void save(Candidate candidate) {
+    public Candidate save(Candidate candidate) {
         log.info("Process save candidate : [{}]",candidate);
-        CandidateEntity candidateEntity = candidateEntityMapper.mapToEntity(candidate);
-        candidateJpaRepository.saveAndFlush(candidateEntity);
+        return candidateEntityMapper.mapFromEntity(candidateJpaRepository.saveAndFlush(candidateEntityMapper.mapToEntity(candidate)));
     }
 
     @Override

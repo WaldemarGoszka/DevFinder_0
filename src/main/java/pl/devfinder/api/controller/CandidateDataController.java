@@ -57,9 +57,9 @@ public class CandidateDataController {
         CandidateDetailsDTO candidateDetailsDTO = candidateDetailsMapper.map(candidateService.findById(candidateId));
         if (Objects.nonNull(candidateDetailsDTO.getPhotoFilename())) {
             String photoPath = "/user_data/" + candidateDetailsDTO.getCandidateUuid() + candidateDetailsDTO.getPhotoFilename();
-            model.addAttribute("photoDir", photoPath);
+            model.addAttribute("photoProfileDir", photoPath);
         } else {
-            model.addAttribute("photoDir", "/img/user.jpg");
+            model.addAttribute("photoProfileDir", "/img/user.jpg");
         }
         checkToShowFireCandidateButton(model, user, candidateDetailsDTO);
 

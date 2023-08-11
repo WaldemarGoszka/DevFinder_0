@@ -20,7 +20,6 @@ public class UserService {
     private final UserDAO userDAO;
     private final CandidateService candidateService;
     private final EmployerService employerService;
-    //private final EmailVerificationTokenService emailVerificationTokenService;
     private final EmailVerificationTokenDAO emailVerificationTokenDAO;
 
 
@@ -65,6 +64,8 @@ public class UserService {
     }
 
     public List<User> findAll() {
+        log.info("Process find all users");
+
         return userDAO.findAll();
     }
 
