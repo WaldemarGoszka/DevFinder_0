@@ -57,7 +57,7 @@ public class CandidateUserController {
         CandidateDetailsDTO candidateDetailsDTO = candidate.map(candidateDetailsMapper::map).orElseThrow();
 
         model.addAttribute("candidateDetailsDTO", candidateDetailsDTO);
-        model.addAttribute("downloadCvFilePath", "/user_data/" + candidate.get().getCandidateUuid() + candidate.get().getCvFilename());
+        model.addAttribute("downloadCvFilePath", Utility.getUserPhotoPath(candidate.get().getCandidateUuid(),candidate.get().getCvFilename()));
         return "candidate/profile";
     }
 
@@ -71,7 +71,7 @@ public class CandidateUserController {
         CandidateDetailsDTO candidateDetailsDTO = new CandidateDetailsDTO().withStatus(Keys.CandidateState.ACTIVE.getName());
         if (candidate.isPresent()) {
             log.info("Edit profile existing candidate id: [{}]", candidate.get().getCandidateId());
-            candidateDetailsDTO = candidate.map(candidateDetailsMapper::map).get();
+            candidateDetailsDTO = candidateDetailsMapper.map(candidate.get());
             model.addAttribute("candidateDetailsDTO", candidateDetailsDTO);
         } else {
             log.info("Edit profile new candidate");
@@ -164,7 +164,7 @@ public class CandidateUserController {
 
     private void setCandidatePhotoToModel(Model model, Optional<Candidate> candidate) {
         if (candidate.isPresent() && Objects.nonNull(candidate.get().getPhotoFilename())) {
-            String photoPath = "/user_data/" + candidate.get().getCandidateUuid() + candidate.get().getPhotoFilename();
+            String photoPath = Utility.getUserPhotoPath(candidate.get().getCandidateUuid(),candidate.get().getPhotoFilename());
             model.addAttribute("photoDir", photoPath);
         } else {
             model.addAttribute("photoDir", "/img/user.jpg");

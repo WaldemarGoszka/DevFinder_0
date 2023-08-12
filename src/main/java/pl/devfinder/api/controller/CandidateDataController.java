@@ -45,7 +45,7 @@ public class CandidateDataController {
 
 
     @GetMapping()
-    public String homePage(Model model) {
+    public String homePage() {
         return "candidate/portal";
     }
 
@@ -56,14 +56,14 @@ public class CandidateDataController {
 
         CandidateDetailsDTO candidateDetailsDTO = candidateDetailsMapper.map(candidateService.findById(candidateId));
         if (Objects.nonNull(candidateDetailsDTO.getPhotoFilename())) {
-            String photoPath = "/user_data/" + candidateDetailsDTO.getCandidateUuid() + candidateDetailsDTO.getPhotoFilename();
+            String photoPath = Utility.getUserPhotoPath(candidateDetailsDTO.getCandidateUuid(),candidateDetailsDTO.getPhotoFilename());
             model.addAttribute("photoProfileDir", photoPath);
         } else {
             model.addAttribute("photoProfileDir", "/img/user.jpg");
         }
         checkToShowFireCandidateButton(model, user, candidateDetailsDTO);
 
-        model.addAttribute("downloadCvFilePath", "/user_data/" + candidateDetailsDTO.getCandidateUuid() + candidateDetailsDTO.getCvFilename());
+        model.addAttribute("downloadCvFilePath", Utility.getUserPhotoPath(candidateDetailsDTO.getCandidateUuid(),candidateDetailsDTO.getCvFilename()));
 
         model.addAttribute("candidateDetailsDTO", candidateDetailsDTO);
         return "candidate_details";

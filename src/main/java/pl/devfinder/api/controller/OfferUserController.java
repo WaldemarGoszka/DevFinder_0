@@ -177,7 +177,7 @@ public class OfferUserController {
 
     private void setEmployerLogoToModel(Model model, Optional<Employer> employer) {
         if (employer.isPresent() && Objects.nonNull(employer.get().getLogoFilename())) {
-            String logoPath = "/user_data/" + employer.get().getEmployerUuid() + employer.get().getLogoFilename();
+            String logoPath = Utility.getUserPhotoPath(employer.get().getEmployerUuid(),employer.get().getLogoFilename());
             model.addAttribute("photoDir", logoPath);
         } else {
             model.addAttribute("photoDir", "/img/user.jpg");

@@ -3,9 +3,11 @@ package pl.devfinder.business;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import pl.devfinder.business.management.Utility;
 import pl.devfinder.domain.exception.FileUploadToProfileException;
 
 import java.io.File;
@@ -33,7 +35,17 @@ public class FileUploadService {
                 throw new RuntimeException(e);
             }
         }
-        return uploadPath + File.separator + uuid + filename;
+        return userDataPath + File.separator + uuid.replaceAll("-", "_") + filename;
+    }
+    public String getUploadDirBuild(String uuid, String filename) {
+        File savePath = null;
+        try {
+            Files.createDirectories(Paths.get("build/resources/main/static/user_data"));
+            savePath = new ClassPathResource("static/user_data").getFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return savePath + File.separator + uuid.replaceAll("-", "_") + filename;
     }
     public String saveFileToDisc(String uuid, MultipartFile file) {
 
@@ -44,6 +56,7 @@ public class FileUploadService {
             log.info("Process copy file to [{}] ", uploadDir);
 
             Files.copy(file.getInputStream(), Paths.get(uploadDir), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(file.getInputStream(), Paths.get(getUploadDirBuild(uuid,filename)), StandardCopyOption.REPLACE_EXISTING);
 
             return filename;
 

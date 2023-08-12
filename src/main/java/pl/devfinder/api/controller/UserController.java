@@ -14,6 +14,7 @@ import pl.devfinder.business.CandidateService;
 import pl.devfinder.business.EmployerService;
 import pl.devfinder.business.UserService;
 import pl.devfinder.business.management.Keys;
+import pl.devfinder.business.management.Utility;
 import pl.devfinder.domain.Candidate;
 import pl.devfinder.domain.Employer;
 import pl.devfinder.domain.User;
@@ -66,7 +67,7 @@ public class UserController {
             if (user.get().getRole().getRole().equals(Keys.Role.CANDIDATE.getName())) {
                 Optional<Candidate> candidate = candidateService.findByCandidateUuid(user.get().getUserUuid());
                 if (candidate.isPresent() && Objects.nonNull(candidate.get().getPhotoFilename())) {
-                    model.addAttribute("photoDir", "/user_data/" + candidate.get().getCandidateUuid() + candidate.get().getPhotoFilename());
+                    model.addAttribute("photoDir", Utility.getUserPhotoPath(candidate.get().getCandidateUuid(),candidate.get().getPhotoFilename()));
                 } else {
                     model.addAttribute("photoDir", "/img/user.jpg");
                 }
@@ -74,7 +75,7 @@ public class UserController {
             if (user.get().getRole().getRole().equals(Keys.Role.EMPLOYER.getName())) {
                 Optional<Employer> employer = employerService.findByEmployerUuid(user.get().getUserUuid());
                 if (employer.isPresent() && Objects.nonNull(employer.get().getLogoFilename())) {
-                    model.addAttribute("photoDir", "/user_data/" + employer.get().getEmployerUuid() + employer.get().getLogoFilename());
+                    model.addAttribute("photoDir", Utility.getUserPhotoPath(employer.get().getEmployerUuid(),employer.get().getLogoFilename()));
                 } else {
                     model.addAttribute("photoDir", "/img/user.jpg");
                 }
