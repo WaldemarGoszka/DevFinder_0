@@ -206,6 +206,7 @@ public class SecurityConfiguration {
                         "/candidates",
                         "/candidate/**",
                         "/user_data/**",
+                        "/user/**",
                         "/api/**")
                 .permitAll()
                 .requestMatchers(
@@ -241,18 +242,4 @@ public class SecurityConfiguration {
         return http.build();
     }
 
-//    @Bean
-//    public InMemoryUserDetailsManager userDetailsManager() {
-//        UserDetails employer = User
-//                .withUsername("employer")
-//                .password(passwordEncoder().encode("12345678"))
-//                .roles(Keys.Role.EMPLOYER.getName())
-//                .build();
-//        UserDetails candidate = User
-//                .withUsername("candidate")
-//                .password(passwordEncoder().encode("12345678"))
-//                .roles(Keys.Role.CANDIDATE.getName())
-//                .build();
-//        return new InMemoryUserDetailsManager(employer, candidate);
-//    }
 }

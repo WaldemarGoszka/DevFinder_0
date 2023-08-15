@@ -31,6 +31,11 @@
                         There is already an account registered with that email! <strong><a th:href="@{/login}">Click here to Log in</a></strong>
                     </div>
                 </div>
+                <div th:if="${param.delete_account_success}">
+                    <div class="alert alert-info">
+                        Your account has been successfully deleted
+                    </div>
+                </div>
                 <div th:if="${param.select_role}">
                     <div class="alert alert-info">
                         Select the role candidate or employer
@@ -121,8 +126,9 @@
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Sign Up</button>
-                        <p class="text-center mb-0">Already have an Account? <a href="/" th:href="@{/login}">Log in</a>
+                        <p class="text-center mb-4">Already have an Account? <a href="/" th:href="@{/login}">Log in</a>
                         </p>
+                        <a th:href="@{/}" class="btn btn-info w-100 mb-4">Back To Home Page</a>
                     </div>
                 </form>
             </div>

@@ -30,7 +30,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class OfferDataController {
     public static final String OFFERS_LIST = "/offers";
-    public static final String OFFER_DETAILS = "/offer";
+    public static final String OFFER_DETAILS = "/offer/{offerId}";
 
 
     private final UserService userService;
@@ -57,7 +57,7 @@ public class OfferDataController {
 
         return new ModelAndView("offers", offersListData);
     }
-    @GetMapping(value = OFFER_DETAILS + "/{offerId}")
+    @GetMapping(value = OFFER_DETAILS)
     public String getOfferDetails(@PathVariable Long offerId, Model model, Authentication authentication) {
         Optional<User> user = Utility.putUserDataToModel(authentication, userService, model);
         userController.setUserPhotoToModel(model, user);

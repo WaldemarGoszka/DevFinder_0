@@ -27,46 +27,123 @@
         <!-- Content Side Start -->
         <div class="container-fluid pt-4 px-4">
             <div class="row vh-100 bg-secondary rounded align-items-center justify-content-center mx-0">
-                <div class="col-md-6 text-center">
-                    <h3 sec:authorize="${!isAuthenticated()}">Log in for more content</h3>
-                    <h3 sec:authorize="${isAuthenticated()}">Instructions for users</h3>
-                    <!--                    TODO DELETE THIS IN PRODUCTION-->
-                    <br>
-
-                    <div>
-                        All
-                        <br>
-                        <a th:href="@{/offers}"><i></i>Find an Offers</a><br>
-                        <a th:href="@{/employers}"><i></i>Find an Employer</a><br>
-                        <a th:href="@{/candidates}"><i></i>Find a candidate</a><br>
-                        Candidate
-                        <br>
-                        <a th:href="@{/candidate_portal/applications}"><i></i>Your applications</a><br>
-                        <a th:href="@{/candidate/my_employer}"><i></i>My Employer</a><br>
-                        <br>
-                        Employer
-                        <br>
-                        <a th:href="@{/offers_of_employer/new_form}"><i></i>Post a new job</a><br>
-                        <a th:href="@{/offers_of_employer/offers}"><i></i>My Posted Offers</a><br>
-                        <a th:href="@{/employer_portal/employee}"><i></i>My Employee</a><br>
-                        <!--                       TODO DELETE THIS IN PRODUCTION -->
+                <div class="col-md-12">
+                    <div sec:authorize="${!isAuthenticated()}">
+                        <h2 class="mb-4">Ready to Join?</h2>
+                        <p class="lead">Whether you're an employer seeking top talent or a skilled programmer
+                            ready to take your career to the next level, our platform has you covered. Join us
+                            today and experience the following benefits:</p>
+                        <ul class="list-unstyled">
+                            <li><strong>Efficient Hiring Process:</strong> Connect with the right candidates or
+                                employers quickly and seamlessly.
+                            </li>
+                            <li><strong>Customized Searches:</strong> Tailor your search based on your specific
+                                criteria, whether it's skills, experience, or company culture.
+                            </li>
+                            <li><strong>Direct Communication:</strong> Engage in meaningful conversations with
+                                potential matches, all within the platform.
+                            </li>
+                            <li><strong>Showcase Your Profile:</strong> Candidates can highlight their skills,
+                                experiences, and accomplishments, while employers can showcase their company
+                                culture.
+                            </li>
+                            <li><strong>Post Job Offers:</strong> Employers can also post job offers to attract
+                                potential candidates directly to their open positions.
+                            </li>
+                            <li><strong>Stay Informed:</strong> Receive updates on new opportunities or
+                                potential candidates that match your preferences.
+                            </li>
+                        </ul>
+                        <p class="lead">Don't miss out on the potential of seamless recruitment and connections.
+                            Sign up today and take the next step towards your goals!</p>
+                    </div>
+                    <div sec:authorize="${isAuthenticated()}">
+                        <div sec:authorize="hasAuthority('EMPLOYER')">
+                            <h3>Welcome to our Recruitment Platform!</h3>
+                            <p class="lead">For Employers:</p>
+                            <p class="lead">Are you looking to find talented programmers to join your team?
+                                Look no further! Our platform provides you with the tools you need to
+                                streamline your hiring process and connect with the best candidates. Here's
+                                what you can do:</p>
+                            <ul class="list-unstyled">
+                                <li><strong>Create an Account:</strong> Represent your company on our
+                                    platform by creating an account. Set up your company profile and let
+                                    candidates know what you're all about.
+                                </li>
+                                <li><strong>Define Your Ideal Candidate:</strong> Tailor your search by
+                                    specifying the qualities you're looking for in a candidate. From
+                                    technical skills to soft skills, you can customize your criteria to find
+                                    the perfect match.
+                                </li>
+                                <li><strong>Browse Candidate Profiles:</strong> Our advanced search feature
+                                    allows you to explore candidate profiles based on your defined criteria.
+                                    Get an in-depth view of their skills, experience, and more.
+                                </li>
+                                <li><strong>Streamlined Communication:</strong> Reach out to candidates
+                                    directly through our platform. Easily manage your interactions and keep
+                                    track of your conversations, all in one place.
+                                </li>
+                                <li><strong>Mark Candidates as Hired:</strong> Once you've found the right
+                                    fit, mark the candidate as hired. This lets other companies know that
+                                    the candidate is no longer available, reducing unnecessary
+                                    communication.
+                                </li>
+                                <li><strong>Post Job Offers:</strong> Looking for the perfect candidate? Post your job offers on our
+                                    platform to attract potential candidates directly to your open positions.
+                                </li>
+                            </ul>
+                        </div>
+                        <div sec:authorize="hasAuthority('CANDIDATE')">
+                            <h3>Welcome to our Recruitment Platform!</h3>
+                            <p class="lead">For Candidates:</p>
+                            <p class="lead">Are you a skilled programmer looking for your next opportunity?
+                                You're in the right place! Our platform empowers you to showcase your
+                                talents and connect with companies that align with your goals. Here's what
+                                you can do:</p>
+                            <ul class="list-unstyled">
+                                <li><strong>Create Your Profile:</strong> Build your virtual CV by setting
+                                    up your profile. Highlight your skills, experiences, and accomplishments
+                                    to make a lasting impression.
+                                </li>
+                                <li><strong>Upload Your Photo and CV:</strong> Add a professional touch by
+                                    uploading your photo to your profile. Let your personality shine
+                                    through!
+                                </li>
+                                <li><strong>Search for Companies:</strong> Browse through a list of
+                                    companies actively seeking candidates like you. Filter your search based
+                                    on various criteria to find the right match.
+                                </li>
+                                <li><strong>Stay in Control:</strong> If you're not currently open to new
+                                    opportunities, you can easily mark your profile as "inactive." This
+                                    lets companies know that you're not actively looking, but your
+                                    information is still available for future reference.
+                                </li>
+                                <li><strong>Connect with Employers:</strong> Receive direct messages from
+                                    companies interested in your profile. Engage in meaningful conversations
+                                    and take the next step in your career journey.
+                                </li>
+                                <li><strong>Explore Job Offers:</strong> Browse through job offers posted by employers seeking candidates
+                                    like you. Find the opportunities that align with your career goals.
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-    <!-- Content Side End -->
+        <!-- Content Side End -->
 
-    <!-- Footer Start -->
-    <div th:replace="~{fragments :: footer}"></div>
-    <!-- Footer End -->
-</div>
-<!-- Content End -->
+        <!-- Footer Start -->
+        <div th:replace="~{fragments :: footer}"></div>
+        <!-- Footer End -->
+    </div>
+    <!-- Content End -->
 
-<!-- Back to Top -->
-<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 
-<div th:replace="~{fragments :: js}"></div>
+    <div th:replace="~{fragments :: js}"></div>
 
 </body>
 </html>

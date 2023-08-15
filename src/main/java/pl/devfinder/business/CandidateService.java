@@ -3,25 +3,16 @@ package pl.devfinder.business;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 import pl.devfinder.business.dao.CandidateDAO;
-import pl.devfinder.business.management.Keys;
 import pl.devfinder.domain.*;
 import pl.devfinder.domain.exception.FileUploadToProfileException;
 import pl.devfinder.domain.exception.NotFoundException;
 import pl.devfinder.domain.search.CandidateSearchCriteria;
 import pl.devfinder.infrastructure.database.repository.criteria.CandidateCriteriaRepository;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.OffsetDateTime;
 import java.util.*;
 
@@ -35,16 +26,8 @@ public class CandidateService {
     private final SkillService skillService;
     private final CandidateSkillService candidateSkillService;
     private final EmployerService employerService;
-
     private final FileUploadService fileUploadService;
     private final DataService dataService;
-
-
-//    public List<Candidate> findAllByState(Keys.CandidateState state) {
-//        List<Candidate> allAvailableCandidates = candidateDAO.findAllByState(state);
-//        log.info("Available Candidate amount: [{}]", allAvailableCandidates.size());
-//        return allAvailableCandidates;
-//    }
 
 
     public Page<Candidate> findAllByCriteria(CandidateSearchCriteria candidateSearchCriteria) {
@@ -63,12 +46,6 @@ public class CandidateService {
         return candidateDAO.findByCandidateUuid(uuid);
     }
 
-
-//    public void updateCustomer(Candidate candidate) {
-//        log.info("Update candidate nr: [{}]", candidate.getCandidateId());
-//        candidateDAO.save(candidate);
-//    }
-
     @Transactional
     public void updateCandidateProfile(CandidateUpdateRequest candidateUpdateRequest, Candidate candidate) {
         if (cityService.nonCityExist(candidateUpdateRequest.getResidenceCityName())) {
@@ -83,6 +60,10 @@ public class CandidateService {
         if (Objects.nonNull(candidateUpdateRequest.getCandidateSkillsNames())) {
             Set<CandidateSkill> candidateSkillToSave = buildCandidateSkills(updateCandidate, candidateUpdateRequest);
             candidateSkillService.saveAll(candidateSkillToSave);
+        }
+        if (dataService.countUsesOfCityName(candidate.getResidenceCityId().getCityName()) <= 1) {
+            log.info("City No Longer needed. Delete city : [{}]", candidate.getResidenceCityId().getCityName());
+            cityService.deleteByCityName(candidate.getResidenceCityId().getCityName());
         }
         candidateDAO.save(updateCandidate);
     }
@@ -200,10 +181,6 @@ public class CandidateService {
                         .build()));
         return candidateSkillToSave;
     }
-
-
-
-
 
     private String processUpdateCvFile(CandidateUpdateRequest candidateUpdateRequest, Candidate candidate) {
         if (!candidateUpdateRequest.getFileCv().isEmpty()) {

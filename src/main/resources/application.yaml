@@ -3,23 +3,14 @@ devfinder-conf:
   user-data-path : "src/main/resources/static/user_data/"
 
 server:
-  port: 8190
+  port: 8080
   servlet:
     context-path: /devfinder
-#log4j:
-#  logger:
-#    org:
-#      hibernate:
-#        SQL: DEBUG
-#        type: TRACE
 spring:
   jpa:
     hibernate:
       ddl-auto: validate
     show-sql: true
-#    properties:
-#      show_sql: true              # show SQL with Slf4j
-#      hibernate.format_sql: true  # show SQL pretty
   security:
     enabled: true
   datasource:
@@ -55,6 +46,3 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-
-
-

@@ -65,13 +65,13 @@
                                                     <input type="checkbox" class="btn-check" id="statusInactive"
                                                            th:value="${statusEnumInactive}"
                                                            th:name="status"
-                                                           th:checked="${statusChecked.contains(statusEnumExpired)}"
+                                                           th:checked="${statusChecked.contains(statusEnumInactive)}"
                                                            autocomplete="on">
                                                     <label class="btn btn-outline-light" for="statusInactive">[[${statusEnumInactive}]]</label>
                                                     <input type="checkbox" class="btn-check" id="statusEmployed"
                                                            th:value="${statusEnumEmployed}"
                                                            th:name="status"
-                                                           th:checked="${statusChecked.contains(statusEnumExpired)}"
+                                                           th:checked="${statusChecked.contains(statusEnumEmployed)}"
                                                            autocomplete="on">
                                                     <label class="btn btn-outline-light" for="statusEmployed">[[${statusEnumEmployed}]]</label>
                                                 </div>
@@ -152,7 +152,7 @@
                                             <div class="mb-4">
                                                 <h6 class="mb-3">Open To Remote Work</h6>
                                                 <div class="btn-group" role="group">
-                                                    <input type="radio" class="btn-check" id="remoteWorkYes"
+                                                    <input type="checkbox" class="btn-check" id="remoteWorkYes"
                                                            th:value="${remoteEnumYes}"
                                                            th:name="openToRemoteJob"
                                                            th:checked="${openToRemoteJobChecked.contains(remoteEnumYes)}"
@@ -254,7 +254,7 @@
                                 </button>
                             </div>
                             <!--                        END PAGINATION BAR-->
-
+                            <div class="mt-4">Click on a column head to sort. Click again to change the sorting direction</div>
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <thead>

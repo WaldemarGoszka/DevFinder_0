@@ -11,6 +11,7 @@ import org.hibernate.validator.constraints.Length;
 @EqualsAndHashCode(of = "id")
 @ToString(of = {"id", "userName", "email", "isEnabled", "roleId"})
 @Entity
+@With
 @Table(name = "devfinder_user")
 public class UserEntity {
 
@@ -34,7 +35,7 @@ public class UserEntity {
     @Column(name = "is_enabled", nullable = false)
     private Boolean isEnabled;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private RoleEntity roleId;
 

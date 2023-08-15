@@ -10,8 +10,6 @@ public interface Keys {
         ACTIVE("ACTIVE"),
         INACTIVE("INACTIVE"),
         EMPLOYED("EMPLOYED");
-//        EMPLOYED_BUT_SEEKING_NEXT_JOB("employed_but_seeking_next_job"),
-//        BANNED("banned");
 
         private final String name;
 

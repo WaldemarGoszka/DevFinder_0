@@ -1,6 +1,7 @@
 package pl.devfinder.api.dto;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.devfinder.domain.CandidateSkill;
@@ -21,8 +22,6 @@ public class CandidateDetailsDTO {
     String candidateUuid;
     String firstName;
     String lastName;
-    @Email
-    //TODO add validate other pool
     String emailContact;
     String phoneNumber;
     OffsetDateTime createdAt;

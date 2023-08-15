@@ -22,6 +22,10 @@ import java.util.Optional;
 public class IndexController {
 
     static final String INDEX = "/";
+    public static final String ERROR_403 = "/403";
+    public static final String ERROR_404 = "/404";
+    public static final String LOGIN_PAGE = "/login";
+
 
     private final UserService userService;
     private final UserController userController;
@@ -34,24 +38,19 @@ public class IndexController {
         return "index";
     }
 
-
-
-    //    @GetMapping("/index")
-//    public String homePage2() {
-//        return "index";
-//    }
-//    @GetMapping("/logout")
-//    public String logout() {
-//        return "redirect:/login?logout";
-//    }
-    @GetMapping("/403")
+    @GetMapping(ERROR_403)
     public String error403() {
         return "403";
     }
 
-    @GetMapping("/404")
+    @GetMapping(ERROR_404)
     public String error404() {
         return "404";
+    }
+
+    @GetMapping(LOGIN_PAGE)
+    public String getLoginPage(){
+        return "login";
     }
 
 }

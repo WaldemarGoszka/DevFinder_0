@@ -61,6 +61,7 @@ public class CandidateUserController {
         return "candidate/profile";
     }
 
+
     @GetMapping(value = CANDIDATE_EDIT_PROFILE)
     public String getCandidateEditProfile(Model model, Authentication authentication) {
         User user = Utility.putUserDataToModel(authentication, userService, model)
@@ -78,11 +79,9 @@ public class CandidateUserController {
             model.addAttribute("candidateDetailsDTO", candidateDetailsDTO);
         }
 
-//        model.addAttribute("candidateDetailsDTO", candidateDetailsDTO);
-
         model.addAttribute("statusChecked", candidateDetailsDTO.getStatus());
 
-//Enums
+
         model.addAttribute("statusEnumActive", Keys.CandidateState.ACTIVE.getName());
         model.addAttribute("statusEnumInactive", Keys.CandidateState.INACTIVE.getName());
         model.addAttribute("statusEnumEmployed", Keys.CandidateState.EMPLOYED.getName());
@@ -128,12 +127,8 @@ public class CandidateUserController {
 
     @PostMapping(value = CANDIDATE_UPDATE_PROFILE)
     public String updateCandidateProfile(@Valid @ModelAttribute("candidateRequestDTO") CandidateUpdateRequestDTO candidateUpdateRequestDTO,
-                                         BindingResult bindingResult,
                                          Model model,
                                          Authentication authentication) {
-        if (bindingResult.hasErrors()) {
-            return "error";
-        }
         User user = Utility.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Optional<Candidate> candidate = candidateService.findByCandidateUuid(user.getUserUuid());

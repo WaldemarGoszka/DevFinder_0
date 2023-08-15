@@ -31,13 +31,7 @@ public class UserDetailsServiceCustom implements UserDetailsService {
         Optional<User> user = userService.findByEmail(email);
         if (user.isPresent()) {
             log.info("Building UserDetailCustom: [{}]", user);
-            //TODO srwdzić czy tutaj nie można zwrócić obiektu UserDetailCustom który jest zdefiniowany w paczce configuration
             return new UserDetailsCustom(user.get());
-
-//            return new org.springframework.security.core.userdetails.User(
-//                    user.getEmail(),
-//                    user.getPassword(),
-//                    List.of(new SimpleGrantedAuthority(user.getRole().getRole())));
         } else {
             throw new UsernameNotFoundException("Invalid username or password.");
         }

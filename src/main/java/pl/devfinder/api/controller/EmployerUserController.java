@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import pl.devfinder.api.dto.*;
 import pl.devfinder.api.dto.mapper.*;
 import pl.devfinder.business.*;
@@ -21,16 +22,17 @@ import pl.devfinder.domain.User;
 import pl.devfinder.domain.exception.NotFoundException;
 import pl.devfinder.domain.search.CandidateSearchCriteria;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+
+import static pl.devfinder.api.controller.EmployerUserController.EMPLOYER_BASE_PATH;
 
 @Slf4j
 @Controller
 @AllArgsConstructor
-@RequestMapping("/employer_portal")
+@RequestMapping(EMPLOYER_BASE_PATH)
 public class EmployerUserController {
+
+    public static final String EMPLOYER_BASE_PATH = "/employer_portal";
     public static final String EMPLOYER_PROFILE = "/profile";
     public static final String EMPLOYER_EDIT_PROFILE = "/edit_profile";
     public static final String EMPLOYER_UPDATE_PROFILE = "/update";
@@ -52,59 +54,28 @@ public class EmployerUserController {
     private final SkillMapper skillMapper;
 
     @GetMapping(value = EMPLOYER_EMPLOYEES)
-    public String getEmployeesList(
+    public ModelAndView getEmployeesList(
             CandidateSearchCriteria candidateSearchCriteria,
             Model model,
             Authentication authentication) {
         User user = Utility.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Optional<Employer> employerOptional = employerService.findByEmployerUuid(user.getUserUuid());
-        if(employerOptional.isEmpty()){
-            return "redirect:../employer_portal/edit_profile?first_create_profile";
+        if (employerOptional.isEmpty()) {
+            return new ModelAndView("redirect:../employer_portal/edit_profile?first_create_profile");
         }
         Employer employer = employerOptional.orElseThrow(() -> new NotFoundException("Could not find employer by uuid"));
         setEmployerLogoToModel(model, employerOptional);
 
+        setFilterToGetEmployedCandidateInThatCompany(candidateSearchCriteria, employer);
+
+        Map<String, ?> employeeListData = prepareEmployeeListData(candidateSearchCriteria);
+
+        return new ModelAndView("employer/employees", employeeListData);
+    }
+
+    private static void setFilterToGetEmployedCandidateInThatCompany(CandidateSearchCriteria candidateSearchCriteria, Employer employer) {
         candidateSearchCriteria.setEmployer(employer.getCompanyName());
-        //candidateSearchCriteria.setStatus(new ArrayList<>());
-        Page<CandidateRowDTO> page = candidateService.findAllByCriteria(candidateSearchCriteria).map(candidateRowMapper::map);
-        List<CandidateRowDTO> allCandidates = page.getContent();
-
-//Pagination Bar
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalItems", page.getTotalElements());
-
-//Check selected for filters
-        model.addAttribute("experienceLevelChecked", candidateSearchCriteria.getExperienceLevels());
-        model.addAttribute("skillChecked", candidateSearchCriteria.getSkills());
-        model.addAttribute("cityChecked", candidateSearchCriteria.getCity());
-        model.addAttribute("minYearsOfExperienceChecked", candidateSearchCriteria.getMinYearsOfExperience());
-        model.addAttribute("openToRemoteJobChecked", candidateSearchCriteria.getOpenToRemoteJob());
-        model.addAttribute("statusChecked", candidateSearchCriteria.getStatus());
-
-//Enums for filters
-        model.addAttribute("expLevelEnumJunior", Keys.Experience.JUNIOR.getName());
-        model.addAttribute("expLevelEnumMid", Keys.Experience.MID.getName());
-        model.addAttribute("expLevelEnumSenior", Keys.Experience.SENIOR.getName());
-        model.addAttribute("statusEnumActive", Keys.CandidateState.ACTIVE.getName());
-        model.addAttribute("statusEnumInactive", Keys.CandidateState.INACTIVE.getName());
-        model.addAttribute("statusEnumEmployed", Keys.CandidateState.EMPLOYED.getName());
-        model.addAttribute("remoteEnumYes", Keys.CandidateFilterBy.YES.getName());
-        model.addAttribute("remoteEnumNo", Keys.CandidateFilterBy.NO.getName());
-
-//List for filters
-        List<SkillDTO> allSkills = skillService.findAll().stream().map(skillMapper::map).toList();
-        List<CityDTO> allCity = cityService.findAll().stream().map(cityMapper::map).toList();
-        model.addAttribute("allSkillsDTOs", allSkills);
-        model.addAttribute("allCityDTOs", allCity);
-//Sorting
-        model.addAttribute("sortBy", candidateSearchCriteria.getSortBy());
-        model.addAttribute("sortDirection", candidateSearchCriteria.getSortDirection());
-        model.addAttribute("reverseSortDirection", candidateSearchCriteria.getSortDirection()
-                .equals(Sort.Direction.ASC) ? Sort.Direction.DESC : Sort.Direction.ASC);
-
-        model.addAttribute("allCandidatesDTOs", allCandidates);
-        return "employer/employees";
     }
 
     @PutMapping(value = EMPLOYER_HIRE_CANDIDATE)
@@ -119,6 +90,7 @@ public class EmployerUserController {
         employerService.hireCandidate(employer, Long.valueOf(candidateId));
         return "redirect:../employee?hire";
     }
+
     @PutMapping(value = EMPLOYER_FIRE_CANDIDATE)
     public String fireCandidate(@PathVariable String candidateId,
                                 Model model,
@@ -133,18 +105,24 @@ public class EmployerUserController {
 
     @GetMapping(value = EMPLOYER_PROFILE)
     public String getEmployerProfile(Model model, Authentication authentication) {
-        User user = Utility.putUserDataToModel(authentication, userService, model)
-                .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
-        Optional<Employer> employer = employerService.findByEmployerUuid(user.getUserUuid());
-        setEmployerLogoToModel(model, employer);
+//        User user = Utility.putUserDataToModel(authentication, userService, model)
+//                .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
 
-        if (employer.isEmpty()) {
-            return "redirect:edit_profile?new";
+        if (authentication != null) {
+            User user = userService.findByEmail(authentication.getName())
+                    .orElseThrow(() -> new NotFoundException("Could not find user by email"+ authentication.getName()));
+            model.addAttribute("user", user);
+            Optional<Employer> employer = employerService.findByEmployerUuid(user.getUserUuid());
+            setEmployerLogoToModel(model, employer);
+            if (employer.isEmpty()) {
+                return "redirect:edit_profile?new";
+            }
+            EmployerDetailsDTO employerDetailsDTO = employer.map(employerDetailsMapper::map).orElseThrow();
+            model.addAttribute("employerDetailsDTO", employerDetailsDTO);
+            return "employer/profile";
+        } else {
+            throw new NotFoundException("Authentication failed");
         }
-
-        EmployerDetailsDTO employerDetailsDTO = employer.map(employerDetailsMapper::map).orElseThrow();
-        model.addAttribute("employerDetailsDTO", employerDetailsDTO);
-        return "employer/profile";
     }
 
     @GetMapping(value = EMPLOYER_EDIT_PROFILE)
@@ -172,12 +150,8 @@ public class EmployerUserController {
 
     @PostMapping(value = EMPLOYER_UPDATE_PROFILE)
     public String updateEmployerProfile(@Valid @ModelAttribute EmployerUpdateRequestDTO employerUpdateRequestDTO,
-                                        BindingResult bindingResult,
                                         Model model,
                                         Authentication authentication) {
-        if (bindingResult.hasErrors()) {
-            return "error";
-        }
         User user = Utility.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Optional<Employer> employer = employerService.findByEmployerUuid(user.getUserUuid());
@@ -220,10 +194,50 @@ public class EmployerUserController {
 
     private void setEmployerLogoToModel(Model model, Optional<Employer> employer) {
         if (employer.isPresent() && Objects.nonNull(employer.get().getLogoFilename())) {
-            String logoPath = Utility.getUserPhotoPath(employer.get().getEmployerUuid(),employer.get().getLogoFilename());
+            String logoPath = Utility.getUserPhotoPath(employer.get().getEmployerUuid(), employer.get().getLogoFilename());
             model.addAttribute("photoDir", logoPath);
         } else {
             model.addAttribute("photoDir", "/img/user.jpg");
         }
+    }
+
+
+    private Map<String, ?> prepareEmployeeListData(CandidateSearchCriteria candidateSearchCriteria) {
+        Map<String, Object> model = new HashMap<>();
+        Page<CandidateRowDTO> page = candidateService.findAllByCriteria(candidateSearchCriteria).map(candidateRowMapper::map);
+        List<CandidateRowDTO> allCandidates = page.getContent();
+
+        model.put("totalPages", page.getTotalPages());
+        model.put("totalItems", page.getTotalElements());
+
+        model.put("experienceLevelChecked", candidateSearchCriteria.getExperienceLevels());
+        model.put("skillChecked", candidateSearchCriteria.getSkills());
+        model.put("cityChecked", candidateSearchCriteria.getCity());
+        model.put("minYearsOfExperienceChecked", candidateSearchCriteria.getMinYearsOfExperience());
+        model.put("openToRemoteJobChecked", candidateSearchCriteria.getOpenToRemoteJob());
+        model.put("statusChecked", candidateSearchCriteria.getStatus());
+
+        model.put("expLevelEnumJunior", Keys.Experience.JUNIOR.getName());
+        model.put("expLevelEnumMid", Keys.Experience.MID.getName());
+        model.put("expLevelEnumSenior", Keys.Experience.SENIOR.getName());
+        model.put("statusEnumActive", Keys.CandidateState.ACTIVE.getName());
+        model.put("statusEnumInactive", Keys.CandidateState.INACTIVE.getName());
+        model.put("statusEnumEmployed", Keys.CandidateState.EMPLOYED.getName());
+        model.put("remoteEnumYes", Keys.CandidateFilterBy.YES.getName());
+        model.put("remoteEnumNo", Keys.CandidateFilterBy.NO.getName());
+
+        List<SkillDTO> allSkills = skillService.findAll().stream().map(skillMapper::map).toList();
+        List<CityDTO> allCity = cityService.findAll().stream().map(cityMapper::map).toList();
+        model.put("allSkillsDTOs", allSkills);
+        model.put("allCityDTOs", allCity);
+
+        model.put("sortBy", candidateSearchCriteria.getSortBy());
+        model.put("sortDirection", candidateSearchCriteria.getSortDirection());
+        model.put("reverseSortDirection", candidateSearchCriteria.getSortDirection()
+                .equals(Sort.Direction.ASC) ? Sort.Direction.DESC : Sort.Direction.ASC);
+
+        model.put("allCandidatesDTOs", allCandidates);
+
+        return model;
     }
 }

@@ -22,7 +22,6 @@ public class UserRepository implements UserDAO {
     public Optional<User> findByEmail(String email) {
         return userJpaRepository.findByEmail(email)
                 .map(userEntityMapper::mapFromEntity);
-
     }
 
     @Override
@@ -34,7 +33,7 @@ public class UserRepository implements UserDAO {
     public User save(User user) {
         log.info("Process save user: [{}]", user);
         UserEntity userEntity = userEntityMapper.mapToEntity(user);
-        return userEntityMapper.mapFromEntity(userJpaRepository.save(userEntity));
+        return userEntityMapper.mapFromEntity(userJpaRepository.saveAndFlush(userEntity));
     }
 
     @Override

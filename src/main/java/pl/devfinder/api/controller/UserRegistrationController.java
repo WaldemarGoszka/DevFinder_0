@@ -32,6 +32,13 @@ import java.util.Optional;
 @RequestMapping("/register")
 public class UserRegistrationController {
 
+    public static final String REGISTER_PAGE = "/register_page";
+    public static final String SAVE = "/save";
+    public static final String VERIFY_EMAIL = "/verify_email";
+    public static final String FORGOT_PASSWORD_FORM = "/forgot_password_form";
+    public static final String FORGOT_PASSWORD_REQUEST = "/forgot-password";
+    public static final String PASSWORD_RESET_FORM = "/password_reset_form";
+    public static final String RESET_PASSWORD_REQUEST = "/reset_password";
     private final UserService userService;
     private final UserMapper userMapper;
     private final ApplicationEventPublisher applicationEventPublisher;
@@ -41,7 +48,7 @@ public class UserRegistrationController {
     private final Environment environment;
 
 
-    @GetMapping("/register_page")
+    @GetMapping(REGISTER_PAGE)
     public String getRegistrationPage(Model model) {
         model.addAttribute("user", new UserDTO());
         model.addAttribute("candidateEnum", Keys.Role.CANDIDATE.getName());
@@ -53,9 +60,9 @@ public class UserRegistrationController {
         return "register";
     }
 
-    @PostMapping("/save")
-    public String postRegistrationPage(@Valid @ModelAttribute("user") UserDTO userDTO,
-                                       Model model, HttpServletRequest request) {
+    @PostMapping(SAVE)
+    public String userRegister(@Valid @ModelAttribute("user") UserDTO userDTO,
+                               Model model, HttpServletRequest request) {
         Boolean enableEmailVerification = environment.getProperty("devfinder-conf.enable-email-verification", Boolean.class);
         model.addAttribute("enableEmailVerification", enableEmailVerification);
         try {
@@ -64,7 +71,7 @@ public class UserRegistrationController {
                 log.warn("User already registered with this email, userDTO: [{}]", userDTO);
                 return "redirect:/register/register_page?email_already_registered";
             }
-            if (Objects.isNull(userDTO.getRole())) {
+            if (checkIfUserSelectedRole(userDTO)) {
                 log.error("The user has not selected a role");
                 return "redirect:/register/register_page?select_role";
             }
@@ -84,7 +91,11 @@ public class UserRegistrationController {
         }
     }
 
-    @GetMapping("/verify_email")
+    private static boolean checkIfUserSelectedRole(UserDTO userDTO) {
+        return Objects.isNull(userDTO.getRole());
+    }
+
+    @GetMapping(VERIFY_EMAIL)
     public String verifyEmail(@RequestParam("token") String token) {
         Optional<EmailVerificationToken> emailVerificationToken = emailVerificationTokenService.findByToken(token);
         if (emailVerificationToken.isPresent() && emailVerificationToken.get().getUser().getIsEnabled()) {
@@ -101,12 +112,12 @@ public class UserRegistrationController {
         return "error";
     }
 
-    @GetMapping("/forgot_password_form")
+    @GetMapping(FORGOT_PASSWORD_FORM)
     public String forgotPasswordForm() {
         return "forgot_password_form";
     }
 
-    @PostMapping("/forgot-password")
+    @PostMapping(FORGOT_PASSWORD_REQUEST)
     public String resetPasswordRequest(HttpServletRequest request, Model model) {
         String email = request.getParameter("email");
         log.info("Forgot password request from [{}]", email);
@@ -122,13 +133,13 @@ public class UserRegistrationController {
         return "redirect:/register/forgot_password_form?not_fond";
     }
 
-    @GetMapping("/password_reset_form")
+    @GetMapping(PASSWORD_RESET_FORM)
     public String passwordResetForm(@RequestParam("token") String token, Model model) {
         model.addAttribute("token", token);
         return "password_reset_form";
     }
 
-    @PostMapping("/reset_password")
+    @PostMapping(RESET_PASSWORD_REQUEST)
     public String resetPassword(HttpServletRequest request) {
         String token = request.getParameter("token");
         String password = request.getParameter("password");

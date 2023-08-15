@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import pl.devfinder.api.controller.exception.UserAlreadyExistsException;
 import pl.devfinder.api.dto.ExceptionMessage;
 import pl.devfinder.domain.exception.NotFoundException;
 
@@ -26,19 +27,20 @@ import java.util.UUID;
 public class GlobalExceptionRestHandler extends ResponseEntityExceptionHandler {
 
     private static final Map<Class<?>, HttpStatus> EXCEPTION_STATUS = Map.of(
-        ConstraintViolationException.class, HttpStatus.BAD_REQUEST,
-        DataIntegrityViolationException.class, HttpStatus.BAD_REQUEST,
-        EntityNotFoundException.class, HttpStatus.NOT_FOUND,
-        NotFoundException.class, HttpStatus.NOT_FOUND
+            ConstraintViolationException.class, HttpStatus.BAD_REQUEST,
+            DataIntegrityViolationException.class, HttpStatus.BAD_REQUEST,
+            EntityNotFoundException.class, HttpStatus.NOT_FOUND,
+            NotFoundException.class, HttpStatus.NOT_FOUND,
+            UserAlreadyExistsException.class, HttpStatus.BAD_REQUEST
     );
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(
-        @NonNull Exception exception,
-        @Nullable Object body,
-        @NonNull HttpHeaders headers,
-        @NonNull HttpStatusCode statusCode,
-        @NonNull WebRequest request
+            @NonNull Exception exception,
+            @Nullable Object body,
+            @NonNull HttpHeaders headers,
+            @NonNull HttpStatusCode statusCode,
+            @NonNull WebRequest request
     ) {
         final String errorId = UUID.randomUUID().toString();
         log.error("Exception: ID={}, HttpStatus={}", errorId, statusCode, exception);
@@ -55,9 +57,9 @@ public class GlobalExceptionRestHandler extends ResponseEntityExceptionHandler {
         log.error("Exception: ID={}, HttpStatus={}", errorId, status, exception);
 
         return ResponseEntity
-            .status(status)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(ExceptionMessage.of(errorId));
+                .status(status)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ExceptionMessage.of(errorId));
     }
 
     public HttpStatus getHttpStatusFromException(final Class<?> exception) {

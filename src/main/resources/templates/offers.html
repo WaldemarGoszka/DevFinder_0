@@ -250,7 +250,7 @@
                                         class="btn btn-outline-link ml-3" type="button">
                                     Previous
                                 </button>
-                                <div class="btn-group me-2 " role="group">
+                                <div class="btn-group me-2" role="group">
                                     <span th:each="page: ${#numbers.sequence(1, totalPages)}">
                                         <a th:if="${offerSearchCriteria.pageNumber != page}">
                                             <button th:class="${offerSearchCriteria.pageNumber != page} ? 'btn btn-secondary' : ''"
@@ -271,6 +271,8 @@
                                 </button>
                             </div>
                             <!--                        END PAGINATION BAR-->
+
+                            <div class="mt-4">Click on a column head to sort. Click again to change the sorting direction</div>
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <thead>

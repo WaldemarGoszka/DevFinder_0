@@ -20,7 +20,7 @@ public class SkillRepository implements SkillDAO {
 
     @Override
     public List<Skill> findAll() {
-        return skillJpaRepository.findAll().stream().map(skillEntityMapper::mapFromEntity).toList();
+        return skillJpaRepository.findAllByOrderBySkillName().stream().map(skillEntityMapper::mapFromEntity).toList();
     }
 
     @Override

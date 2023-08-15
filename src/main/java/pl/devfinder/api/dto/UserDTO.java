@@ -11,17 +11,16 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
-    @Size(max = 32)
+    @Size(max = 32, message = "User name too long, max 32 chars")
     @NotEmpty(message = "User Name should not be empty")
     private String userName;
     private String userUuid;
     @NotEmpty(message = "Email should not be empty")
     @Email
-    @Size(max = 32)
+    @Size(max = 32, message = "Email too long, max 32 chars")
     private String email;
-    //    @Size(min = 8)
     @NotEmpty(message = "Password should not be empty")
-    @Size(max = 32, message = "Invalid password")
+    @Size(max = 32, message = "Password too long, max 32 chars")
     private String password;
     private Boolean isEnabled;
     @NotEmpty

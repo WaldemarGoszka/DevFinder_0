@@ -16,7 +16,7 @@ public class OfferSearchCriteria {
     List<String> remoteWork = new ArrayList<>();
     BigDecimal salaryMin;
     List<String> salary = new ArrayList<>();
-    List<String> status = new ArrayList<>(List.of(Keys.OfferState.ACTIVE.getName()));
+    List<String> status = new ArrayList<>();
     String city;
     String employer;
     List<String> skills = new ArrayList<>();

@@ -82,7 +82,6 @@ public class OfferService {
         }
         City city = cityService.findByCityName(offerUpdateRequest.getCityName()).orElseThrow();
 
-//        validateIfSkillsExist(offerUpdateRequest.getCandidateSkillsNames());
         offerSkillService.deleteAllByOffer(offer);
 
         Offer updateOffer = buildUpdatedOffer(offerUpdateRequest, city, offer);
@@ -91,6 +90,10 @@ public class OfferService {
             offerSkillService.saveAll(offerSkillToSave);
         }
 
+        if (dataService.countUsesOfCityName(offer.getCityId().getCityName()) <= 1) {
+            log.info("City No Longer needed. Delete city : [{}]", offer.getCityId().getCityName());
+            cityService.deleteByCityName(offer.getCityId().getCityName());
+        }
         offerDAO.save(updateOffer);
     }
 
@@ -126,14 +129,11 @@ public class OfferService {
     }
 
     @Transactional
-
     public void createNewOffer(OfferUpdateRequest offerUpdateRequest, Employer employer) {
         if (cityService.nonCityExist(offerUpdateRequest.getCityName())) {
             cityService.save(offerUpdateRequest.getCityName());
         }
         City city = cityService.findByCityName(offerUpdateRequest.getCityName()).orElseThrow();
-
-//        validateIfSkillsExist(offerUpdateRequest.getCandidateSkillsNames());
 
         Offer createNewOffer = buildNewOffer(offerUpdateRequest, employer, city);
         Offer savedOffer = offerDAO.save(createNewOffer);

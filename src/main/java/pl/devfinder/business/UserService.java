@@ -7,34 +7,36 @@ import org.springframework.stereotype.Service;
 import pl.devfinder.business.dao.EmailVerificationTokenDAO;
 import pl.devfinder.business.dao.UserDAO;
 import pl.devfinder.business.management.Keys;
+import pl.devfinder.domain.Candidate;
+import pl.devfinder.domain.Employer;
 import pl.devfinder.domain.User;
 import pl.devfinder.domain.exception.NotFoundException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+
 @Slf4j
 @Service
 @AllArgsConstructor
 public class UserService {
 
     private final UserDAO userDAO;
+    private final EmailVerificationTokenDAO emailVerificationTokenDAO;
     private final CandidateService candidateService;
     private final EmployerService employerService;
-    private final EmailVerificationTokenDAO emailVerificationTokenDAO;
 
 
     @Transactional
     public Optional<User> findByEmail(String email) {
         log.info("Process find user by email: [{}]", email);
-        Optional<User> user = userDAO.findByEmail(email);
-        return user;//.orElseThrow(() -> new NotFoundException("Could not find user by email: [%s]".formatted(email)));
+        return userDAO.findByEmail(email);
     }
 
     @Transactional
     public Optional<User> findByUserName(String userName) {
         log.info("Process find user by userName: [{}]", userName);
-        Optional<User> user = userDAO.findByUserName(userName);
-        return user;//.orElseThrow(() -> new NotFoundException("Could not find user by userName: [%s]".formatted(userName)));
+        return userDAO.findByUserName(userName);
     }
 
     @Transactional
@@ -44,11 +46,18 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUserById(Long userId) {
-        log.info("Process delete user By Id : [{}]", userId);
-        Optional<User> user1 = userDAO.findById(userId);
-        user1.ifPresent(user -> emailVerificationTokenDAO.deleteByUserId(user.getId()));
-        userDAO.deleteById(userId);
+    public void deleteUser(User user) {
+        log.info("Process delete user By Id : [{}]", user.getId());
+        emailVerificationTokenDAO.deleteByUserId(user.getId());
+        if (user.getRole().getRole().equals(Keys.Role.CANDIDATE.getName())) {
+            Optional<Candidate> candidate = candidateService.findByCandidateUuid(user.getUserUuid());
+            candidate.ifPresent(value -> candidateService.deleteCandidateProfile(value.getCandidateId()));
+        }
+        if (user.getRole().getRole().equals(Keys.Role.EMPLOYER.getName())) {
+            Optional<Employer> employer = employerService.findByEmployerUuid(user.getUserUuid());
+            employer.ifPresent(value -> employerService.deleteEmployerProfile(value.getEmployerId()));
+        }
+        userDAO.deleteById(user.getId());
     }
 
     @Transactional
@@ -68,27 +77,4 @@ public class UserService {
 
         return userDAO.findAll();
     }
-
-
-    // Optional<User> findByUUID(Long id);
-
-
-//    @Override
-//    public List<UserDto> findAllUsers() {
-//        List<User> users = userRepository.findAll();
-//        return users.stream()
-//                .map((user) -> mapToUserDto(user))
-//                .collect(Collectors.toList());
-//    }
-
-//    private UserDto mapToUserDto(User user){
-//        UserDto userDto = new UserDto();
-//        String[] str = user.getName().split(" ");
-//        userDto.setFirstName(str[0]);
-//        userDto.setLastName(str[1]);
-//        userDto.setEmail(user.getEmail());
-//        return userDto;
-//    }
-
-
 }

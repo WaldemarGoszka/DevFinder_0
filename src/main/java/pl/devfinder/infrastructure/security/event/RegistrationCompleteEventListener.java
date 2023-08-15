@@ -4,7 +4,6 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
-import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -17,6 +16,7 @@ import java.io.UnsupportedEncodingException;
 @Component
 @RequiredArgsConstructor
 public class RegistrationCompleteEventListener implements ApplicationListener<RegistrationCompleteEvent> {
+    public static final String APPLICATION_MAIL = "devfinder.service@gmail.com";
     private final EmailVerificationTokenService emailVerificationTokenService;
     private final JavaMailSender javaMailSender;
     private User user;
@@ -25,15 +25,10 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
 
     @Override
     public void onApplicationEvent(RegistrationCompleteEvent registrationCompleteEvent) {
-        //1. get the user
         user = registrationCompleteEvent.getUser();
-        //2. generate a token for the user
         String token = Utility.generateUUID();
-        //3. save the token for the user
         emailVerificationTokenService.saveVerificationTokenForUser(user, token);
-        //4. Build the verification url
         String url = registrationCompleteEvent.getConfirmationUrl()+"/register/verify_email?token="+token;
-        //5. send the email to the user
         try {
             sendVerificationEmail(url);
         } catch (MessagingException | UnsupportedEncodingException e) {
@@ -68,10 +63,7 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
             throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(message);
-        //TODO zamiast maila wykożystać klasę Environment i pobrać z konfiguracji maila
-        //TODO zahasłować hasło do maila w application.yaml
-//        environment.getProperty("devfinder-conf.disable-email-verification", Boolean.class)
-        messageHelper.setFrom("devfinder.service@gmail.com", senderName);
+        messageHelper.setFrom(APPLICATION_MAIL, senderName);
         messageHelper.setTo(user.getEmail());
         messageHelper.setSubject(subject);
         messageHelper.setText(mailContent, true);

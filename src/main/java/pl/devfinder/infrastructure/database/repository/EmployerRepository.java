@@ -20,7 +20,7 @@ public class EmployerRepository implements EmployerDAO {
 
     @Override
     public List<Employer> findAll() {
-        return employerJpaRepository.findAll().stream()
+        return employerJpaRepository.findAllByOrderByCompanyName().stream()
                 .map(employerEntityMapper::mapFromEntity)
                 .toList();
     }

@@ -114,6 +114,10 @@ public class EmployerService {
 
         Employer updateEmployer = buildUpdatedEmployer(employerUpdateRequest, employer, city);
 
+        if (dataService.countUsesOfCityName(employer.getCityId().getCityName()) <= 1) {
+            log.info("City No Longer needed. Delete city : [{}]", employer.getCityId().getCityName());
+            cityService.deleteByCityName(employer.getCityId().getCityName());
+        }
         employerDAO.save(updateEmployer);
     }
 

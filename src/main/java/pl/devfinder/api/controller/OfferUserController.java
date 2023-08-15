@@ -33,10 +33,10 @@ public class OfferUserController {
     public static final String OFFERS_LIST = "/offers";
     public static final String OFFER_NEW_FORM = "/new_form";
     public static final String OFFER_CREATE_NEW = "/new";
-    public static final String OFFER_DETAILS = "/offer";
-    public static final String OFFER_EDIT_FORM = "/edit";
+    public static final String OFFER_DETAILS = "/offer/{offerId}";
+    public static final String OFFER_EDIT_FORM = "/edit/{offerId}";
     public static final String OFFER_UPDATE = "/update";
-    public static final String OFFER_DELETE = "/delete";
+    public static final String OFFER_DELETE = "/delete/{offerId}";
 
     private final UserService userService;
     private final EmployerService employerService;
@@ -68,7 +68,7 @@ public class OfferUserController {
         return new ModelAndView("employer/offers", offersListData);
     }
 
-    @GetMapping(value = OFFER_DETAILS + "/{offerId}")
+    @GetMapping(value = OFFER_DETAILS)
     public String getOfferDetailsToEmployer(@PathVariable Long offerId, Model model, Authentication authentication) {
         User user = Utility.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
@@ -84,7 +84,7 @@ public class OfferUserController {
         return "employer/offer_details";
     }
 
-    @GetMapping(value = OFFER_EDIT_FORM + "/{offerId}")
+    @GetMapping(value = OFFER_EDIT_FORM)
     public String getOfferEditForm(@PathVariable Long offerId, Model model, Authentication authentication) {
         User user = Utility.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
@@ -118,12 +118,8 @@ public class OfferUserController {
 
     @PutMapping(value = OFFER_UPDATE)
     public String updateOfferRequest(@Valid @ModelAttribute OfferUpdateRequestDTO offerUpdateRequestDTO,
-                                     BindingResult bindingResult,
                                      Model model,
                                      Authentication authentication) {
-        if (bindingResult.hasErrors()) {
-            return "error";
-        }
         User user = Utility.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Optional<Employer> employerOptional = employerService.findByEmployerUuid(user.getUserUuid());
@@ -140,12 +136,8 @@ public class OfferUserController {
 
     @PostMapping(value = OFFER_CREATE_NEW)
     public String createNewOfferRequest(@Valid @ModelAttribute OfferUpdateRequestDTO offerUpdateRequestDTO,
-                                        BindingResult bindingResult,
                                         Model model,
                                         Authentication authentication) {
-        if (bindingResult.hasErrors()) {
-            return "error";
-        }
         User user = Utility.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Optional<Employer> employerOptional = employerService.findByEmployerUuid(user.getUserUuid());
@@ -153,13 +145,13 @@ public class OfferUserController {
         Employer employer = employerOptional.orElseThrow(() -> new NotFoundException("Could not find employer by uuid"));
 
         log.info("Process create new offer");
-        offerUpdateRequestDTO.setStatus(Keys.OfferState.ACTIVE.getName());
+        setDefaultStatusToNewOffer(offerUpdateRequestDTO);
         OfferUpdateRequest offerUpdateRequest = offerUpdateRequestMapper.map(offerUpdateRequestDTO);
         offerService.createNewOffer(offerUpdateRequest, employer);
         return "redirect:offers?created";
     }
 
-    @DeleteMapping(value = OFFER_DELETE + "/{offerId}")
+    @DeleteMapping(value = OFFER_DELETE)
     public String deleteCandidateProfile(@PathVariable Long offerId, Model model, Authentication authentication) {
         User user = Utility.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
@@ -213,11 +205,9 @@ public class OfferUserController {
         List<OfferRowDTO> allOffers = page.getContent();
         model.put("allOffersDTOs", allOffers);
 
-//Pagination Bar
         model.put("totalPages", page.getTotalPages());
         model.put("totalItems", page.getTotalElements());
 
-//Check selected for filters
         model.put("experienceLevelChecked", offerSearchCriteria.getExperienceLevels());
         model.put("skillChecked", offerSearchCriteria.getSkills());
         model.put("cityChecked", offerSearchCriteria.getCity());
@@ -226,7 +216,6 @@ public class OfferUserController {
         model.put("statusChecked", offerSearchCriteria.getStatus());
         model.put("employerChecked", offerSearchCriteria.getEmployer());
 
-//Enums for filters
         model.put("remoteEnumFull", Keys.RemoteWork.FULL.getName());
         model.put("remoteEnumOffice", Keys.RemoteWork.OFFICE.getName());
         model.put("remoteEnumPartly", Keys.RemoteWork.PARTLY.getName());
@@ -238,20 +227,20 @@ public class OfferUserController {
         model.put("statusEnumActive", Keys.OfferState.ACTIVE.getName());
         model.put("statusEnumExpired", Keys.OfferState.EXPIRED.getName());
 
-//List for filters
         List<SkillDTO> allSkills = skillService.findAll().stream().map(skillMapper::map).toList();
         List<CityDTO> allCity = cityService.findAll().stream().map(cityMapper::map).toList();
-//        List<EmployerRowDTO> allEmployer = employerService.findAll().stream().map(employerRowMapper::map).toList();
         model.put("allSkillsDTOs", allSkills);
         model.put("allCityDTOs", allCity);
-//        model.put("allEmployerDTOs", allEmployer);
 
-//Sorting
         model.put("sortBy", offerSearchCriteria.getSortBy());
         model.put("sortDirection", offerSearchCriteria.getSortDirection());
         model.put("reverseSortDirection", offerSearchCriteria.getSortDirection()
                 .equals(Sort.Direction.ASC) ? Sort.Direction.DESC : Sort.Direction.ASC);
 
         return model;
+    }
+
+    private static void setDefaultStatusToNewOffer(OfferUpdateRequestDTO offerUpdateRequestDTO) {
+        offerUpdateRequestDTO.setStatus(Keys.OfferState.ACTIVE.getName());
     }
 }
