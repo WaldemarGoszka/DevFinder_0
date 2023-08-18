@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.devfinder.business.dao.CandidateDAO;
 import pl.devfinder.business.dao.EmployerDAO;
 import pl.devfinder.domain.*;
 import pl.devfinder.domain.exception.FileUploadToProfileException;
@@ -95,7 +94,7 @@ public class EmployerService {
     }
 
     private String processNewLogoFile(EmployerUpdateRequest employerUpdateRequest, User user) {
-        if (!employerUpdateRequest.getFileLogo().isEmpty()) {
+        if (Objects.nonNull(employerUpdateRequest.getFileLogo()) && !employerUpdateRequest.getFileLogo().isEmpty()) {
             log.info("Process upload new logo file : [{}]", employerUpdateRequest.getFileLogo().getOriginalFilename());
             return fileUploadService.saveFileToDisc(user.getUserUuid(), employerUpdateRequest.getFileLogo());
         } else {
@@ -140,7 +139,7 @@ public class EmployerService {
     }
 
     private String processUpdateLogoFile(EmployerUpdateRequest employerUpdateRequest, Employer employer) {
-        if (!employerUpdateRequest.getFileLogo().isEmpty()) {
+        if (Objects.nonNull(employerUpdateRequest.getFileLogo()) && !employerUpdateRequest.getFileLogo().isEmpty()) {
             log.info("Process upload update photo file : [{}]", employerUpdateRequest.getFileLogo().getOriginalFilename());
             try {
                 if (fileUploadService.oldFileExist(employer.getEmployerUuid(), employer.getLogoFilename())) {

@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.devfinder.business.CandidateService;
 import pl.devfinder.business.EmployerService;
+import pl.devfinder.business.FileUploadService;
 import pl.devfinder.business.UserService;
 import pl.devfinder.business.management.Keys;
 import pl.devfinder.business.management.Utility;
@@ -22,23 +23,27 @@ import java.util.Optional;
 
 @Slf4j
 @Controller
-@RequestMapping("/user")
+@RequestMapping(UserController.BASE_PATH)
 @RequiredArgsConstructor
 public class UserController {
+    public static final String BASE_PATH = "/user";
     public static final String SETTINGS = "/settings";
     public static final String CHANGE_PASSWORD = "/change-password";
     public static final String DELETE = "/delete";
+
+    public static final String DEFAULT_PHOTO_PATH = "/img/user.jpg";
 
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final CandidateService candidateService;
     private final EmployerService employerService;
+    private final FileUploadService fileUploadService;
 
     @GetMapping(SETTINGS)
     public String getSettingsPage(Model model, Authentication authentication) {
-        Optional<User> user = Utility.putUserDataToModel(authentication, userService, model);
-        setUserPhotoToModel(model, user);
+        Optional<User> user = this.putUserDataToModel(authentication, userService, model);
+        this.setUserPhotoToModel(model, user);
         user.orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         return "settings";
     }
@@ -46,18 +51,20 @@ public class UserController {
 
     @DeleteMapping(DELETE)
     public String deleteUser(Model model, Authentication authentication) {
-        User user = Utility.putUserDataToModel(authentication, userService, model)
+        log.info("Process delete account for user: [{}]", authentication.getName());
+        User user = this.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         userService.deleteUser(user);
         return "redirect:/logout";
     }
 
-    @PutMapping(CHANGE_PASSWORD)
+    @PatchMapping (CHANGE_PASSWORD)
     public String getChangePassword(@RequestParam("oldPassword") String oldPassword,
                                     @RequestParam("newPassword") String newPassword,
                                     @RequestParam("repeatNewPassword") String repeatPassword,
                                     Model model, Authentication authentication) {
-        User user = Utility.putUserDataToModel(authentication, userService, model)
+        log.info("Process change password to user: [{}]", authentication.getName());
+        User user = this.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         if (passwordEncoder.matches(oldPassword, user.getPassword())
                 && !passwordEncoder.matches(newPassword, oldPassword)
@@ -76,19 +83,31 @@ public class UserController {
             if (user.get().getRole().getRole().equals(Keys.Role.CANDIDATE.getName())) {
                 Optional<Candidate> candidate = candidateService.findByCandidateUuid(user.get().getUserUuid());
                 if (candidate.isPresent() && Objects.nonNull(candidate.get().getPhotoFilename())) {
-                    model.addAttribute("photoDir", Utility.getUserPhotoPath(candidate.get().getCandidateUuid(), candidate.get().getPhotoFilename()));
+                    model.addAttribute("photoDir", fileUploadService.getUserPhotoPath(candidate.get().getCandidateUuid(), candidate.get().getPhotoFilename()));
                 } else {
-                    model.addAttribute("photoDir", "/img/user.jpg");
+                    model.addAttribute("photoDir", UserController.DEFAULT_PHOTO_PATH);
                 }
             }
             if (user.get().getRole().getRole().equals(Keys.Role.EMPLOYER.getName())) {
                 Optional<Employer> employer = employerService.findByEmployerUuid(user.get().getUserUuid());
                 if (employer.isPresent() && Objects.nonNull(employer.get().getLogoFilename())) {
-                    model.addAttribute("photoDir", Utility.getUserPhotoPath(employer.get().getEmployerUuid(), employer.get().getLogoFilename()));
+                    model.addAttribute("photoDir", fileUploadService.getUserPhotoPath(employer.get().getEmployerUuid(), employer.get().getLogoFilename()));
                 } else {
-                    model.addAttribute("photoDir", "/img/user.jpg");
+                    model.addAttribute("photoDir", UserController.DEFAULT_PHOTO_PATH);
                 }
             }
         }
     }
+    public Optional<User> putUserDataToModel(Authentication authentication, UserService userService, Model model) {
+        if (authentication != null) {
+            Optional<User> user = userService.findByEmail(authentication.getName());
+            if (user.isEmpty()) {
+                return Optional.empty();
+            }
+            model.addAttribute("user", user.get());
+            return user;
+        }
+        return Optional.empty();
+    }
+
 }

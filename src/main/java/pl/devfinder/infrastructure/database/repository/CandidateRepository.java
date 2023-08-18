@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import pl.devfinder.business.dao.CandidateDAO;
 import pl.devfinder.business.management.Keys;
 import pl.devfinder.domain.Candidate;
-import pl.devfinder.infrastructure.database.entity.CandidateEntity;
 import pl.devfinder.infrastructure.database.repository.jpa.CandidateJpaRepository;
 import pl.devfinder.infrastructure.database.repository.mapper.CandidateEntityMapper;
 
@@ -19,12 +18,7 @@ public class CandidateRepository implements CandidateDAO {
     private final CandidateJpaRepository candidateJpaRepository;
     private final CandidateEntityMapper candidateEntityMapper;
 
-    @Override
-    public List<Candidate> findAllByState(Keys.CandidateState state) {
-        return candidateJpaRepository.findAllByState(state.getName()).stream()
-                .map(candidateEntityMapper::mapFromEntity)
-                .toList();
-    }
+
 
     @Override
     public Candidate save(Candidate candidate) {

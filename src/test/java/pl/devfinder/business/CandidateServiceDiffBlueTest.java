@@ -1,21 +1,6 @@
 package pl.devfinder.business;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.atLeast;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Optional;
-
 import org.junit.jupiter.api.Disabled;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -34,6 +19,13 @@ import pl.devfinder.domain.exception.FileUploadToProfileException;
 import pl.devfinder.domain.exception.NotFoundException;
 import pl.devfinder.domain.search.CandidateSearchCriteria;
 import pl.devfinder.infrastructure.database.repository.criteria.CandidateCriteriaRepository;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ContextConfiguration(classes = {CandidateService.class})
 @ExtendWith(SpringExtension.class)
@@ -138,22 +130,6 @@ class CandidateServiceDiffBlueTest {
         verify(candidateDAO).findByCandidateUuid(Mockito.<String>any());
     }
 
-    /**
-     * Method under test: {@link CandidateService#updateCandidateProfile(CandidateUpdateRequest, Candidate)}
-     */
-    @Test
-    @Disabled("TODO: Complete this test")
-    void testUpdateCandidateProfile() {
-        // TODO: Complete this test.
-        //   Reason: R013 No inputs found that don't throw a trivial exception.
-        //   Diffblue Cover tried to run the arrange/act section, but the method under
-        //   test threw
-        //   java.lang.NullPointerException: Cannot invoke "pl.devfinder.domain.CandidateUpdateRequest.getResidenceCityName()" because "candidateUpdateRequest" is null
-        //       at pl.devfinder.business.CandidateService.updateCandidateProfile(CandidateService.java:51)
-        //   See https://diff.blue/R013 to resolve this issue.
-
-        candidateService.updateCandidateProfile(null, null);
-    }
 
     /**
      * Method under test: {@link CandidateService#updateCandidateProfile(CandidateUpdateRequest, Candidate)}
@@ -217,22 +193,6 @@ class CandidateServiceDiffBlueTest {
         verify(candidateUpdateRequest, atLeast(1)).getResidenceCityName();
     }
 
-    /**
-     * Method under test: {@link CandidateService#newCandidateProfile(CandidateUpdateRequest, User)}
-     */
-    @Test
-    @Disabled("TODO: Complete this test")
-    void testNewCandidateProfile() {
-        // TODO: Complete this test.
-        //   Reason: R013 No inputs found that don't throw a trivial exception.
-        //   Diffblue Cover tried to run the arrange/act section, but the method under
-        //   test threw
-        //   java.lang.NullPointerException: Cannot invoke "pl.devfinder.domain.CandidateUpdateRequest.getResidenceCityName()" because "candidateUpdateRequest" is null
-        //       at pl.devfinder.business.CandidateService.newCandidateProfile(CandidateService.java:96)
-        //   See https://diff.blue/R013 to resolve this issue.
-
-        candidateService.newCandidateProfile(null, null);
-    }
 
     /**
      * Method under test: {@link CandidateService#newCandidateProfile(CandidateUpdateRequest, User)}

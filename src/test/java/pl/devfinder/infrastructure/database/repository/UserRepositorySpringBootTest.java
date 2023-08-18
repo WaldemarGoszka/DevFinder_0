@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Import(PersistenceContainerTestConfiguration.class)
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 @Transactional
-class UserRepositoryTest {
+class UserRepositorySpringBootTest {
 
     private UserJpaRepository userJpaRepository;
     private UserEntityMapper userEntityMapper;
@@ -68,9 +68,7 @@ class UserRepositoryTest {
         assertEquals(userId, result.get().getId());
     }
 
-    @Test
-    void save() {
-    }
+
 
 
 

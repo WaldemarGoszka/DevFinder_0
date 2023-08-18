@@ -1,17 +1,6 @@
 package pl.devfinder.api.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Optional;
-
 import org.junit.jupiter.api.Disabled;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -28,22 +17,17 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
-import pl.devfinder.api.dto.EmployerUpdateRequestDTO;
-import pl.devfinder.api.dto.mapper.CandidateRowMapper;
-import pl.devfinder.api.dto.mapper.CityMapper;
-import pl.devfinder.api.dto.mapper.EmployerDetailsMapper;
-import pl.devfinder.api.dto.mapper.EmployerUpdateRequestMapper;
-import pl.devfinder.api.dto.mapper.SkillMapper;
-import pl.devfinder.business.CandidateService;
-import pl.devfinder.business.CityService;
-import pl.devfinder.business.EmployerService;
-import pl.devfinder.business.SkillService;
-import pl.devfinder.business.UserService;
+import pl.devfinder.api.dto.mapper.*;
+import pl.devfinder.business.*;
 import pl.devfinder.domain.exception.NotFoundException;
 import pl.devfinder.domain.search.CandidateSearchCriteria;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 @ContextConfiguration(classes = {EmployerUserController.class})
 @ExtendWith(SpringExtension.class)

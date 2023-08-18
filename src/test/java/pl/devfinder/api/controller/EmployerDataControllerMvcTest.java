@@ -15,9 +15,7 @@ import pl.devfinder.business.CityService;
 import pl.devfinder.business.EmployerService;
 import pl.devfinder.business.SkillService;
 import pl.devfinder.business.UserService;
-import pl.devfinder.domain.User;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 

@@ -2,7 +2,6 @@ package pl.devfinder.infrastructure.database.repository.mapper;
 
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import pl.devfinder.domain.City;
 import pl.devfinder.infrastructure.database.entity.CityEntity;

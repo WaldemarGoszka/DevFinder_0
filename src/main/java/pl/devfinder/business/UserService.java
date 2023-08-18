@@ -3,7 +3,9 @@ package pl.devfinder.business;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import pl.devfinder.business.dao.EmailVerificationTokenDAO;
 import pl.devfinder.business.dao.UserDAO;
 import pl.devfinder.business.management.Keys;
@@ -13,7 +15,6 @@ import pl.devfinder.domain.User;
 import pl.devfinder.domain.exception.NotFoundException;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -77,4 +78,5 @@ public class UserService {
 
         return userDAO.findAll();
     }
+
 }

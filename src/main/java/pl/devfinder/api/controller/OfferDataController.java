@@ -16,9 +16,8 @@ import pl.devfinder.api.dto.mapper.*;
 import pl.devfinder.business.*;
 import pl.devfinder.business.management.Keys;
 import pl.devfinder.business.management.Utility;
-import pl.devfinder.domain.Candidate;
+import pl.devfinder.domain.Offer;
 import pl.devfinder.domain.User;
-import pl.devfinder.domain.exception.NotFoundException;
 import pl.devfinder.domain.search.OfferSearchCriteria;
 
 import java.util.HashMap;
@@ -50,7 +49,7 @@ public class OfferDataController {
             @ModelAttribute OfferSearchCriteria offerSearchCriteria,
             Model model,
             Authentication authentication) {
-        Optional<User> user = Utility.putUserDataToModel(authentication, userService, model);
+        Optional<User> user = userController.putUserDataToModel(authentication, userService, model);
         userController.setUserPhotoToModel(model, user);
 
         Map<String, ?> offersListData = prepareOffersListData(offerSearchCriteria);
@@ -59,10 +58,11 @@ public class OfferDataController {
     }
     @GetMapping(value = OFFER_DETAILS)
     public String getOfferDetails(@PathVariable Long offerId, Model model, Authentication authentication) {
-        Optional<User> user = Utility.putUserDataToModel(authentication, userService, model);
+        Optional<User> user = userController.putUserDataToModel(authentication, userService, model);
         userController.setUserPhotoToModel(model, user);
 
-        OfferDetailsDTO offerDetailsDTO = offerDetailsMapper.map(offerService.findById(offerId));
+        Offer offer = offerService.findById(offerId);
+        OfferDetailsDTO offerDetailsDTO = offerDetailsMapper.map(offer);
         model.addAttribute("offerDetailsDTO", offerDetailsDTO);
         return "offer_details";
 
@@ -71,15 +71,14 @@ public class OfferDataController {
     private Map<String, ?> prepareOffersListData(OfferSearchCriteria offerSearchCriteria) {
         Map<String, Object> model = new HashMap<>();
 
-        Page<OfferRowDTO> page = offerService.findAllByCriteria(offerSearchCriteria).map(offerRowMapper::map);
+        Page<Offer> allByCriteria = offerService.findAllByCriteria(offerSearchCriteria);
+        Page<OfferRowDTO> page = allByCriteria.map(offerRowMapper::map);
         List<OfferRowDTO> allOffers = page.getContent();
         model.put("allOffersDTOs", allOffers);
 
-//Pagination Bar
         model.put("totalPages", page.getTotalPages());
         model.put("totalItems", page.getTotalElements());
 
-//Check selected for filters
         model.put("experienceLevelChecked", offerSearchCriteria.getExperienceLevels());
         model.put("skillChecked", offerSearchCriteria.getSkills());
         model.put("cityChecked", offerSearchCriteria.getCity());
@@ -88,7 +87,6 @@ public class OfferDataController {
         model.put("statusChecked", offerSearchCriteria.getStatus());
         model.put("employerChecked", offerSearchCriteria.getEmployer());
 
-//Enums for filters
         model.put("remoteEnumFull", Keys.RemoteWork.FULL.getName());
         model.put("remoteEnumOffice", Keys.RemoteWork.OFFICE.getName());
         model.put("remoteEnumPartly", Keys.RemoteWork.PARTLY.getName());
@@ -100,7 +98,6 @@ public class OfferDataController {
         model.put("statusEnumActive", Keys.OfferState.ACTIVE.getName());
         model.put("statusEnumExpired", Keys.OfferState.EXPIRED.getName());
 
-//List for filters
         List<SkillDTO> allSkills = skillService.findAll().stream().map(skillMapper::map).toList();
         List<CityDTO> allCity = cityService.findAll().stream().map(cityMapper::map).toList();
         List<EmployerRowDTO> allEmployer = employerService.findAll().stream().map(employerRowMapper::map).toList();
@@ -108,7 +105,6 @@ public class OfferDataController {
         model.put("allCityDTOs", allCity);
         model.put("allEmployerDTOs", allEmployer);
 
-//Sorting
         model.put("sortBy", offerSearchCriteria.getSortBy());
         model.put("sortDirection", offerSearchCriteria.getSortDirection());
         model.put("reverseSortDirection", offerSearchCriteria.getSortDirection()

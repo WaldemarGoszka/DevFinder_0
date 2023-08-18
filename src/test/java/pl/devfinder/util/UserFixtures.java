@@ -4,8 +4,6 @@ import lombok.experimental.UtilityClass;
 import pl.devfinder.business.management.Keys;
 import pl.devfinder.domain.Role;
 import pl.devfinder.domain.User;
-import pl.devfinder.infrastructure.database.entity.RoleEntity;
-import pl.devfinder.infrastructure.database.entity.UserEntity;
 
 @UtilityClass
 public class UserFixtures {

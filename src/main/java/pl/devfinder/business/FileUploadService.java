@@ -7,7 +7,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import pl.devfinder.business.management.Utility;
 import pl.devfinder.domain.exception.FileUploadToProfileException;
 
 import java.io.File;
@@ -77,5 +76,8 @@ public class FileUploadService {
     public boolean oldFileExist(String uuid, String filename) throws IOException {
         log.info("Checked if file exist in direction: [{}]", getUploadDir(uuid, filename));
         return Files.exists(Paths.get(getUploadDir(uuid, filename)));
+    }
+    public  String getUserPhotoPath(String uuid, String fileName) {
+        return "/user_data/" + uuid.replaceAll("-", "_") + fileName;
     }
 }

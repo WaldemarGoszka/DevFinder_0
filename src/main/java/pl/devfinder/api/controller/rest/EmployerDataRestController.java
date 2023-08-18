@@ -11,13 +11,17 @@ import pl.devfinder.api.dto.EmployersDTO;
 import pl.devfinder.api.dto.mapper.EmployerDetailsMapper;
 import pl.devfinder.api.dto.mapper.EmployerRowMapper;
 import pl.devfinder.business.EmployerService;
+import pl.devfinder.domain.Employer;
 import pl.devfinder.domain.search.EmployerSearchCriteria;
+
+import java.util.List;
 
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api")
+@RequestMapping(EmployerDataRestController.BASE_PATH)
 public class EmployerDataRestController {
+    public static final String BASE_PATH = "/api";
     public static final String EMPLOYER_DETAILS = "/employer/{employerId}";
     public static final String EMPLOYERS_LIST = "/employers";
 
@@ -27,12 +31,17 @@ public class EmployerDataRestController {
 
     @GetMapping(value = EMPLOYERS_LIST)
     public ResponseEntity<EmployersDTO> getEmployersList(@ModelAttribute EmployerSearchCriteria employerSearchCriteria) {
-        Page<EmployerRowDTO> page = employerService.findAllByCriteria(employerSearchCriteria).map(employerRowMapper::map);
-        return ResponseEntity.ok(EmployersDTO.builder().employerRowDTOs(page.getContent()).build());
+        Page<Employer> allByCriteria = employerService.findAllByCriteria(employerSearchCriteria);
+        Page<EmployerRowDTO> page = allByCriteria.map(employerRowMapper::map);
+        List<EmployerRowDTO> content = page.getContent();
+        EmployersDTO employersDTO = EmployersDTO.builder().employerRowDTOs(content).build();
+        return ResponseEntity.ok(employersDTO);
     }
 
     @GetMapping(value = EMPLOYER_DETAILS)
     public ResponseEntity<EmployerDetailsDTO> getEmployerDetails(@PathVariable Long employerId) {
-        return ResponseEntity.ok(employerDetailsMapper.map(employerService.findById(employerId)));
+        Employer employer = employerService.findById(employerId);
+        EmployerDetailsDTO employerDetailsDTO = employerDetailsMapper.map(employer);
+        return ResponseEntity.ok(employerDetailsDTO);
     }
 }

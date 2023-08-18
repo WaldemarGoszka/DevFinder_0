@@ -1,7 +1,6 @@
 package pl.devfinder.domain;
 
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -37,10 +36,5 @@ public class Candidate {
     Employer employerId;
     City residenceCityId;
     Set<CandidateSkill> candidateSkills;
-
-//    String residenceCityName;
-//    Set<String> nameCandidateSkills;
-//    MultipartFile filePhoto;
-//    MultipartFile fileCv;
 
 }

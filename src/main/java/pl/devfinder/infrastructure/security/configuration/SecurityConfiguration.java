@@ -207,14 +207,26 @@ public class SecurityConfiguration {
                         "/candidate/**",
                         "/user_data/**",
                         "/user/**",
-                        "/api/**")
+                        "/api/offers",
+                        "/api/offers/**",
+                        "/api/employers",
+                        "/api/employer/**",
+                        "/api/candidates",
+                        "/api/candidate/**",
+                        "/api/register/**"
+                        )
                 .permitAll()
                 .requestMatchers(
-                        "/candidate_portal/**")
+                        "/candidate_portal/**",
+                        "/api/candidate_portal/**"
+                        )
                 .hasAuthority(Keys.Role.CANDIDATE.getName())
                 .requestMatchers(
                         "/employer_portal/**",
-                        "/offers_of_employer/**")
+                        "/api/employer_portal/**",
+                        "/offers_of_employer/**",
+                        "/api/offers_of_employer/**"
+                        )
                 .hasAuthority(Keys.Role.EMPLOYER.getName())
                 .anyRequest()
                 .authenticated()
@@ -241,5 +253,4 @@ public class SecurityConfiguration {
                 .anyRequest().permitAll();
         return http.build();
     }
-
 }

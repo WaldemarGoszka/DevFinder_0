@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.devfinder.business.management.Keys;
 import pl.devfinder.domain.Employer;
 
 import java.math.BigDecimal;

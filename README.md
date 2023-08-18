@@ -32,8 +32,10 @@ clicking on the column head, the columns by which we can sort are red. We can ch
 clicking again on the same column, The direction of sorting can be seen by a white strap line which changes according to
 the direction of sorting, I used font-awesome and JavaScript functions for this.
 
-Filters take into account many parameters, They were written using Criteria Api. Here you can select multiple fields at
+Filters take into account many parameters. They were written using Criteria Api. Here you can select multiple fields at
 once and they will all be taken into account when searching. I think few job platforms have such advanced search.
+
+A great convenience when filtering results is that the page, after reloading, remembers and selects the buttons by which the results are filtered
 
 All sorting as well as filtering parameters are included in param
 url ```http://localhost:8080/devfinder/offers?city=Warszawa&employer=ABC+Sp.+z+o.o.&salaryMin=&pageSize=5&pageNumber=1&sortBy=title&sortDirection=ASC#```.
@@ -45,7 +47,6 @@ We can go into the details of each offer, candidate or employee. When entering t
 leading to offers issued by that employer. Entering the details of the offer we have links to the details of the
 employer and links to other offers issued by this employer.
 
-Translated with www.DeepL.com/Translator (free version)
 
 ### Registration
 
@@ -109,6 +110,498 @@ completely, which will block the possibility of logging in to it. All data will 
 again must re-register .
 
 ### REST API
+
+Postman collection to test all endpoints below is in Postman ```Test Candidate Collection.postman_collection.json``` file
+
+#### GET Content available without registration
+
+##### ```api/employers``` endpoint
+Employer List
+```
+http://localhost:8080/devfinder/api/employers  
+ 
+http://localhost:8080/devfinder/api/employers?skillsInOffers=PostgreSQL&city=Warszawa&jobOffersStatus=hasJobOffers&jobOffersStatus=hasNoJobOffers&pageSize=5&pageNumber=1&sortBy=amountOfAvailableOffers&sortDirection=DESC#
+```
+available params at ```api/employers``` endpoint:
+```
+city  
+companyName  
+skillsInOffers
+amountOfAvailableOffers  
+numberOfEmployees  
+jobOffersStatus []  
+
+pageNumber {default 1}  
+pageSize {default 5}  
+sortDirection {default DESC}  
+sortBy {default amountOfAvailableOffers}  
+```
+available param values ```skillsInOffers```
+```
+"Python"
+"JavaScript"
+"C++"
+"SQL"
+"HTML"
+"CSS"
+"PHP"
+"Ruby"
+"Swift"
+"Go"
+"Kotlin"
+"React"
+"Angular"
+"Vue.js"
+"Node.js"
+"Docker"
+"Git"
+"AWS"
+"Machine Learning"
+"Data Science"
+"Ruby on Rails"
+"ASP.NET"
+"Laravel"
+"Spring Framework"
+"Express.js"
+"MongoDB"
+"PostgreSQL"
+"Firebase"
+"Elasticsearch"
+"GraphQL"
+"AWS Lambda"
+"Azure"
+"Google Cloud Platform"
+"DevOps"
+"Scrum"
+"Kubernetes"
+"Microservices"
+"RESTful API"
+"Test Driven Development"
+"Agile Project Management"
+"Spring Boot"
+"Hibernate"
+"JavaFX"
+"JPA"
+"JUnit"
+"Maven"
+"Gradle"
+```
+available param values  ```jobOffersStatus```
+```
+hasJobOffers  
+hasNoJobOffers  
+```
+available param values ```sortDirection```
+```
+ASC  
+DESC
+```
+available param values ```sortBy```
+```
+companyName
+city
+amountOfAvailableOffers
+numberOfEmployees
+```
+##### ```api/employer/{employerId}``` endpoint
+```
+http://localhost:8080/devfinder/api/employer/1
+```
+
+
+##### ```api/candidates``` endpoint
+Candidates List
+```
+http://localhost:8080/devfinder/api/candidates 
+ 
+http://localhost:8080/devfinder/api/candidates?status=ACTIVE&status=INACTIVE&status=EMPLOYED&experienceLevels=JUNIOR&experienceLevels=MID&experienceLevels=SENIOR&minYearsOfExperience=1&city=Warszawa&openToRemoteJob=YES&openToRemoteJob=NO&salaryMax=&pageSize=5&sortBy=lastName&sortDirection=ASC#
+```
+available params at ```api/candidates``` endpoint:
+```
+status []
+experienceLevels []
+skills []
+minYearsOfExperience
+city
+openToRemoteJob []
+salaryMax
+employer
+
+pageNumber {default 1}  
+pageSize {default 5}  
+sortDirection {default ASC}  
+sortBy {default lastName}  
+```
+
+available param values ```status```
+```
+ACTIVE
+INACTIVE
+EMPLOYED
+```
+available param values ```experienceLevels```
+```
+JUNIOR
+MID
+SENIOR
+```
+available param values ```skills```
+```
+as in the previous endpoint
+```
+available param values ```openToRemoteJob```
+```
+YES
+NO
+```
+available param values ```sortBy```
+```
+lastName  
+experienceLevel  
+yearsOfExperience
+residenceCityId.cityName
+salaryMin
+```
+
+##### ```api/candidate/{candidateId}``` endpoint
+```
+http://localhost:8080/devfinder/api/candidate/1
+```
+
+##### ```api/offers``` endpoint
+Offers List
+```
+http://localhost:8080/devfinder/api/offers
+ 
+http://localhost:8080/devfinder/api/offers?status=ACTIVE&status=EXPIRED&experienceLevels=JUNIOR&experienceLevels=MID&experienceLevels=SENIOR&skills=Node.js&city=Wroc%C5%82aw&employer=&remoteWork=FULL&remoteWork=PARTLY&remoteWork=OFFICE&salary=WITH&salary=UNDISCLOSED&salaryMin=3000&pageSize=5&sortBy=createdAt&sortDirection=DESC#
+```
+available params at ```api/offers``` endpoint:
+```
+experienceLevels []
+remoteWork []
+salaryMin
+salary []
+status []
+city
+employer
+skills []
+
+pageNumber {default 1}  
+pageSize {default 5}  
+sortDirection {default DESC}  
+sortBy {default createdAt}  
+```
+
+available param values ```remoteWork```
+```
+FULL
+PARTLY
+OFFICE
+```
+available param values ```salary```
+```
+WITH
+UNDISCLOSED
+```
+available param values ```status```
+```
+ACTIVE
+EXPIRED
+```
+available param values ```skills```
+```
+as in the previous endpoint
+```
+available param values ```sortBy```
+```
+title 
+experienceLevel  
+employerId.companyName
+cityId.cityName
+remoteWork
+salaryMin
+createdAt
+```
+
+#### POST User Registration
+available Role:
+```
+CANDIDATE
+EMPLOYER
+```
+Request:
+curl:
+```
+curl --location 'http://localhost:8080/devfinder/api/register/register_page' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "userName": "John5",
+    "email": "john@example.com5",
+    "password": "test",
+    "role": "CANDIDATE"
+}'
+```
+```
+POST http://localhost:8080/devfinder/api/register/register_page
+```
+example body:
+```
+{
+    "userName": "John",
+    "email": "john@example.com",
+    "password": "test",
+    "role": "CANDIDATE"
+}
+```
+Response:
+```
+{
+    "id": 59,
+    "userName": "John",
+    "userUuid": "dc8beaa6-0bb5-409b-9cc9-5ede08050125",
+    "email": "john@example.com",
+    "password": "$2a$10$2lc1RQ5wBeGX8.0WGJ1lKOe6Iw2Bkis6.NfGwaYQtbrUd.haZ6iZi",
+    "isEnabled": true,
+    "role": {
+        "id": 1,
+        "role": "CANDIDATE"
+    }
+}
+```
+#### POST User Login
+```
+POST http://localhost:8080/devfinder/login?email=john@example.com&password=test
+```
+```
+curl --location --request POST 'http://localhost:8080/devfinder/login?email=john%40example.com&password=test' \
+```
+#### POST Create Candidate Profile
+We can only once tą metodę i otrzymamy 201, przy ponownym dostaniemy 400 Bad Request nie jest idempotentna
+```
+POST http://localhost:8080/devfinder/api/candidate_portal/new_profile
+```
+example json body
+```
+{
+"status": "ACTIVE",
+"firstName": "Jan",
+"lastName": "Kowalski",
+"residenceCityName": "Warszawa",
+"experienceLevel": "JUNIOR",
+"yearsOfExperience": "3",
+"candidateSkillsNames": 
+["CSS", "Data Science", "Docker", "Express.js", "GraphQL", "JavaScript", "Kotlin"],
+"education": "Mgr inż. Informatyki",
+"foreignLanguage": "Angielski",
+"salaryMin": "5000.00",
+"openToRemoteJob": "false",
+"linkedinLink": "https://linkedin.com/in/jankowalski",
+"githubLink": "https://github.com/jankowalski",
+"hobby": "Gra na gitarze",
+"emailContact": "jan.kowalski@example.com",
+"phoneNumber": "123456789"
+}
+```
+example curl
+```
+curl --location 'http://localhost:8080/devfinder/api/candidate_portal/new_profile' \
+--header 'Content-Type: application/json' \
+--header 'Cookie: JSESSIONID=FD1EB88AAA6D24AE2F6BED98E93CBB91' \
+--data-raw '{
+"status": "ACTIVE",
+"firstName": "Jan",
+"lastName": "Kowalski",
+"residenceCityName": "Warszawa",
+"experienceLevel": "JUNIOR",
+"yearsOfExperience": "3",
+"candidateSkillsNames": 
+["CSS", "Data Science", "Docker", "Express.js", "GraphQL", "JavaScript", "Kotlin"],
+"education": "Mgr inż. Informatyki",
+"foreignLanguage": "Angielski",
+"salaryMin": "5000.00",
+"openToRemoteJob": "false",
+"linkedinLink": "https://linkedin.com/in/jankowalski",
+"githubLink": "https://github.com/jankowalski",
+"hobby": "Gra na gitarze",
+"emailContact": "jan.kowalski@example.com",
+"phoneNumber": "123456789"
+}'
+```
+#### GET get Candidate Profile
+```
+GET http://localhost:8080/devfinder/api/candidate_portal/profile
+```
+curl
+```
+curl --location 'http://localhost:8080/devfinder/api/candidate_portal/profile' \
+--header 'Cookie: JSESSIONID=5FC19CFA6FE53B8D944FF44EF681EE32'
+```
+example response body
+```
+{
+    "candidateId": 34,
+    "candidateUuid": "8e5f2519-72c7-492b-b80b-b04a3e1f77dc",
+    "firstName": "John",
+    "lastName": "Kowalski",
+    "emailContact": "jan.kowalski@example.com",
+    "phoneNumber": "123456789",
+    "createdAt": "2023-08-17T11:23:31.454846+02:00",
+    "status": "ACTIVE",
+    "education": "Mgr inż. Informatyki",
+    "hobby": "Gra na gitarze",
+    "foreignLanguage": "Angielski",
+    "githubLink": "https://github.com/jankowalski",
+    "linkedinLink": "https://linkedin.com/in/jankowalski",
+    "experienceLevel": "JUNIOR",
+    "yearsOfExperience": 3,
+    "salaryMin": 5000.00,
+    "openToRemoteJob": false,
+    "residenceCityId": {
+        "cityId": 1,
+        "cityName": "Warszawa"
+    },
+    "candidateSkills": [
+        {
+            "candidateSkillId": 219,
+            "skillId": {
+                "skillId": 20,
+                "skillName": "Data Science"
+            }
+        },
+        {
+            "candidateSkillId": 218,
+            "skillId": {
+                "skillId": 30,
+                "skillName": "GraphQL"
+            }
+        },
+        {
+            "candidateSkillId": 222,
+            "skillId": {
+                "skillId": 6,
+                "skillName": "CSS"
+            }
+        },
+        {
+            "candidateSkillId": 217,
+            "skillId": {
+                "skillId": 16,
+                "skillName": "Docker"
+            }
+        },
+        {
+            "candidateSkillId": 223,
+            "skillId": {
+                "skillId": 11,
+                "skillName": "Kotlin"
+            }
+        },
+        {
+            "candidateSkillId": 220,
+            "skillId": {
+                "skillId": 2,
+                "skillName": "JavaScript"
+            }
+        },
+        {
+            "candidateSkillId": 221,
+            "skillId": {
+                "skillId": 25,
+                "skillName": "Express.js"
+            }
+        }
+    ]
+}
+```
+#### PUT Update Candidate Profile
+możemy metodę wykonywać ile razt chce się jest idempotentna
+```
+PUT http://localhost:8080/devfinder/api/candidate_portal/update_profile
+```
+example body
+```
+{
+"status": "ACTIVE",
+"firstName": "Marek",
+"lastName": "Nowak",
+"residenceCityName": "Warszawa",
+"experienceLevel": "JUNIOR",
+"yearsOfExperience": "3",
+"candidateSkillsNames": 
+["CSS", "Data Science", "Docker", "Express.js", "GraphQL", "JavaScript", "Kotlin"],
+"education": "Mgr inż. Informatyki",
+"foreignLanguage": "Angielski",
+"salaryMin": "5000.00",
+"openToRemoteJob": "false",
+"linkedinLink": "https://linkedin.com/in/jankowalski",
+"githubLink": "https://github.com/jankowalski",
+"hobby": "Gra na gitarze",
+"emailContact": "jan.kowalski@example.com",
+"phoneNumber": "123456789"
+}
+```
+example cURL
+```
+curl --location --request PUT 'http://localhost:8080/devfinder/api/candidate_portal/update_profile' \
+--header 'Content-Type: application/json' \
+--header 'Cookie: JSESSIONID=FD1EB88AAA6D24AE2F6BED98E93CBB91' \
+--data-raw '{
+"status": "ACTIVE",
+"firstName": "Marek",
+"lastName": "Nowak",
+"residenceCityName": "Warszawa",
+"experienceLevel": "JUNIOR",
+"yearsOfExperience": "3",
+"candidateSkillsNames": 
+["CSS", "Data Science", "Docker", "Express.js", "GraphQL", "JavaScript", "Kotlin"],
+"education": "Mgr inż. Informatyki",
+"foreignLanguage": "Angielski",
+"salaryMin": "5000.00",
+"openToRemoteJob": "false",
+"linkedinLink": "https://linkedin.com/in/jankowalski",
+"githubLink": "https://github.com/jankowalski",
+"hobby": "Gra na gitarze",
+"emailContact": "jan.kowalski@example.com",
+"phoneNumber": "123456789"
+}'
+```
+
+#### DELETE Delete Candidate Profile
+jest idempotentna za pierwszym razem dostaniemy 200 a za kolejnym 404 not found
+```
+DELETE http://localhost:8080/devfinder/api/candidate_portal/delete_profile
+```
+#### PATCH User Change Password
+```
+PATCH http://localhost:8080/devfinder/api/user/change-password?oldPassword=test&newPassword=test2&repeatNewPassword=test2
+```
+```
+curl --location --request PATCH 'http://localhost:8080/devfinder/api/user/change-password?oldPassword=test&newPassword=test2&repeatNewPassword=test2' \
+--header 'Content-Type: application/json' \
+--header 'Cookie: JSESSIONID=BCE5CF808623500505341BA5B4DA823D' \
+--data '{
+    "oldPassword" : "test",
+    "newPassword" : "test2",
+    "repeatNewPassword" : "test2"
+}'
+```
+#### DELETE Delete User Account
+```
+DELETE http://localhost:8080/devfinder/api/user/delete
+```
+curl
+```
+curl --location --request DELETE 'http://localhost:8080/devfinder/api/user/delete' \
+--header 'Cookie: JSESSIONID=C917705D44896E149534573F641049E0'
+```
+
+
+
+```
+http://localhost:8080/devfinder/login?email=john@example.com&password=test
+```
+
+#### POST Create/Update candidate profile
 
 #### Swagger-UI / Open Api
 

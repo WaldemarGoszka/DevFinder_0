@@ -16,17 +16,16 @@ import pl.devfinder.api.dto.mapper.*;
 import pl.devfinder.business.*;
 import pl.devfinder.business.management.Keys;
 import pl.devfinder.business.management.Utility;
+import pl.devfinder.domain.Candidate;
 import pl.devfinder.domain.Employer;
 import pl.devfinder.domain.User;
 import pl.devfinder.domain.search.CandidateSearchCriteria;
-import pl.devfinder.domain.search.EmployerSearchCriteria;
 
 import java.util.*;
 
 @Slf4j
 @Controller
 @AllArgsConstructor
-//@RequestMapping("/candidate")
 public class CandidateDataController {
 
     public static final String CANDIDATES_LIST = "/candidates";
@@ -43,6 +42,7 @@ public class CandidateDataController {
     private final CandidateDetailsMapper candidateDetailsMapper;
     private final UserController userController;
     private final CandidateRowMapper candidateRowMapper;
+    private final FileUploadService fileUploadService;
 
 
     @GetMapping(value = CANDIDATES_LIST)
@@ -50,7 +50,7 @@ public class CandidateDataController {
                                     CandidateSearchCriteria candidateSearchCriteria,
                                           Model model,
                                           Authentication authentication) {
-        Optional<User> user = Utility.putUserDataToModel(authentication, userService, model);
+        Optional<User> user = userController.putUserDataToModel(authentication, userService, model);
         userController.setUserPhotoToModel(model, user);
 
         Map<String, ?> candidateListData = prepareCandidateListData(candidateSearchCriteria);
@@ -63,19 +63,23 @@ public class CandidateDataController {
             @PathVariable Long candidateId,
             Model model,
             Authentication authentication) {
-        Optional<User> user = Utility.putUserDataToModel(authentication, userService, model);
+        Optional<User> user = userController.putUserDataToModel(authentication, userService, model);
         userController.setUserPhotoToModel(model, user);
 
-        CandidateDetailsDTO candidateDetailsDTO = candidateDetailsMapper.map(candidateService.findById(candidateId));
-        if (Objects.nonNull(candidateDetailsDTO.getPhotoFilename())) {
-            String photoPath = Utility.getUserPhotoPath(candidateDetailsDTO.getCandidateUuid(),candidateDetailsDTO.getPhotoFilename());
+        Candidate candidate = candidateService.findById(candidateId);
+        CandidateDetailsDTO candidateDetailsDTO = candidateDetailsMapper.map(candidate);
+        String photoFilename = candidateDetailsDTO.getPhotoFilename();
+        String candidateUuid = candidateDetailsDTO.getCandidateUuid();
+        if (Objects.nonNull(photoFilename)) {
+            String photoPath = fileUploadService.getUserPhotoPath(candidateUuid, photoFilename);
             model.addAttribute("photoProfileDir", photoPath);
         } else {
-            model.addAttribute("photoProfileDir", "/img/user.jpg");
+            model.addAttribute("photoProfileDir", UserController.DEFAULT_PHOTO_PATH);
         }
         checkToShowFireCandidateButton(model, user, candidateDetailsDTO);
 
-        model.addAttribute("downloadCvFilePath", Utility.getUserPhotoPath(candidateDetailsDTO.getCandidateUuid(),candidateDetailsDTO.getCvFilename()));
+        String userPhotoPath = fileUploadService.getUserPhotoPath(candidateUuid, candidateDetailsDTO.getCvFilename());
+        model.addAttribute("downloadCvFilePath", userPhotoPath);
 
         model.addAttribute("candidateDetailsDTO", candidateDetailsDTO);
         return "candidate_details";
@@ -100,14 +104,15 @@ public class CandidateDataController {
 
     private Map<String, ?> prepareCandidateListData(CandidateSearchCriteria candidateSearchCriteria) {
         Map<String, Object> model = new HashMap<>();
-        Page<CandidateRowDTO> page = candidateService.findAllByCriteria(candidateSearchCriteria).map(candidateRowMapper::map);
+        Page<Candidate> allByCriteria = candidateService.findAllByCriteria(candidateSearchCriteria);
+        Page<CandidateRowDTO> page = allByCriteria.map(candidateRowMapper::map);
         List<CandidateRowDTO> allCandidates = page.getContent();
 
-//Pagination Bar
+
         model.put("totalPages", page.getTotalPages());
         model.put("totalItems", page.getTotalElements());
 
-//Check selected for filters
+
         model.put("experienceLevelChecked", candidateSearchCriteria.getExperienceLevels());
         model.put("skillChecked", candidateSearchCriteria.getSkills());
         model.put("cityChecked", candidateSearchCriteria.getCity());
@@ -115,7 +120,7 @@ public class CandidateDataController {
         model.put("openToRemoteJobChecked", candidateSearchCriteria.getOpenToRemoteJob());
         model.put("statusChecked", candidateSearchCriteria.getStatus());
 
-//Enums for filters
+
         model.put("expLevelEnumJunior", Keys.Experience.JUNIOR.getName());
         model.put("expLevelEnumMid", Keys.Experience.MID.getName());
         model.put("expLevelEnumSenior", Keys.Experience.SENIOR.getName());
@@ -125,14 +130,14 @@ public class CandidateDataController {
         model.put("remoteEnumYes", Keys.CandidateFilterBy.YES.getName());
         model.put("remoteEnumNo", Keys.CandidateFilterBy.NO.getName());
 
-//List for filters
+
         List<SkillDTO> allSkills = skillService.findAll().stream().map(skillMapper::map).toList();
         List<CityDTO> allCity = cityService.findAll().stream().map(cityMapper::map).toList();
         List<EmployerRowDTO> allEmployer = employerService.findAll().stream().map(employerRowMapper::map).toList();
         model.put("allSkillsDTOs", allSkills);
         model.put("allCityDTOs", allCity);
         model.put("allEmployerDTOs", allEmployer);
-//Sorting
+
         model.put("sortBy", candidateSearchCriteria.getSortBy());
         model.put("sortDirection", candidateSearchCriteria.getSortDirection());
         model.put("reverseSortDirection", candidateSearchCriteria.getSortDirection()

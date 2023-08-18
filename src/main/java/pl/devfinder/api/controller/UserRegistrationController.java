@@ -29,9 +29,10 @@ import java.util.Optional;
 @Slf4j
 @Controller
 @AllArgsConstructor
-@RequestMapping("/register")
+@RequestMapping(UserRegistrationController.BASE_PATH)
 public class UserRegistrationController {
 
+    public static final String BASE_PATH = "/register";
     public static final String REGISTER_PAGE = "/register_page";
     public static final String SAVE = "/save";
     public static final String VERIFY_EMAIL = "/verify_email";

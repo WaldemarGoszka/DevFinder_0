@@ -6,13 +6,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.devfinder.api.dto.CandidateDetailsDTO;
 import pl.devfinder.api.dto.CandidateUpdateRequestDTO;
 import pl.devfinder.api.dto.SkillDTO;
-import pl.devfinder.api.dto.mapper.*;
-import pl.devfinder.business.*;
+import pl.devfinder.api.dto.mapper.CandidateDetailsMapper;
+import pl.devfinder.api.dto.mapper.CandidateUpdateRequestMapper;
+import pl.devfinder.api.dto.mapper.SkillMapper;
+import pl.devfinder.business.CandidateService;
+import pl.devfinder.business.SkillService;
+import pl.devfinder.business.UserService;
 import pl.devfinder.business.management.Keys;
 import pl.devfinder.business.management.Utility;
 import pl.devfinder.domain.Candidate;
@@ -27,11 +30,13 @@ import java.util.Optional;
 @Slf4j
 @Controller
 @AllArgsConstructor
-@RequestMapping("/candidate_portal")
+@RequestMapping(CandidateUserController.BASE_PATH)
 public class CandidateUserController {
+    public static final String BASE_PATH = "/candidate_portal";
+
     public static final String CANDIDATE_PROFILE = "/profile";
     public static final String CANDIDATE_EDIT_PROFILE = "/edit_profile";
-    public static final String CANDIDATE_UPDATE_PROFILE = "/update";
+    public static final String CANDIDATE_CREATE_OR_UPDATE_PROFILE = "/update";
     public static final String CANDIDATE_DELETE_PROFILE = "/delete_profile";
     public static final String CANDIDATE_DELETE_CV_FILE = "/edit_profile/delete_cvFile";
     public static final String CANDIDATE_DELETE_PHOTO_FILE = "/edit_profile/delete_photoFile";
@@ -125,7 +130,7 @@ public class CandidateUserController {
         return "redirect:../edit_profile?delete_photo_file";
     }
 
-    @PostMapping(value = CANDIDATE_UPDATE_PROFILE)
+    @PostMapping(value = CANDIDATE_CREATE_OR_UPDATE_PROFILE)
     public String updateCandidateProfile(@Valid @ModelAttribute("candidateRequestDTO") CandidateUpdateRequestDTO candidateUpdateRequestDTO,
                                          Model model,
                                          Authentication authentication) {
@@ -135,7 +140,7 @@ public class CandidateUserController {
 
         CandidateUpdateRequest candidateUpdateRequest = candidateUpdateRequestMapper.map(candidateUpdateRequestDTO);
         if (candidate.isEmpty()) {
-            log.info("Process new candidate profile");
+            log.info("Process create candidate profile");
             candidateService.newCandidateProfile(candidateUpdateRequest, user);
             return "redirect:profile?created";
         } else {
@@ -162,7 +167,7 @@ public class CandidateUserController {
             String photoPath = Utility.getUserPhotoPath(candidate.get().getCandidateUuid(),candidate.get().getPhotoFilename());
             model.addAttribute("photoDir", photoPath);
         } else {
-            model.addAttribute("photoDir", "/img/user.jpg");
+            model.addAttribute("photoDir", UserController.DEFAULT_PHOTO_PATH);
         }
     }
 }

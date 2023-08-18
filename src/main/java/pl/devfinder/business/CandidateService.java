@@ -47,7 +47,7 @@ public class CandidateService {
     }
 
     @Transactional
-    public void updateCandidateProfile(CandidateUpdateRequest candidateUpdateRequest, Candidate candidate) {
+    public Candidate updateCandidateProfile(CandidateUpdateRequest candidateUpdateRequest, Candidate candidate) {
         if (cityService.nonCityExist(candidateUpdateRequest.getResidenceCityName())) {
             cityService.save(candidateUpdateRequest.getResidenceCityName());
         }
@@ -65,7 +65,7 @@ public class CandidateService {
             log.info("City No Longer needed. Delete city : [{}]", candidate.getResidenceCityId().getCityName());
             cityService.deleteByCityName(candidate.getResidenceCityId().getCityName());
         }
-        candidateDAO.save(updateCandidate);
+        return candidateDAO.save(updateCandidate);
     }
 
     private Candidate buildUpdatedCandidate(CandidateUpdateRequest candidateUpdateRequest, Candidate candidate, City city) {
@@ -96,7 +96,7 @@ public class CandidateService {
     }
 
     @Transactional
-    public void newCandidateProfile(CandidateUpdateRequest candidateUpdateRequest, User user) {
+    public Candidate newCandidateProfile(CandidateUpdateRequest candidateUpdateRequest, User user) {
         if (cityService.nonCityExist(candidateUpdateRequest.getResidenceCityName())) {
             cityService.save(candidateUpdateRequest.getResidenceCityName());
         }
@@ -110,7 +110,7 @@ public class CandidateService {
             Set<CandidateSkill> candidateSkillToSave = buildCandidateSkills(savedCandidate, candidateUpdateRequest);
             candidateSkillService.saveAll(candidateSkillToSave);
         }
-
+        return savedCandidate;
     }
 
     private Candidate buildNewCandidate(CandidateUpdateRequest candidateUpdateRequest, User user, City city) {
@@ -140,7 +140,7 @@ public class CandidateService {
     }
 
     private String processNewPhotoFile(CandidateUpdateRequest candidateUpdateRequest, User user) {
-        if (!candidateUpdateRequest.getFilePhoto().isEmpty()) {
+        if (Objects.nonNull(candidateUpdateRequest.getFilePhoto()) && !candidateUpdateRequest.getFilePhoto().isEmpty()) {
             log.info("Process upload new photo file : [{}]", candidateUpdateRequest.getFilePhoto().getOriginalFilename());
             return fileUploadService.saveFileToDisc(user.getUserUuid(), candidateUpdateRequest.getFilePhoto());
         } else {
@@ -150,7 +150,7 @@ public class CandidateService {
     }
 
     private String processNewCvFile(CandidateUpdateRequest candidateUpdateRequest, User user) {
-        if (!candidateUpdateRequest.getFileCv().isEmpty()) {
+        if (Objects.nonNull(candidateUpdateRequest.getFileCv()) && !candidateUpdateRequest.getFileCv().isEmpty()) {
             log.info("Process upload new cv file : [{}]", candidateUpdateRequest.getFileCv().getOriginalFilename());
             return fileUploadService.saveFileToDisc(user.getUserUuid(), candidateUpdateRequest.getFileCv());
         } else {
@@ -183,7 +183,7 @@ public class CandidateService {
     }
 
     private String processUpdateCvFile(CandidateUpdateRequest candidateUpdateRequest, Candidate candidate) {
-        if (!candidateUpdateRequest.getFileCv().isEmpty()) {
+        if (Objects.nonNull(candidateUpdateRequest.getFileCv()) && !candidateUpdateRequest.getFileCv().isEmpty()) {
             log.info("Process upload update cv file : [{}]", candidateUpdateRequest.getFileCv().getOriginalFilename());
             try {
                 if (fileUploadService.oldFileExist(candidate.getCandidateUuid(), candidate.getCvFilename())) {
@@ -200,7 +200,7 @@ public class CandidateService {
     }
 
     private String processUpdatePhotoFile(CandidateUpdateRequest candidateUpdateRequest, Candidate candidate) {
-        if (!candidateUpdateRequest.getFilePhoto().isEmpty()) {
+        if (Objects.nonNull(candidateUpdateRequest.getFilePhoto()) && !candidateUpdateRequest.getFilePhoto().isEmpty()) {
             log.info("Process upload update photo file : [{}]", candidateUpdateRequest.getFilePhoto().getOriginalFilename());
             try {
                 if (fileUploadService.oldFileExist(candidate.getCandidateUuid(), candidate.getPhotoFilename())) {
@@ -253,7 +253,7 @@ public class CandidateService {
 
     public void deletePhotoFile(Candidate candidate) {
         log.info("Process delete photo file");
-        fileUploadService.deleteFileFromDisc(candidate.getCandidateUuid(),candidate.getPhotoFilename());
+        fileUploadService.deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getPhotoFilename());
         Candidate updateCandidate = candidate.withPhotoFilename(null);
         candidateDAO.save(updateCandidate);
     }

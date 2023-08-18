@@ -29,6 +29,7 @@ public class CandidateUpdateRequestDTO {
     String phoneNumber;
     OffsetDateTime createdAt;
     @Pattern(regexp = "^(ACTIVE|INACTIVE|EMPLOYED)?$", message = "Candidate status should be 'ACTIVE', 'MID' or 'SENIOR'")
+    @NotEmpty(message = "Candidate status should be 'ACTIVE', 'MID' or 'SENIOR'")
     String status;
     @Size(max = 512, message = "Candidate education should be max 512 chars")
     String education;

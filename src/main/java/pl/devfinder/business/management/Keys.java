@@ -183,21 +183,13 @@ public interface Keys {
     }
 
     enum CandidateFilterBy {
-        //        title("title"),
-//        employerId("employerId"),
-//        companyName("companyName"),
-//        remoteWork("remoteWork"),
         salaryMin("salaryMin"),
-//        salaryMax("salaryMax"),
-//        salary("salary"),
         openToRemoteJob("openToRemoteJob"),
         yearsOfExperience("yearsOfExperience"),
         residenceCityId("residenceCityId"),
         cityName("cityName"),
         candidateId("candidateId"),
-
         experienceLevel("experienceLevel"),
-        //        candidateSkills("candidateSkills"),
         skillId("skillId"),
         skillName("skillName"),
         status("status"),

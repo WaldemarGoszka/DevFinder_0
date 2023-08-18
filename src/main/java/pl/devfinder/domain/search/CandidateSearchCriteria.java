@@ -2,8 +2,6 @@ package pl.devfinder.domain.search;
 
 import lombok.Data;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Component;
-import pl.devfinder.business.management.Keys;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

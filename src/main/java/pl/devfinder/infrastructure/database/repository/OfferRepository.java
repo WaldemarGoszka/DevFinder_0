@@ -10,14 +10,12 @@ import pl.devfinder.business.dao.OfferDAO;
 import pl.devfinder.business.management.Keys;
 import pl.devfinder.domain.Employer;
 import pl.devfinder.domain.Offer;
-import pl.devfinder.infrastructure.database.entity.EmployerEntity;
 import pl.devfinder.infrastructure.database.repository.jpa.OfferJpaRepository;
 import pl.devfinder.infrastructure.database.repository.mapper.EmployerEntityMapper;
 import pl.devfinder.infrastructure.database.repository.mapper.OfferEntityMapper;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 @Slf4j
 @Repository
 @AllArgsConstructor

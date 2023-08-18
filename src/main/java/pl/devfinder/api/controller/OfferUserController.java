@@ -8,7 +8,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import pl.devfinder.api.dto.*;
@@ -28,8 +27,10 @@ import java.util.*;
 @Slf4j
 @Controller
 @AllArgsConstructor
-@RequestMapping("/offers_of_employer")
+@RequestMapping(OfferUserController.BASE_PATH)
 public class OfferUserController {
+    public static final String BASE_PATH = "/offers_of_employer";
+
     public static final String OFFERS_LIST = "/offers";
     public static final String OFFER_NEW_FORM = "/new_form";
     public static final String OFFER_CREATE_NEW = "/new";
@@ -172,7 +173,7 @@ public class OfferUserController {
             String logoPath = Utility.getUserPhotoPath(employer.get().getEmployerUuid(),employer.get().getLogoFilename());
             model.addAttribute("photoDir", logoPath);
         } else {
-            model.addAttribute("photoDir", "/img/user.jpg");
+            model.addAttribute("photoDir", UserController.DEFAULT_PHOTO_PATH);
         }
     }
 

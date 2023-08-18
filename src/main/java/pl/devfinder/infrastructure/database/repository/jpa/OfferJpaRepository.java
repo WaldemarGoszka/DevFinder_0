@@ -11,7 +11,6 @@ import pl.devfinder.infrastructure.database.entity.OfferEntity;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Repository
 public interface OfferJpaRepository extends JpaRepository<OfferEntity, Long> {

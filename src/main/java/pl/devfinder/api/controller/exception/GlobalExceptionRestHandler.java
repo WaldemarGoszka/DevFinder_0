@@ -1,4 +1,4 @@
-package pl.devfinder.api.controller.rest;
+package pl.devfinder.api.controller.exception;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import pl.devfinder.api.controller.exception.UserAlreadyExistsException;
 import pl.devfinder.api.dto.ExceptionMessage;
 import pl.devfinder.domain.exception.NotFoundException;
 
@@ -31,7 +30,9 @@ public class GlobalExceptionRestHandler extends ResponseEntityExceptionHandler {
             DataIntegrityViolationException.class, HttpStatus.BAD_REQUEST,
             EntityNotFoundException.class, HttpStatus.NOT_FOUND,
             NotFoundException.class, HttpStatus.NOT_FOUND,
-            UserAlreadyExistsException.class, HttpStatus.BAD_REQUEST
+            UserAlreadyExistsException.class, HttpStatus.BAD_REQUEST,
+            ProfileAlreadyExistException.class, HttpStatus.BAD_REQUEST,
+            ProfileNotExistException.class, HttpStatus.NOT_FOUND
     );
 
     @Override

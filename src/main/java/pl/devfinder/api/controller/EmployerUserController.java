@@ -8,7 +8,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import pl.devfinder.api.dto.*;
@@ -24,18 +23,18 @@ import pl.devfinder.domain.search.CandidateSearchCriteria;
 
 import java.util.*;
 
-import static pl.devfinder.api.controller.EmployerUserController.EMPLOYER_BASE_PATH;
+import static pl.devfinder.api.controller.EmployerUserController.BASE_PATH;
 
 @Slf4j
 @Controller
 @AllArgsConstructor
-@RequestMapping(EMPLOYER_BASE_PATH)
+@RequestMapping(BASE_PATH)
 public class EmployerUserController {
 
-    public static final String EMPLOYER_BASE_PATH = "/employer_portal";
+    public static final String BASE_PATH = "/employer_portal";
     public static final String EMPLOYER_PROFILE = "/profile";
     public static final String EMPLOYER_EDIT_PROFILE = "/edit_profile";
-    public static final String EMPLOYER_UPDATE_PROFILE = "/update";
+    public static final String EMPLOYER_CREATE_OR_UPDATE_PROFILE = "/update";
     public static final String EMPLOYER_DELETE_PROFILE = "/delete_profile";
     public static final String EMPLOYER_DELETE_LOGO_FILE = "/edit_profile/delete_logoFile";
     public static final String EMPLOYER_EMPLOYEES = "/employee";
@@ -148,7 +147,7 @@ public class EmployerUserController {
         return "employer/edit_profile";
     }
 
-    @PostMapping(value = EMPLOYER_UPDATE_PROFILE)
+    @PostMapping(value = EMPLOYER_CREATE_OR_UPDATE_PROFILE)
     public String updateEmployerProfile(@Valid @ModelAttribute EmployerUpdateRequestDTO employerUpdateRequestDTO,
                                         Model model,
                                         Authentication authentication) {
@@ -158,7 +157,7 @@ public class EmployerUserController {
 
         EmployerUpdateRequest candidateUpdateRequest = employerUpdateRequestMapper.map(employerUpdateRequestDTO);
         if (employer.isEmpty()) {
-            log.info("Process new employer profile");
+            log.info("Process create employer profile");
             employerService.newEmployerProfile(candidateUpdateRequest, user);
             return "redirect:profile?created";
         } else {
@@ -197,7 +196,7 @@ public class EmployerUserController {
             String logoPath = Utility.getUserPhotoPath(employer.get().getEmployerUuid(), employer.get().getLogoFilename());
             model.addAttribute("photoDir", logoPath);
         } else {
-            model.addAttribute("photoDir", "/img/user.jpg");
+            model.addAttribute("photoDir", UserController.DEFAULT_PHOTO_PATH);
         }
     }
 

@@ -5,14 +5,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.env.Environment;
 import org.springframework.ui.Model;
 import pl.devfinder.api.dto.UserDTO;
-import pl.devfinder.api.dto.mapper.UserMapper;
-import pl.devfinder.business.EmailVerificationTokenService;
-import pl.devfinder.business.ResetPasswordTokenService;
-import pl.devfinder.business.UserService;
 import pl.devfinder.business.management.Keys;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

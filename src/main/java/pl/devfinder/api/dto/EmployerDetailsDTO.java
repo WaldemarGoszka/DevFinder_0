@@ -1,16 +1,14 @@
 package pl.devfinder.api.dto;
 
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.Where;
 import org.springframework.web.multipart.MultipartFile;
 import pl.devfinder.domain.City;
 
 import java.time.OffsetDateTime;
 
 @Data
+@With
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

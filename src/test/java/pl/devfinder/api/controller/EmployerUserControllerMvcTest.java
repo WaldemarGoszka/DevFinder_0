@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.devfinder.api.dto.mapper.*;
 import pl.devfinder.business.*;
-import pl.devfinder.business.management.Keys;
 import pl.devfinder.domain.User;
 import pl.devfinder.infrastructure.security.configuration.UserDetailsCustom;
 import pl.devfinder.util.UserFixtures;
@@ -82,7 +81,7 @@ class EmployerUserControllerMvcTest {
         User user = UserFixtures.someUserEmployer1();
         Mockito.when(userService.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
-        mockMvc.perform(get(EmployerUserController.EMPLOYER_BASE_PATH + EmployerUserController.EMPLOYER_PROFILE))
+        mockMvc.perform(get(EmployerUserController.BASE_PATH + EmployerUserController.EMPLOYER_PROFILE))
                 .andExpect(status().isOk());
 //                .andExpect(model().attributeExists("invoiceNumber"))
 //                .andExpect(model().attributeExists("customerName"))

@@ -1,17 +1,13 @@
 package pl.devfinder.infrastructure.database.repository.mapper;
 
-import org.mapstruct.*;
-import pl.devfinder.domain.Candidate;
-import pl.devfinder.domain.CandidateSkill;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 import pl.devfinder.domain.Role;
 import pl.devfinder.domain.User;
-import pl.devfinder.infrastructure.database.entity.CandidateEntity;
-import pl.devfinder.infrastructure.database.entity.CandidateSkillEntity;
 import pl.devfinder.infrastructure.database.entity.RoleEntity;
 import pl.devfinder.infrastructure.database.entity.UserEntity;
-
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserEntityMapper {

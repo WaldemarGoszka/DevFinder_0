@@ -2,7 +2,6 @@ package pl.devfinder.business;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.devfinder.api.dto.SkillDTO;
 import pl.devfinder.business.dao.SkillDAO;
 import pl.devfinder.domain.Skill;
 import pl.devfinder.domain.exception.NotFoundException;

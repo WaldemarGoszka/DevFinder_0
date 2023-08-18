@@ -7,18 +7,24 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
-import pl.devfinder.api.dto.*;
-import pl.devfinder.api.dto.mapper.*;
+import pl.devfinder.api.dto.CityDTO;
+import pl.devfinder.api.dto.EmployerDetailsDTO;
+import pl.devfinder.api.dto.EmployerRowDTO;
+import pl.devfinder.api.dto.SkillDTO;
+import pl.devfinder.api.dto.mapper.CityMapper;
+import pl.devfinder.api.dto.mapper.EmployerDetailsMapper;
+import pl.devfinder.api.dto.mapper.EmployerRowMapper;
+import pl.devfinder.api.dto.mapper.SkillMapper;
 import pl.devfinder.business.*;
 import pl.devfinder.business.management.Keys;
 import pl.devfinder.business.management.Utility;
-import pl.devfinder.domain.Candidate;
+import pl.devfinder.domain.Employer;
 import pl.devfinder.domain.User;
-import pl.devfinder.domain.exception.NotFoundException;
 import pl.devfinder.domain.search.EmployerSearchCriteria;
-import pl.devfinder.domain.search.OfferSearchCriteria;
 
 import java.util.*;
 
@@ -38,13 +44,14 @@ public class EmployerDataController {
     private final EmployerRowMapper employerRowMapper;
     private final EmployerDetailsMapper employerDetailsMapper;
     private final UserController userController;
+    private final FileUploadService fileUploadService;
 
 
     @GetMapping(value = EMPLOYERS_LIST)
     public ModelAndView getEmployersList(@ModelAttribute EmployerSearchCriteria employerSearchCriteria,
                                          Model model,
                                          Authentication authentication) {
-        Optional<User> user = Utility.putUserDataToModel(authentication, userService, model);
+        Optional<User> user = userController.putUserDataToModel(authentication, userService, model);
         userController.setUserPhotoToModel(model, user);
 
         Map<String, ?> employerListData = prepareEmployerListData(employerSearchCriteria);
@@ -54,15 +61,18 @@ public class EmployerDataController {
 
     @GetMapping(value = EMPLOYER_DETAILS)
     public String getEmployerDetails(@PathVariable Long employerId, Model model, Authentication authentication) {
-        Optional<User> user = Utility.putUserDataToModel(authentication, userService, model);
+        Optional<User> user = userController.putUserDataToModel(authentication, userService, model);
         userController.setUserPhotoToModel(model, user);
 
-        EmployerDetailsDTO employerDetailsDTO = employerDetailsMapper.map(employerService.findById(employerId));
-        if (Objects.nonNull(employerDetailsDTO.getLogoFilename())) {
-            String photoPath = Utility.getUserPhotoPath(employerDetailsDTO.getEmployerUuid(),employerDetailsDTO.getLogoFilename());
+        Employer employer = employerService.findById(employerId);
+        EmployerDetailsDTO employerDetailsDTO = employerDetailsMapper.map(employer);
+        String logoFilename = employerDetailsDTO.getLogoFilename();
+        if (Objects.nonNull(logoFilename)) {
+            String employerUuid = employerDetailsDTO.getEmployerUuid();
+            String photoPath = fileUploadService.getUserPhotoPath(employerUuid, logoFilename);
             model.addAttribute("photoProfileDir", photoPath);
         } else {
-            model.addAttribute("photoProfileDir", "/img/user.jpg");
+            model.addAttribute("photoProfileDir", UserController.DEFAULT_PHOTO_PATH);
         }
         model.addAttribute("employerDetailsDTO", employerDetailsDTO);
         return "employer_details";
