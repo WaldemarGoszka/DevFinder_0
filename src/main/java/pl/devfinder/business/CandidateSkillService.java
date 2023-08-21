@@ -16,12 +16,12 @@ public class CandidateSkillService {
     private final CandidateSkillDAO candidateSkillDAO;
 
     public void saveAll(Set<CandidateSkill> candidateSkills) {
-        log.info("Process save all candidate skill: [{}]",candidateSkills);
+        log.info("Process save all candidate skill: [{}]", candidateSkills);
         candidateSkillDAO.saveAll(candidateSkills);
     }
 
     public void deleteAllByCandidate(Candidate candidate) {
-        log.info("Delete all candidate skill, candidateId: [{}]",candidate.getCandidateId());
+        log.info("Delete all candidate skill, candidateId: [{}]", candidate.getCandidateId());
         candidateSkillDAO.deleteAllByCandidate(candidate);
     }
 }

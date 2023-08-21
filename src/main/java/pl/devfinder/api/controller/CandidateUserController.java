@@ -14,10 +14,10 @@ import pl.devfinder.api.dto.mapper.CandidateDetailsMapper;
 import pl.devfinder.api.dto.mapper.CandidateUpdateRequestMapper;
 import pl.devfinder.api.dto.mapper.SkillMapper;
 import pl.devfinder.business.CandidateService;
+import pl.devfinder.business.FileService;
 import pl.devfinder.business.SkillService;
 import pl.devfinder.business.UserService;
 import pl.devfinder.business.management.Keys;
-import pl.devfinder.business.management.Utility;
 import pl.devfinder.domain.Candidate;
 import pl.devfinder.domain.CandidateUpdateRequest;
 import pl.devfinder.domain.User;
@@ -48,10 +48,12 @@ public class CandidateUserController {
     private final CandidateService candidateService;
     private final CandidateDetailsMapper candidateDetailsMapper;
     private final CandidateUpdateRequestMapper candidateUpdateRequestMapper;
+    private final UserController userController;
+    private final FileService fileService;
 
     @GetMapping(value = CANDIDATE_PROFILE)
     public String getCandidateProfile(Model model, Authentication authentication) {
-        User user = Utility.putUserDataToModel(authentication, userService, model)
+        User user = userController.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Optional<Candidate> candidate = candidateService.findByCandidateUuid(user.getUserUuid());
         setCandidatePhotoToModel(model, candidate);
@@ -62,14 +64,14 @@ public class CandidateUserController {
         CandidateDetailsDTO candidateDetailsDTO = candidate.map(candidateDetailsMapper::map).orElseThrow();
 
         model.addAttribute("candidateDetailsDTO", candidateDetailsDTO);
-        model.addAttribute("downloadCvFilePath", Utility.getUserPhotoPath(candidate.get().getCandidateUuid(),candidate.get().getCvFilename()));
+        model.addAttribute("downloadCvFilePath", fileService.getUserPhotoPath(candidate.get().getCandidateUuid(), candidate.get().getCvFilename()));
         return "candidate/profile";
     }
 
 
     @GetMapping(value = CANDIDATE_EDIT_PROFILE)
     public String getCandidateEditProfile(Model model, Authentication authentication) {
-        User user = Utility.putUserDataToModel(authentication, userService, model)
+        User user = userController.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Optional<Candidate> candidate = candidateService.findByCandidateUuid(user.getUserUuid());
         setCandidatePhotoToModel(model, candidate);
@@ -110,7 +112,7 @@ public class CandidateUserController {
 
     @DeleteMapping(value = CANDIDATE_DELETE_CV_FILE)
     public String deleteCvFile(Model model, Authentication authentication) {
-        User user = Utility.putUserDataToModel(authentication, userService, model)
+        User user = userController.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Candidate candidate = candidateService.findByCandidateUuid(user.getUserUuid())
                 .orElseThrow(() -> new NotFoundException("Could not find candidate by uuid"));
@@ -121,7 +123,7 @@ public class CandidateUserController {
 
     @DeleteMapping(value = CANDIDATE_DELETE_PHOTO_FILE)
     public String deletePhotoFile(Model model, Authentication authentication) {
-        User user = Utility.putUserDataToModel(authentication, userService, model)
+        User user = userController.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Candidate candidate = candidateService.findByCandidateUuid(user.getUserUuid())
                 .orElseThrow(() -> new NotFoundException("Could not find candidate by uuid"));
@@ -134,7 +136,7 @@ public class CandidateUserController {
     public String updateCandidateProfile(@Valid @ModelAttribute("candidateRequestDTO") CandidateUpdateRequestDTO candidateUpdateRequestDTO,
                                          Model model,
                                          Authentication authentication) {
-        User user = Utility.putUserDataToModel(authentication, userService, model)
+        User user = userController.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Optional<Candidate> candidate = candidateService.findByCandidateUuid(user.getUserUuid());
 
@@ -153,7 +155,7 @@ public class CandidateUserController {
 
     @DeleteMapping(value = CANDIDATE_DELETE_PROFILE)
     public String deleteCandidateProfile(Model model, Authentication authentication) {
-        User user = Utility.putUserDataToModel(authentication, userService, model)
+        User user = userController.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Candidate candidate = candidateService.findByCandidateUuid(user.getUserUuid())
                 .orElseThrow(() -> new NotFoundException("Could not find candidate by uuid"));
@@ -164,7 +166,7 @@ public class CandidateUserController {
 
     private void setCandidatePhotoToModel(Model model, Optional<Candidate> candidate) {
         if (candidate.isPresent() && Objects.nonNull(candidate.get().getPhotoFilename())) {
-            String photoPath = Utility.getUserPhotoPath(candidate.get().getCandidateUuid(),candidate.get().getPhotoFilename());
+            String photoPath = fileService.getUserPhotoPath(candidate.get().getCandidateUuid(), candidate.get().getPhotoFilename());
             model.addAttribute("photoDir", photoPath);
         } else {
             model.addAttribute("photoDir", UserController.DEFAULT_PHOTO_PATH);

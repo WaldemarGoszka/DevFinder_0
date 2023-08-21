@@ -1,12 +1,5 @@
 package pl.devfinder.infrastructure.database.repository;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.HashSet;
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -17,6 +10,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import pl.devfinder.infrastructure.database.entity.RoleEntity;
 import pl.devfinder.infrastructure.database.repository.jpa.RoleJpaRepository;
 import pl.devfinder.infrastructure.database.repository.mapper.RoleEntityMapper;
+
+import java.util.HashSet;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {RoleRepository.class})
 @ExtendWith(SpringExtension.class)
@@ -40,11 +40,11 @@ class RoleRepositoryDiffBlueTest {
         roleEntity.setRole("Role");
         roleEntity.setUserId(new HashSet<>());
         Optional<RoleEntity> ofResult = Optional.of(roleEntity);
-        when(roleJpaRepository.findByRole(Mockito.<String>any())).thenReturn(ofResult);
-        when(roleEntityMapper.mapFromEntity(Mockito.<RoleEntity>any())).thenReturn(null);
+        when(roleJpaRepository.findByRole(Mockito.any())).thenReturn(ofResult);
+        when(roleEntityMapper.mapFromEntity(Mockito.any())).thenReturn(null);
         assertFalse(roleRepository.findByRole("Role").isPresent());
-        verify(roleJpaRepository).findByRole(Mockito.<String>any());
-        verify(roleEntityMapper).mapFromEntity(Mockito.<RoleEntity>any());
+        verify(roleJpaRepository).findByRole(Mockito.any());
+        verify(roleEntityMapper).mapFromEntity(Mockito.any());
     }
 }
 

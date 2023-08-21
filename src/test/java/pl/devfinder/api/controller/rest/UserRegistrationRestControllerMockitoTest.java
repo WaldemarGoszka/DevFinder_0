@@ -79,54 +79,5 @@ class UserRegistrationRestControllerMockitoTest {
         verify(userService, times(1)).findByEmail(userDTO.getEmail());
     }
 
-//    @Test
-//    void registerUser() {
-//        // given
-//        UserDTO userDTO = UserDTOFixtures.someUserCandidateDTO1();
-//        Boolean enableEmailVerification = true;
-//        User userDtoOnCondition = UserFixtures.someUserCandidate1();
-//        User savedUser = UserFixtures.someUserCandidate1();
-//
-//        // when
-//        when(userService.findByEmail(userDTO.getEmail())).thenReturn(Optional.empty());
-//        when(environment.getProperty("devfinder-conf.enable-email-verification", Boolean.class)).thenReturn(enableEmailVerification);
-//        when(userService.save(userDtoOnCondition)).thenReturn(savedUser);
-//
-//        // call the method being tested
-//        ResponseEntity<User> responseEntity = userRegistrationRestController.registerUser(userDTO, request);
-//
-//        // then
-//        verify(userService).findByEmail(userDTO.getEmail());
-//        verify(userMapper).mapFromDTO(userDTO);
-//        verify(userService).save(userDtoOnCondition);
-//
-//        // assert the response
-//        assertNotNull(responseEntity);
-//        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-//
-//        User actualSavedUser = responseEntity.getBody();
-//        assertNotNull(actualSavedUser);
-//        assertEquals(savedUser, actualSavedUser);
-//    }
-
-//    @Test
-//    void registerUserUserAlreadyExists() {
-//        // given
-//        UserDTO userDTO = new UserDTO();
-//        userDTO.setEmail("test@example.com");
-//        Optional<User> existingUser = Optional.of(new User());
-//
-//        // when
-//        when(userService.findByEmail(userDTO.getEmail())).thenReturn(existingUser);
-//
-//        // call the method being tested
-//        assertThrows(UserAlreadyExistsException.class, () -> userController.registerUser(userDTO, request));
-//
-//        // then
-//        verify(userService).findByEmail(userDTO.getEmail());
-//        verifyNoInteractions(environment);
-//        verifyNoInteractions(userMapper);
-//        verifyNoInteractions(userService.save(any()));
-//    }
 
 }

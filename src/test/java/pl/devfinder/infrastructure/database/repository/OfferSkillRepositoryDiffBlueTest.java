@@ -1,18 +1,5 @@
 package pl.devfinder.infrastructure.database.repository;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -24,10 +11,20 @@ import pl.devfinder.domain.Offer;
 import pl.devfinder.infrastructure.database.entity.CityEntity;
 import pl.devfinder.infrastructure.database.entity.EmployerEntity;
 import pl.devfinder.infrastructure.database.entity.OfferEntity;
-import pl.devfinder.infrastructure.database.entity.OfferSkillEntity;
 import pl.devfinder.infrastructure.database.repository.jpa.OfferSkillJpaRepository;
 import pl.devfinder.infrastructure.database.repository.mapper.OfferEntityMapper;
 import pl.devfinder.infrastructure.database.repository.mapper.OfferSkillEntityMapper;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.mockito.Mockito.*;
 
 @ContextConfiguration(classes = {OfferSkillRepository.class})
 @ExtendWith(SpringExtension.class)
@@ -49,9 +46,9 @@ class OfferSkillRepositoryDiffBlueTest {
      */
     @Test
     void testSaveAll() {
-        when(offerSkillJpaRepository.saveAll(Mockito.<Iterable<OfferSkillEntity>>any())).thenReturn(new ArrayList<>());
+        when(offerSkillJpaRepository.saveAll(Mockito.any())).thenReturn(new ArrayList<>());
         offerSkillRepository.saveAll(new HashSet<>());
-        verify(offerSkillJpaRepository).saveAll(Mockito.<Iterable<OfferSkillEntity>>any());
+        verify(offerSkillJpaRepository).saveAll(Mockito.any());
     }
 
     /**
@@ -59,7 +56,7 @@ class OfferSkillRepositoryDiffBlueTest {
      */
     @Test
     void testDeleteAllByOffer() {
-        doNothing().when(offerSkillJpaRepository).deleteAllByOfferId(Mockito.<OfferEntity>any());
+        doNothing().when(offerSkillJpaRepository).deleteAllByOfferId(Mockito.any());
 
         CityEntity cityId = new CityEntity();
         cityId.setCandidateResidenceCities(new HashSet<>());
@@ -106,10 +103,10 @@ class OfferSkillRepositoryDiffBlueTest {
         offerEntity.setStatus("Status");
         offerEntity.setTitle("Dr");
         offerEntity.setYearsOfExperience(1);
-        when(offerEntityMapper.mapToEntity(Mockito.<Offer>any())).thenReturn(offerEntity);
+        when(offerEntityMapper.mapToEntity(Mockito.any())).thenReturn(offerEntity);
         offerSkillRepository.deleteAllByOffer(null);
-        verify(offerSkillJpaRepository).deleteAllByOfferId(Mockito.<OfferEntity>any());
-        verify(offerEntityMapper).mapToEntity(Mockito.<Offer>any());
+        verify(offerSkillJpaRepository).deleteAllByOfferId(Mockito.any());
+        verify(offerEntityMapper).mapToEntity(Mockito.any());
     }
 }
 

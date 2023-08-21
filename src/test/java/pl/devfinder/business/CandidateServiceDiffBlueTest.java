@@ -1,6 +1,5 @@
 package pl.devfinder.business;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -52,7 +51,7 @@ class CandidateServiceDiffBlueTest {
     private EmployerService employerService;
 
     @MockBean
-    private FileUploadService fileUploadService;
+    private FileService fileService;
 
     @MockBean
     private SkillService skillService;
@@ -63,7 +62,7 @@ class CandidateServiceDiffBlueTest {
     @Test
     void testFindAllByCriteria() {
         PageImpl<Candidate> pageImpl = new PageImpl<>(new ArrayList<>());
-        when(candidateCriteriaRepository.findAllByCriteria(Mockito.<CandidateSearchCriteria>any())).thenReturn(pageImpl);
+        when(candidateCriteriaRepository.findAllByCriteria(Mockito.any())).thenReturn(pageImpl);
 
         CandidateSearchCriteria candidateSearchCriteria = new CandidateSearchCriteria();
         candidateSearchCriteria.setCity("Oxford");
@@ -81,7 +80,7 @@ class CandidateServiceDiffBlueTest {
         Page<Candidate> actualFindAllByCriteriaResult = candidateService.findAllByCriteria(candidateSearchCriteria);
         assertSame(pageImpl, actualFindAllByCriteriaResult);
         assertTrue(actualFindAllByCriteriaResult.toList().isEmpty());
-        verify(candidateCriteriaRepository).findAllByCriteria(Mockito.<CandidateSearchCriteria>any());
+        verify(candidateCriteriaRepository).findAllByCriteria(Mockito.any());
     }
 
     /**
@@ -110,12 +109,12 @@ class CandidateServiceDiffBlueTest {
     @Test
     void testFindByCandidateUuid() {
         Optional<Candidate> emptyResult = Optional.empty();
-        when(candidateDAO.findByCandidateUuid(Mockito.<String>any())).thenReturn(emptyResult);
+        when(candidateDAO.findByCandidateUuid(Mockito.any())).thenReturn(emptyResult);
         Optional<Candidate> actualFindByCandidateUuidResult = candidateService
                 .findByCandidateUuid("01234567-89AB-CDEF-FEDC-BA9876543210");
         assertSame(emptyResult, actualFindByCandidateUuidResult);
         assertFalse(actualFindByCandidateUuidResult.isPresent());
-        verify(candidateDAO).findByCandidateUuid(Mockito.<String>any());
+        verify(candidateDAO).findByCandidateUuid(Mockito.any());
     }
 
     /**
@@ -123,73 +122,24 @@ class CandidateServiceDiffBlueTest {
      */
     @Test
     void testFindByCandidateUuid2() {
-        when(candidateDAO.findByCandidateUuid(Mockito.<String>any()))
+        when(candidateDAO.findByCandidateUuid(Mockito.any()))
                 .thenThrow(new FileUploadToProfileException("An error occurred"));
         assertThrows(FileUploadToProfileException.class,
                 () -> candidateService.findByCandidateUuid("01234567-89AB-CDEF-FEDC-BA9876543210"));
-        verify(candidateDAO).findByCandidateUuid(Mockito.<String>any());
+        verify(candidateDAO).findByCandidateUuid(Mockito.any());
     }
 
 
-    /**
-     * Method under test: {@link CandidateService#updateCandidateProfile(CandidateUpdateRequest, Candidate)}
-     */
-    @Test
-    @Disabled("TODO: Complete this test")
-    void testUpdateCandidateProfile2() {
-        // TODO: Complete this test.
-        //   Reason: R013 No inputs found that don't throw a trivial exception.
-        //   Diffblue Cover tried to run the arrange/act section, but the method under
-        //   test threw
-        //   java.util.NoSuchElementException: No value present
-        //       at java.base/java.util.Optional.orElseThrow(Optional.java:377)
-        //       at pl.devfinder.business.CandidateService.updateCandidateProfile(CandidateService.java:54)
-        //   See https://diff.blue/R013 to resolve this issue.
-
-        when(cityService.save(Mockito.<String>any())).thenReturn(null);
-        when(cityService.nonCityExist(Mockito.<String>any())).thenReturn(true);
-        when(cityService.findByCityName(Mockito.<String>any())).thenReturn(Optional.empty());
-        CandidateUpdateRequest candidateUpdateRequest = mock(CandidateUpdateRequest.class);
-        when(candidateUpdateRequest.getResidenceCityName()).thenReturn("Residence City Name");
-        candidateService.updateCandidateProfile(candidateUpdateRequest, null);
-    }
-
-    /**
-     * Method under test: {@link CandidateService#updateCandidateProfile(CandidateUpdateRequest, Candidate)}
-     */
-    @Test
-    @Disabled("TODO: Complete this test")
-    void testUpdateCandidateProfile3() {
-        // TODO: Complete this test.
-        //   Reason: R013 No inputs found that don't throw a trivial exception.
-        //   Diffblue Cover tried to run the arrange/act section, but the method under
-        //   test threw
-        //   java.util.NoSuchElementException: No value present
-        //       at java.base/java.util.Optional.orElseThrow(Optional.java:377)
-        //       at pl.devfinder.business.CandidateService.updateCandidateProfile(CandidateService.java:54)
-        //   See https://diff.blue/R013 to resolve this issue.
-
-        when(cityService.save(Mockito.<String>any())).thenReturn(null);
-        when(cityService.nonCityExist(Mockito.<String>any())).thenReturn(false);
-        when(cityService.findByCityName(Mockito.<String>any())).thenReturn(Optional.empty());
-        CandidateUpdateRequest candidateUpdateRequest = mock(CandidateUpdateRequest.class);
-        when(candidateUpdateRequest.getResidenceCityName()).thenReturn("Residence City Name");
-        candidateService.updateCandidateProfile(candidateUpdateRequest, null);
-    }
-
-    /**
-     * Method under test: {@link CandidateService#updateCandidateProfile(CandidateUpdateRequest, Candidate)}
-     */
     @Test
     void testUpdateCandidateProfile4() {
-        when(cityService.save(Mockito.<String>any())).thenThrow(new FileUploadToProfileException("An error occurred"));
-        when(cityService.nonCityExist(Mockito.<String>any())).thenReturn(true);
+        when(cityService.save(Mockito.any())).thenThrow(new FileUploadToProfileException("An error occurred"));
+        when(cityService.nonCityExist(Mockito.any())).thenReturn(true);
         CandidateUpdateRequest candidateUpdateRequest = mock(CandidateUpdateRequest.class);
         when(candidateUpdateRequest.getResidenceCityName()).thenReturn("Residence City Name");
         assertThrows(FileUploadToProfileException.class,
                 () -> candidateService.updateCandidateProfile(candidateUpdateRequest, null));
-        verify(cityService).nonCityExist(Mockito.<String>any());
-        verify(cityService).save(Mockito.<String>any());
+        verify(cityService).nonCityExist(Mockito.any());
+        verify(cityService).save(Mockito.any());
         verify(candidateUpdateRequest, atLeast(1)).getResidenceCityName();
     }
 
@@ -197,62 +147,21 @@ class CandidateServiceDiffBlueTest {
     /**
      * Method under test: {@link CandidateService#newCandidateProfile(CandidateUpdateRequest, User)}
      */
-    @Test
-    @Disabled("TODO: Complete this test")
-    void testNewCandidateProfile2() {
-        // TODO: Complete this test.
-        //   Reason: R013 No inputs found that don't throw a trivial exception.
-        //   Diffblue Cover tried to run the arrange/act section, but the method under
-        //   test threw
-        //   java.util.NoSuchElementException: No value present
-        //       at java.base/java.util.Optional.orElseThrow(Optional.java:377)
-        //       at pl.devfinder.business.CandidateService.newCandidateProfile(CandidateService.java:99)
-        //   See https://diff.blue/R013 to resolve this issue.
 
-        when(cityService.save(Mockito.<String>any())).thenReturn(null);
-        when(cityService.nonCityExist(Mockito.<String>any())).thenReturn(true);
-        when(cityService.findByCityName(Mockito.<String>any())).thenReturn(Optional.empty());
-        CandidateUpdateRequest candidateUpdateRequest = mock(CandidateUpdateRequest.class);
-        when(candidateUpdateRequest.getResidenceCityName()).thenReturn("Residence City Name");
-        candidateService.newCandidateProfile(candidateUpdateRequest, null);
-    }
-
-    /**
-     * Method under test: {@link CandidateService#newCandidateProfile(CandidateUpdateRequest, User)}
-     */
-    @Test
-    @Disabled("TODO: Complete this test")
-    void testNewCandidateProfile3() {
-        // TODO: Complete this test.
-        //   Reason: R013 No inputs found that don't throw a trivial exception.
-        //   Diffblue Cover tried to run the arrange/act section, but the method under
-        //   test threw
-        //   java.util.NoSuchElementException: No value present
-        //       at java.base/java.util.Optional.orElseThrow(Optional.java:377)
-        //       at pl.devfinder.business.CandidateService.newCandidateProfile(CandidateService.java:99)
-        //   See https://diff.blue/R013 to resolve this issue.
-
-        when(cityService.save(Mockito.<String>any())).thenReturn(null);
-        when(cityService.nonCityExist(Mockito.<String>any())).thenReturn(false);
-        when(cityService.findByCityName(Mockito.<String>any())).thenReturn(Optional.empty());
-        CandidateUpdateRequest candidateUpdateRequest = mock(CandidateUpdateRequest.class);
-        when(candidateUpdateRequest.getResidenceCityName()).thenReturn("Residence City Name");
-        candidateService.newCandidateProfile(candidateUpdateRequest, null);
-    }
 
     /**
      * Method under test: {@link CandidateService#newCandidateProfile(CandidateUpdateRequest, User)}
      */
     @Test
     void testNewCandidateProfile4() {
-        when(cityService.save(Mockito.<String>any())).thenThrow(new FileUploadToProfileException("An error occurred"));
-        when(cityService.nonCityExist(Mockito.<String>any())).thenReturn(true);
+        when(cityService.save(Mockito.any())).thenThrow(new FileUploadToProfileException("An error occurred"));
+        when(cityService.nonCityExist(Mockito.any())).thenReturn(true);
         CandidateUpdateRequest candidateUpdateRequest = mock(CandidateUpdateRequest.class);
         when(candidateUpdateRequest.getResidenceCityName()).thenReturn("Residence City Name");
         assertThrows(FileUploadToProfileException.class,
                 () -> candidateService.newCandidateProfile(candidateUpdateRequest, null));
-        verify(cityService).nonCityExist(Mockito.<String>any());
-        verify(cityService).save(Mockito.<String>any());
+        verify(cityService).nonCityExist(Mockito.any());
+        verify(cityService).save(Mockito.any());
         verify(candidateUpdateRequest, atLeast(1)).getResidenceCityName();
     }
 
@@ -281,9 +190,9 @@ class CandidateServiceDiffBlueTest {
      */
     @Test
     void testCountByCityName() {
-        when(candidateDAO.countByCityName(Mockito.<String>any())).thenReturn(3L);
+        when(candidateDAO.countByCityName(Mockito.any())).thenReturn(3L);
         assertEquals(3L, candidateService.countByCityName("Oxford"));
-        verify(candidateDAO).countByCityName(Mockito.<String>any());
+        verify(candidateDAO).countByCityName(Mockito.any());
     }
 
     /**
@@ -291,44 +200,12 @@ class CandidateServiceDiffBlueTest {
      */
     @Test
     void testCountByCityName2() {
-        when(candidateDAO.countByCityName(Mockito.<String>any()))
+        when(candidateDAO.countByCityName(Mockito.any()))
                 .thenThrow(new FileUploadToProfileException("An error occurred"));
         assertThrows(FileUploadToProfileException.class, () -> candidateService.countByCityName("Oxford"));
-        verify(candidateDAO).countByCityName(Mockito.<String>any());
+        verify(candidateDAO).countByCityName(Mockito.any());
     }
 
-    /**
-     * Method under test: {@link CandidateService#deleteCvFile(Candidate)}
-     */
-    @Test
-    @Disabled("TODO: Complete this test")
-    void testDeleteCvFile() {
-        // TODO: Complete this test.
-        //   Reason: R013 No inputs found that don't throw a trivial exception.
-        //   Diffblue Cover tried to run the arrange/act section, but the method under
-        //   test threw
-        //   java.lang.NullPointerException: Cannot invoke "pl.devfinder.domain.Candidate.getCandidateUuid()" because "candidate" is null
-        //       at pl.devfinder.business.CandidateService.deleteCvFile(CandidateService.java:249)
-        //   See https://diff.blue/R013 to resolve this issue.
 
-        candidateService.deleteCvFile(null);
-    }
-
-    /**
-     * Method under test: {@link CandidateService#deletePhotoFile(Candidate)}
-     */
-    @Test
-    @Disabled("TODO: Complete this test")
-    void testDeletePhotoFile() {
-        // TODO: Complete this test.
-        //   Reason: R013 No inputs found that don't throw a trivial exception.
-        //   Diffblue Cover tried to run the arrange/act section, but the method under
-        //   test threw
-        //   java.lang.NullPointerException: Cannot invoke "pl.devfinder.domain.Candidate.getCandidateUuid()" because "candidate" is null
-        //       at pl.devfinder.business.CandidateService.deletePhotoFile(CandidateService.java:256)
-        //   See https://diff.blue/R013 to resolve this issue.
-
-        candidateService.deletePhotoFile(null);
-    }
 }
 

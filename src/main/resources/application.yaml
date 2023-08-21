@@ -1,12 +1,20 @@
 devfinder-conf:
-  enable-email-verification: false
-  user-data-path : "src/main/resources/static/user_data/"
+  enable-email-verification: true
+  user-data-path: "src/main/resources/static/user_data/"
+
+api:
+  justJoinItApi:
+    url: https://justjoin.it/api/offers
 
 server:
   port: 8080
   servlet:
     context-path: /devfinder
+
 spring:
+  devtools:
+    livereload:
+      enabled: false
   jpa:
     hibernate:
       ddl-auto: validate

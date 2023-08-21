@@ -4,7 +4,7 @@
 
 <head>
     <title>DevFinder - Candidate - Edit Profile</title>
-    <link th:href="@{/img/favicon.ico}" rel="icon">
+    <link rel="icon" th:href="@{/img/favicon.ico}">
     <div th:replace="~{fragments :: head_style_}"></div>
 </head>
 
@@ -49,60 +49,60 @@
                         </div>
                         <!--                        FACE PHOTO-->
                         <form action="#"
+                              id="cvFileForm"
                               th:action="@{/candidate_portal/edit_profile/delete_photoFile}"
-                              th:method="DELETE"
-                              id="cvFileForm">
+                              th:method="DELETE">
                             <dl class="row mb-0" th:if="${photoFileLink != null}">
                                 <dt class="col-sm-4">Actual face photo:</dt>
                                 <dd class="col-sm-8">
                                     [[${photoFileLink}]]
-                                    <button type="submit" form="cvFileForm" class="btn  btn-info m-2">Delete
+                                    <button class="btn  btn-info m-2" form="cvFileForm" type="submit">Delete
                                     </button>
                                 </dd>
                             </dl>
                         </form>
                         <!--                            CV FILE-->
                         <form action="#"
+                              id="photoFileForm"
                               th:action="@{/candidate_portal/edit_profile/delete_cvFile}"
-                              th:method="DELETE"
-                              id="photoFileForm">
+                              th:method="DELETE">
                             <dl class="row mb-0" th:if="${cvFileLink != null}">
                                 <dt class="col-sm-4">Actual cv file</dt>
                                 <dd class="col-sm-8">
                                     [[${cvFileLink}]]
-                                    <button type="submit" form="photoFileForm" class="btn  btn-info m-2">Delete
+                                    <button class="btn  btn-info m-2" form="photoFileForm" type="submit">Delete
                                     </button>
                                 </dd>
                             </dl>
                         </form>
                         <form
+                                enctype="multipart/form-data"
+                                id="editForm"
                                 th:action="@{/candidate_portal/update}"
                                 th:method="POST"
                                 th:object="${candidateDetailsDTO}"
-                                enctype="multipart/form-data"
-                                id="editForm"
                         >
                             <dl class="row mb-0">
 
                                 <dt class="col-sm-4">Upload face photo</dt>
                                 <dd class="col-sm-8">
                                     <div class="mb-3">
-                                        <input class="form-control bg-dark"
+                                        <input accept="image/png, image/jpeg"
+                                               class="form-control bg-dark"
+                                               id="photoFile"
                                                th:field="*{filePhoto}"
-                                               accept="image/png, image/jpeg"
-                                               type="file"
-                                               id="photoFile">
+                                               type="file">
                                     </div>
                                 </dd>
 
                                 <dt class="col-sm-4">Upload CV File as PDF</dt>
                                 <dd class="col-sm-8">
                                     <div class="mb-3">
-                                        <input class="form-control bg-dark"
+                                        <input accept="application/pdf"
+                                               class="form-control bg-dark"
+                                               id="cvFile"
                                                th:field="*{fileCv}"
-                                               accept="application/pdf"
-                                               type="file"
-                                               id="cvFile">
+                                               type="file">
                                     </div>
                                 </dd>
 
@@ -110,76 +110,81 @@
                                 <dd class="col-sm-8">
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input"
-                                               type="radio"
                                                id="statusActive"
-                                               th:value="${statusEnumActive}"
-                                               th:disabled="${candidateDetailsDTO.employerId == null} ? false : true"
                                                th:checked="${candidateDetailsDTO.status != null} ? ${candidateDetailsDTO.status} : true"
-                                               th:field="*{status}">
-                                        <label th:text="${statusEnumActive}" class="form-check-label"
-                                               for="statusActive"></label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input"
-                                               type="radio"
-                                               id="statusInactive"
                                                th:disabled="${candidateDetailsDTO.employerId == null} ? false : true"
-                                               th:value="${statusEnumInactive}"
-                                               th:checked="${candidateDetailsDTO.status != null} ? ${candidateDetailsDTO.status} : false"
-                                               th:field="*{status}">
-                                        <label th:text="${statusEnumInactive}" class="form-check-label"
-                                               for="statusInactive"></label>
+                                               th:field="*{status}"
+                                               th:value="${statusEnumActive}"
+                                               type="radio">
+                                        <label class="form-check-label" for="statusActive"
+                                               th:text="${statusEnumActive}"></label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input"
-                                               type="radio"
-                                               id="statusEmployed"
-                                               disabled
-                                               th:value="${statusEnumEmployed}"
+                                               id="statusInactive"
                                                th:checked="${candidateDetailsDTO.status != null} ? ${candidateDetailsDTO.status} : false"
-                                               th:field="*{status}">
-                                        <label class="form-check-label"
-                                               for="statusEmployed">[[${statusEnumEmployed}]] (only employer can hire you)</label>
+                                               th:disabled="${candidateDetailsDTO.employerId == null} ? false : true"
+                                               th:field="*{status}"
+                                               th:value="${statusEnumInactive}"
+                                               type="radio">
+                                        <label class="form-check-label" for="statusInactive"
+                                               th:text="${statusEnumInactive}"></label>
                                     </div>
-                                    <div th:if="${candidateDetailsDTO.employerId != null}"> If your employer makes you redundant you will be able to change your status</div>
-                                <input type="hidden" th:if="${candidateDetailsDTO.employerId != null}" name="status" th:value="${statusEnumEmployed}">
-                                <input type="hidden" th:if="${candidateDetailsDTO.employerId != null}" name="employerName" th:value="${candidateDetailsDTO.employerId.companyName}">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input"
+                                               disabled
+                                               id="statusEmployed"
+                                               th:checked="${candidateDetailsDTO.status != null} ? ${candidateDetailsDTO.status} : false"
+                                               th:field="*{status}"
+                                               th:value="${statusEnumEmployed}"
+                                               type="radio">
+                                        <label class="form-check-label"
+                                               for="statusEmployed">[[${statusEnumEmployed}]] (only employer can hire
+                                            you)</label>
+                                    </div>
+                                    <div th:if="${candidateDetailsDTO.employerId != null}"> If your employer makes you
+                                        redundant you will be able to change your status
+                                    </div>
+                                    <input name="status" th:if="${candidateDetailsDTO.employerId != null}" th:value="${statusEnumEmployed}"
+                                           type="hidden">
+                                    <input name="employerName" th:if="${candidateDetailsDTO.employerId != null}"
+                                           th:value="${candidateDetailsDTO.employerId.companyName}" type="hidden">
                                 </dd>
 
 
                                 <dt class="col-sm-4">First name</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            type="text"
                                             class="form-control"
                                             th:field="*{firstName}"
+                                            type="text"
                                     >
                                 </dd>
 
                                 <dt class="col-sm-4">Last name</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            type="text"
                                             class="form-control"
                                             th:field="*{lastName}"
+                                            type="text"
                                     >
                                 </dd>
 
                                 <dt class="col-sm-4">Residence City</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            th:if="${candidateDetailsDTO.residenceCityId != null}"
-                                            type="text"
                                             class="form-control"
+                                            th:if="${candidateDetailsDTO.residenceCityId != null}"
                                             th:name="residenceCityName"
                                             th:value="${candidateDetailsDTO.residenceCityId.cityName}"
+                                            type="text"
                                     >
                                     <input
-                                            th:if="${candidateDetailsDTO.residenceCityId == null}"
-                                        type="text"
                                             class="form-control"
-                                            th:name="residenceCityName"
                                             th:field="*{residenceCityName}"
+                                            th:if="${candidateDetailsDTO.residenceCityId == null}"
+                                            th:name="residenceCityName"
+                                            type="text"
                                     >
                                 </dd>
 
@@ -187,44 +192,44 @@
                                 <dd class="col-sm-8">
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input"
-                                               type="radio"
                                                id="expJunior"
-                                               th:value="${expLevelEnumJunior}"
                                                th:checked="${candidateDetailsDTO.experienceLevel != null} ? ${candidateDetailsDTO.experienceLevel} : true"
-                                               th:field="*{experienceLevel}">
-                                        <label th:text="${expLevelEnumJunior}" class="form-check-label"
-                                               for="expJunior"></label>
+                                               th:field="*{experienceLevel}"
+                                               th:value="${expLevelEnumJunior}"
+                                               type="radio">
+                                        <label class="form-check-label" for="expJunior"
+                                               th:text="${expLevelEnumJunior}"></label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input"
-                                               type="radio"
                                                id="expMid"
-                                               th:value="${expLevelEnumMid}"
                                                th:checked="${candidateDetailsDTO.experienceLevel != null} ? ${candidateDetailsDTO.experienceLevel} : false"
-                                               th:field="*{experienceLevel}">
-                                        <label th:text="${expLevelEnumMid}" class="form-check-label"
-                                               for="expMid"></label>
+                                               th:field="*{experienceLevel}"
+                                               th:value="${expLevelEnumMid}"
+                                               type="radio">
+                                        <label class="form-check-label" for="expMid"
+                                               th:text="${expLevelEnumMid}"></label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input"
-                                               type="radio"
                                                id="expSenior"
-                                               th:value="${expLevelEnumSenior}"
                                                th:checked="${candidateDetailsDTO.experienceLevel != null} ? ${candidateDetailsDTO.experienceLevel} : false"
-                                               th:field="*{experienceLevel}">
-                                        <label th:text="${expLevelEnumSenior}" class="form-check-label"
-                                               for="expSenior"></label>
+                                               th:field="*{experienceLevel}"
+                                               th:value="${expLevelEnumSenior}"
+                                               type="radio">
+                                        <label class="form-check-label" for="expSenior"
+                                               th:text="${expLevelEnumSenior}"></label>
                                     </div>
                                 </dd>
 
                                 <dt class="col-sm-4">Years of experience</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            type="number"
                                             class="form-control"
-                                            th:field="*{yearsOfExperience}"
                                             min="0"
                                             step="1"
+                                            th:field="*{yearsOfExperience}"
+                                            type="number"
                                     >
                                 </dd>
 
@@ -232,17 +237,17 @@
                                 <dd class="col-sm-8">
                                     <div class="m-n2">
                                         <span th:each="skill : ${allSkillsDTOs}">
-                                            <input type="checkbox"
-                                                   th:value="${skill.skillName}"
+                                            <input autocomplete="on"
+                                                   class="btn-check"
+                                                   th:checked="${candidateDetailsDTO.candidateSkills != null} ? ${skillChecked.contains(skill.skillName)} : false"
                                                    th:id="${skill.skillId}"
                                                    th:name="candidateSkillsNames"
-                                                   th:checked="${candidateDetailsDTO.candidateSkills != null} ? ${skillChecked.contains(skill.skillName)} : false"
-                                                   class="btn-check"
-                                                   autocomplete="on">
-                                            <label type="checkbox"
-                                                   class="btn btn-outline-light m-2"
+                                                   th:value="${skill.skillName}"
+                                                   type="checkbox">
+                                            <label class="btn btn-outline-light m-2"
                                                    th:for="${skill.skillId}"
                                                    th:text="${skill.skillName}"
+                                                   type="checkbox"
                                             ></label>
                                         </span>
                                     </div>
@@ -251,37 +256,37 @@
                                 <dt class="col-sm-4">Other Skills</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            type="text"
                                             class="form-control"
                                             th:field="*{otherSkills}"
+                                            type="text"
                                     >
                                 </dd>
 
                                 <dt class="col-sm-4">Education</dt>
                                 <dd class="col-sm-8">
                                     <textarea
-                                            type="text"
                                             class="form-control"
                                             rows="2"
                                             th:field="*{education}"
+                                            type="text"
                                     ></textarea>
                                 </dd>
 
                                 <dt class="col-sm-4">Foreign Language</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            type="text"
                                             class="form-control"
                                             th:field="*{foreignLanguage}"
+                                            type="text"
                                     >
                                 </dd>
 
                                 <dt class="col-sm-4">Minimum expected payout</dt>
                                 <dd class="col-sm-8">
                                     <div class="input-group mb-3">
-                                        <input type="number"
-                                               class="form-control"
+                                        <input class="form-control"
                                                th:field="*{salaryMin}"
+                                               type="number"
 
                                         >
                                     </div>
@@ -291,20 +296,20 @@
                                 <dd class="col-sm-8">
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input"
-                                               type="radio"
                                                id="openToRemote"
-                                               th:value="${true}"
                                                th:checked="${candidateDetailsDTO.openToRemoteJob != null} ? ${candidateDetailsDTO.openToRemoteJob} : false"
-                                               th:field="*{openToRemoteJob}">
+                                               th:field="*{openToRemoteJob}"
+                                               th:value="${true}"
+                                               type="radio">
                                         <label class="form-check-label" for="openToRemote">Yes</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input"
-                                               type="radio"
                                                id="noOpenToRemote"
-                                               th:value="${false}"
                                                th:checked="${candidateDetailsDTO.openToRemoteJob != null} ? ${candidateDetailsDTO.openToRemoteJob} : false"
-                                               th:field="*{openToRemoteJob}">
+                                               th:field="*{openToRemoteJob}"
+                                               th:value="${false}"
+                                               type="radio">
                                         <label class="form-check-label" for="noOpenToRemote">No</label>
                                     </div>
                                 </dd>
@@ -313,45 +318,45 @@
                                 <dt class="col-sm-4">Linkedin link</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            type="text"
                                             class="form-control"
                                             th:field="*{linkedinLink}"
+                                            type="text"
                                     >
                                 </dd>
 
                                 <dt class="col-sm-4">Github / Gitlab Link</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            type="text"
                                             class="form-control"
                                             th:field="*{githubLink}"
+                                            type="text"
                                     >
                                 </dd>
                                 <dt class="col-sm-4">Hobby</dt>
                                 <dd class="col-sm-8">
                                     <textarea
-                                            type="text"
                                             class="form-control"
                                             rows="2"
                                             th:field="*{hobby}"
+                                            type="text"
                                     ></textarea>
                                 </dd>
 
                                 <dt class="col-sm-4">Contact email</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            type="text"
                                             class="form-control"
                                             th:field="*{emailContact}"
+                                            type="text"
                                     >
                                 </dd>
 
                                 <dt class="col-sm-4">Phone number</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            type="text"
                                             class="form-control"
                                             th:field="*{phoneNumber}"
+                                            type="text"
                                     >
                                 </dd>
                             </dl>
@@ -369,15 +374,17 @@
                         </form>
                         <form
                                 action="#"
-                                th:action="@{/candidate_portal/delete_profile}"
-                                th:method="DELETE"
                                 id="deleteProfile"
                                 onsubmit="return confirm('Do you really want to delete your profile? Employers will stop seeing you');"
+                                th:action="@{/candidate_portal/delete_profile}"
+                                th:method="DELETE"
 
                         >
-                            <button th:unless="${param.new}"
-                                    form="deleteProfile" class="btn justify-content-center btn-danger m-2"  type="submit">
-                                Delete Profile</button>
+                            <button class="btn justify-content-center btn-danger m-2"
+                                    form="deleteProfile" th:unless="${param.new}"
+                                    type="submit">
+                                Delete Profile
+                            </button>
                         </form>
 
 
@@ -408,7 +415,7 @@
 
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <a class="btn btn-lg btn-primary btn-lg-square back-to-top" href="#"><i class="bi bi-arrow-up"></i></a>
 </div>
 
 <div th:replace="~{fragments :: js_}"></div>

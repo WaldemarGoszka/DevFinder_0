@@ -98,24 +98,24 @@ class CandidateUserRestControllerMockitoTest {
         verifyNoInteractions(candidateDetailsMapper);
     }
 
-        @Test
-        void getCandidateProfileCandidateNotFound() {
-            // given
-            User user = UserFixtures.someUserCandidate1();
-            String userEmail = user.getEmail();
+    @Test
+    void getCandidateProfileCandidateNotFound() {
+        // given
+        User user = UserFixtures.someUserCandidate1();
+        String userEmail = user.getEmail();
 
-            // when
-            when(authentication.getName()).thenReturn(userEmail);
-            when(userService.findByEmail(userEmail)).thenReturn(Optional.of(user));
-            when(candidateService.findByCandidateUuid(user.getUserUuid())).thenReturn(Optional.empty());
+        // when
+        when(authentication.getName()).thenReturn(userEmail);
+        when(userService.findByEmail(userEmail)).thenReturn(Optional.of(user));
+        when(candidateService.findByCandidateUuid(user.getUserUuid())).thenReturn(Optional.empty());
 
-            assertThrows(ProfileNotExistException.class, () -> candidateUserRestController.getCandidateProfile(authentication));
+        assertThrows(ProfileNotExistException.class, () -> candidateUserRestController.getCandidateProfile(authentication));
 
-            // then
-            verify(userService).findByEmail(userEmail);
-            verify(candidateService).findByCandidateUuid(user.getUserUuid());
-            verifyNoInteractions(candidateDetailsMapper);
-        }
+        // then
+        verify(userService).findByEmail(userEmail);
+        verify(candidateService).findByCandidateUuid(user.getUserUuid());
+        verifyNoInteractions(candidateDetailsMapper);
+    }
 
     @Test
     void createCandidateProfile() {

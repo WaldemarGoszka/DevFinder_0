@@ -13,28 +13,28 @@ import java.util.Set;
 @Mapper(componentModel = "spring")
 
 public abstract class OfferRowMapper {
-@Autowired
+    @Autowired
     OfferService offerService;
 
     public OfferRowDTO map(Offer offer) {
-        if ( offer == null ) {
+        if (offer == null) {
             return null;
         }
 
         OfferRowDTO.OfferRowDTOBuilder offerRowDTO = OfferRowDTO.builder();
 
         offerRowDTO.offerId(offer.getOfferId());
-        offerRowDTO.title( offer.getTitle() );
-        offerRowDTO.remoteWorkFormatted( offerService.formatRemoteWork(offer.getRemoteWork()) );
-        offerRowDTO.experienceLevel( offer.getExperienceLevel() );
-        offerRowDTO.salaryRange(offerService.formatSalaryRange(offer.getSalaryMin(), offer.getSalaryMax()) );
-        offerRowDTO.employerId( offer.getEmployerId() );
-        offerRowDTO.cityId( offer.getCityId() );
-        offerRowDTO.status( offer.getStatus() );
+        offerRowDTO.title(offer.getTitle());
+        offerRowDTO.remoteWorkFormatted(offerService.formatRemoteWork(offer.getRemoteWork()));
+        offerRowDTO.experienceLevel(offer.getExperienceLevel());
+        offerRowDTO.salaryRange(offerService.formatSalaryRange(offer.getSalaryMin(), offer.getSalaryMax()));
+        offerRowDTO.employerId(offer.getEmployerId());
+        offerRowDTO.cityId(offer.getCityId());
+        offerRowDTO.status(offer.getStatus());
         offerRowDTO.daysSinceCreated(offerService.getDaysSinceDate(offer.getCreatedAt()));
         Set<OfferSkill> set = offer.getOfferSkills();
-        if ( set != null ) {
-            offerRowDTO.offerSkills( new LinkedHashSet<OfferSkill>( set ) );
+        if (set != null) {
+            offerRowDTO.offerSkills(new LinkedHashSet<OfferSkill>(set));
         }
         return offerRowDTO.build();
     }

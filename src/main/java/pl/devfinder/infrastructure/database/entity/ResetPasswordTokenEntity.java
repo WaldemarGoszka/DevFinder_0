@@ -12,7 +12,7 @@ import java.time.OffsetDateTime;
 @EqualsAndHashCode(of = "passwordResetTokenId")
 @ToString(of = {"passwordResetTokenId", "token"})
 @Entity
-@Table(name  = "reset_password_token")
+@Table(name = "reset_password_token")
 public class ResetPasswordTokenEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

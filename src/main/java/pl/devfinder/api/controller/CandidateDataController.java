@@ -15,7 +15,6 @@ import pl.devfinder.api.dto.*;
 import pl.devfinder.api.dto.mapper.*;
 import pl.devfinder.business.*;
 import pl.devfinder.business.management.Keys;
-import pl.devfinder.business.management.Utility;
 import pl.devfinder.domain.Candidate;
 import pl.devfinder.domain.Employer;
 import pl.devfinder.domain.User;
@@ -42,12 +41,12 @@ public class CandidateDataController {
     private final CandidateDetailsMapper candidateDetailsMapper;
     private final UserController userController;
     private final CandidateRowMapper candidateRowMapper;
-    private final FileUploadService fileUploadService;
+    private final FileService fileService;
 
 
     @GetMapping(value = CANDIDATES_LIST)
     public ModelAndView getCandidatesList(@ModelAttribute
-                                    CandidateSearchCriteria candidateSearchCriteria,
+                                          CandidateSearchCriteria candidateSearchCriteria,
                                           Model model,
                                           Authentication authentication) {
         Optional<User> user = userController.putUserDataToModel(authentication, userService, model);
@@ -55,7 +54,7 @@ public class CandidateDataController {
 
         Map<String, ?> candidateListData = prepareCandidateListData(candidateSearchCriteria);
 
-        return new ModelAndView("candidates",candidateListData);
+        return new ModelAndView("candidates", candidateListData);
     }
 
     @GetMapping(value = CANDIDATE_DETAIL)
@@ -71,14 +70,14 @@ public class CandidateDataController {
         String photoFilename = candidateDetailsDTO.getPhotoFilename();
         String candidateUuid = candidateDetailsDTO.getCandidateUuid();
         if (Objects.nonNull(photoFilename)) {
-            String photoPath = fileUploadService.getUserPhotoPath(candidateUuid, photoFilename);
+            String photoPath = fileService.getUserPhotoPath(candidateUuid, photoFilename);
             model.addAttribute("photoProfileDir", photoPath);
         } else {
             model.addAttribute("photoProfileDir", UserController.DEFAULT_PHOTO_PATH);
         }
         checkToShowFireCandidateButton(model, user, candidateDetailsDTO);
 
-        String userPhotoPath = fileUploadService.getUserPhotoPath(candidateUuid, candidateDetailsDTO.getCvFilename());
+        String userPhotoPath = fileService.getUserPhotoPath(candidateUuid, candidateDetailsDTO.getCvFilename());
         model.addAttribute("downloadCvFilePath", userPhotoPath);
 
         model.addAttribute("candidateDetailsDTO", candidateDetailsDTO);
@@ -108,10 +107,8 @@ public class CandidateDataController {
         Page<CandidateRowDTO> page = allByCriteria.map(candidateRowMapper::map);
         List<CandidateRowDTO> allCandidates = page.getContent();
 
-
         model.put("totalPages", page.getTotalPages());
         model.put("totalItems", page.getTotalElements());
-
 
         model.put("experienceLevelChecked", candidateSearchCriteria.getExperienceLevels());
         model.put("skillChecked", candidateSearchCriteria.getSkills());
@@ -119,7 +116,6 @@ public class CandidateDataController {
         model.put("minYearsOfExperienceChecked", candidateSearchCriteria.getMinYearsOfExperience());
         model.put("openToRemoteJobChecked", candidateSearchCriteria.getOpenToRemoteJob());
         model.put("statusChecked", candidateSearchCriteria.getStatus());
-
 
         model.put("expLevelEnumJunior", Keys.Experience.JUNIOR.getName());
         model.put("expLevelEnumMid", Keys.Experience.MID.getName());
@@ -129,7 +125,6 @@ public class CandidateDataController {
         model.put("statusEnumEmployed", Keys.CandidateState.EMPLOYED.getName());
         model.put("remoteEnumYes", Keys.CandidateFilterBy.YES.getName());
         model.put("remoteEnumNo", Keys.CandidateFilterBy.NO.getName());
-
 
         List<SkillDTO> allSkills = skillService.findAll().stream().map(skillMapper::map).toList();
         List<CityDTO> allCity = cityService.findAll().stream().map(cityMapper::map).toList();

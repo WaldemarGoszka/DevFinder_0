@@ -50,7 +50,7 @@ public class OfferService {
 
     public String formatSalaryRange(BigDecimal salaryMin, BigDecimal salaryMax) {
         if (Objects.nonNull(salaryMin) && Objects.nonNull(salaryMax)) {
-            return String.valueOf(salaryMin.toBigInteger()) + " - " + String.valueOf(salaryMax.toBigInteger());
+            return salaryMin.toBigInteger() + " - " + salaryMax.toBigInteger();
         }
         return Keys.Salary.UNDISCLOSED.getName();
     }
@@ -59,7 +59,7 @@ public class OfferService {
         if (remote == null || remote == 0) {
             return "No";
         }
-        return String.valueOf(remote) + " % time";
+        return remote + " % time";
     }
 
     public Offer findById(Long offerId) {

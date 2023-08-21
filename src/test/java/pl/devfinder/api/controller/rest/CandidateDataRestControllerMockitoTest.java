@@ -86,6 +86,7 @@ class CandidateDataRestControllerMockitoTest {
         assertNotNull(actualCandidateDetailsDTO);
         assertEquals(candidateDetailsDTO, actualCandidateDetailsDTO);
     }
+
     @Test
     void getCandidateDetailsCandidateNotFound() {
         // given

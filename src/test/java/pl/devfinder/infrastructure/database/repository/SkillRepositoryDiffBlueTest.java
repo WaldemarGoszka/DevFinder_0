@@ -1,14 +1,5 @@
 package pl.devfinder.infrastructure.database.repository;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -19,6 +10,15 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import pl.devfinder.infrastructure.database.entity.SkillEntity;
 import pl.devfinder.infrastructure.database.repository.jpa.SkillJpaRepository;
 import pl.devfinder.infrastructure.database.repository.mapper.SkillEntityMapper;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {SkillRepository.class})
 @ExtendWith(SpringExtension.class)
@@ -53,11 +53,11 @@ class SkillRepositoryDiffBlueTest {
         skillEntity.setSkillId(1L);
         skillEntity.setSkillName("Skill Name");
         Optional<SkillEntity> ofResult = Optional.of(skillEntity);
-        when(skillJpaRepository.findBySkillName(Mockito.<String>any())).thenReturn(ofResult);
-        when(skillEntityMapper.mapFromEntity(Mockito.<SkillEntity>any())).thenReturn(null);
+        when(skillJpaRepository.findBySkillName(Mockito.any())).thenReturn(ofResult);
+        when(skillEntityMapper.mapFromEntity(Mockito.any())).thenReturn(null);
         assertFalse(skillRepository.findBySkillName("Skill Name").isPresent());
-        verify(skillJpaRepository).findBySkillName(Mockito.<String>any());
-        verify(skillEntityMapper).mapFromEntity(Mockito.<SkillEntity>any());
+        verify(skillJpaRepository).findBySkillName(Mockito.any());
+        verify(skillEntityMapper).mapFromEntity(Mockito.any());
     }
 }
 

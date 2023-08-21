@@ -25,6 +25,7 @@ import pl.devfinder.infrastructure.security.event.RegistrationCompleteEventListe
 import java.io.UnsupportedEncodingException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Controller
@@ -48,6 +49,9 @@ public class UserRegistrationController {
     private final ResetPasswordTokenService resetPasswordTokenService;
     private final Environment environment;
 
+    private static boolean checkIfUserSelectedRole(UserDTO userDTO) {
+        return userDTO.getRole().isBlank() || Objects.isNull(userDTO.getRole());
+    }
 
     @GetMapping(REGISTER_PAGE)
     public String getRegistrationPage(Model model) {
@@ -92,10 +96,6 @@ public class UserRegistrationController {
         }
     }
 
-    private static boolean checkIfUserSelectedRole(UserDTO userDTO) {
-        return Objects.isNull(userDTO.getRole());
-    }
-
     @GetMapping(VERIFY_EMAIL)
     public String verifyEmail(@RequestParam("token") String token) {
         Optional<EmailVerificationToken> emailVerificationToken = emailVerificationTokenService.findByToken(token);
@@ -125,7 +125,7 @@ public class UserRegistrationController {
         Optional<User> userOptional = userService.findByEmail(email);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            String resetPasswordToken = Utility.generateUUID();
+            String resetPasswordToken = UUID.randomUUID().toString();
             resetPasswordTokenService.createPasswordResetTokenForUser(user, resetPasswordToken);
             log.info("Reset password token created for [{}]", email);
             sendPasswordResetVerificationEmail(request, model, email, user, resetPasswordToken);

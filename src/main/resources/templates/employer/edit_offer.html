@@ -4,7 +4,7 @@
 
 <head>
     <title>DevFinder - Employer - Edit Offer</title>
-    <link th:href="@{/img/favicon.ico}" rel="icon">
+    <link rel="icon" th:href="@{/img/favicon.ico}">
     <div th:replace="~{fragments :: head_style__}"></div>
 </head>
 
@@ -33,35 +33,35 @@
                     <div class="bg-secondary rounded h-100 p-4">
 
                         <form
+                                id="editForm"
                                 th:action="@{/offers_of_employer/update}"
                                 th:method="PUT"
                                 th:object="${offerDetailsDTO}"
-                                id="editForm"
                         >
-                            <input type="hidden" name="offerId" th:value="${offerDetailsDTO.offerId}"/>
+                            <input name="offerId" th:value="${offerDetailsDTO.offerId}" type="hidden"/>
                             <dl class="row mb-0">
 
                                 <dt class="col-sm-4">Status</dt>
                                 <dd class="col-sm-8">
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input"
-                                               type="radio"
                                                id="statusActive"
-                                               th:value="${statusEnumActive}"
                                                th:checked="${offerDetailsDTO.status != null} ? ${offerDetailsDTO.status} : true"
-                                               th:field="*{status}">
-                                        <label th:text="${statusEnumActive}" class="form-check-label"
-                                               for="statusActive"></label>
+                                               th:field="*{status}"
+                                               th:value="${statusEnumActive}"
+                                               type="radio">
+                                        <label class="form-check-label" for="statusActive"
+                                               th:text="${statusEnumActive}"></label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input"
-                                               type="radio"
                                                id="statusExpired"
-                                               th:value="${statusEnumExpired}"
                                                th:checked="${offerDetailsDTO.status != null} ? ${offerDetailsDTO.status} : false"
-                                               th:field="*{status}">
-                                        <label th:text="${statusEnumExpired}" class="form-check-label"
-                                               for="statusExpired"></label>
+                                               th:field="*{status}"
+                                               th:value="${statusEnumExpired}"
+                                               type="radio">
+                                        <label class="form-check-label" for="statusExpired"
+                                               th:text="${statusEnumExpired}"></label>
                                     </div>
                                 </dd>
 
@@ -69,20 +69,20 @@
                                 <dt class="col-sm-4">Title</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            type="text"
                                             class="form-control"
-                                            th:field="*{title}"
                                             required
+                                            th:field="*{title}"
+                                            type="text"
                                     >
                                 </dd>
 
                                 <dt class="col-sm-4">Job description</dt>
                                 <dd class="col-sm-8">
                                     <textarea
-                                            type="text"
                                             class="form-control"
                                             rows="4"
                                             th:field="*{description}"
+                                            type="text"
                                     ></textarea>
                                 </dd>
 
@@ -90,44 +90,44 @@
                                 <dd class="col-sm-8">
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input"
-                                               type="radio"
                                                id="expJunior"
-                                               th:value="${expLevelEnumJunior}"
                                                th:checked="${offerDetailsDTO.experienceLevel != null} ? ${offerDetailsDTO.experienceLevel} : true"
-                                               th:field="*{experienceLevel}">
-                                        <label th:text="${expLevelEnumJunior}" class="form-check-label"
-                                               for="expJunior"></label>
+                                               th:field="*{experienceLevel}"
+                                               th:value="${expLevelEnumJunior}"
+                                               type="radio">
+                                        <label class="form-check-label" for="expJunior"
+                                               th:text="${expLevelEnumJunior}"></label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input"
-                                               type="radio"
                                                id="expMid"
-                                               th:value="${expLevelEnumMid}"
                                                th:checked="${offerDetailsDTO.experienceLevel != null} ? ${offerDetailsDTO.experienceLevel} : false"
-                                               th:field="*{experienceLevel}">
-                                        <label th:text="${expLevelEnumMid}" class="form-check-label"
-                                               for="expMid"></label>
+                                               th:field="*{experienceLevel}"
+                                               th:value="${expLevelEnumMid}"
+                                               type="radio">
+                                        <label class="form-check-label" for="expMid"
+                                               th:text="${expLevelEnumMid}"></label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input"
-                                               type="radio"
                                                id="expSenior"
-                                               th:value="${expLevelEnumSenior}"
                                                th:checked="${offerDetailsDTO.experienceLevel != null} ? ${offerDetailsDTO.experienceLevel} : false"
-                                               th:field="*{experienceLevel}">
-                                        <label th:text="${expLevelEnumSenior}" class="form-check-label"
-                                               for="expSenior"></label>
+                                               th:field="*{experienceLevel}"
+                                               th:value="${expLevelEnumSenior}"
+                                               type="radio">
+                                        <label class="form-check-label" for="expSenior"
+                                               th:text="${expLevelEnumSenior}"></label>
                                     </div>
                                 </dd>
 
                                 <dt class="col-sm-4">Years of experience required</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            type="number"
                                             class="form-control"
-                                            th:field="*{yearsOfExperience}"
                                             min="0"
                                             step="1"
+                                            th:field="*{yearsOfExperience}"
+                                            type="number"
                                     >
                                 </dd>
 
@@ -135,17 +135,17 @@
                                 <dd class="col-sm-8">
                                     <div class="m-n2">
                                         <span th:each="skill : ${allSkillsDTOs}">
-                                            <input type="checkbox"
-                                                   th:value="${skill.skillName}"
+                                            <input autocomplete="on"
+                                                   class="btn-check"
+                                                   th:checked="${offerDetailsDTO.offerSkills != null} ? ${skillChecked.contains(skill.skillName)} : false"
                                                    th:id="${skill.skillId}"
                                                    th:name="offerSkillsNames"
-                                                   th:checked="${offerDetailsDTO.offerSkills != null} ? ${skillChecked.contains(skill.skillName)} : false"
-                                                   class="btn-check"
-                                                   autocomplete="on">
-                                            <label type="checkbox"
-                                                   class="btn btn-outline-light m-2"
+                                                   th:value="${skill.skillName}"
+                                                   type="checkbox">
+                                            <label class="btn btn-outline-light m-2"
                                                    th:for="${skill.skillId}"
                                                    th:text="${skill.skillName}"
+                                                   type="checkbox"
                                             ></label>
                                         </span>
                                     </div>
@@ -154,72 +154,72 @@
                                 <dt class="col-sm-4">Other Skills</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            type="text"
                                             class="form-control"
                                             th:field="*{otherSkills}"
+                                            type="text"
                                     >
                                 </dd>
 
                                 <dt class="col-sm-4">Percentage of remote work time (0-100)</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            type="number"
                                             class="form-control"
-                                            th:field="*{remoteWork}"
-                                            min="0"
-                                            step="1"
                                             max="100"
+                                            min="0"
                                             required
+                                            step="1"
+                                            th:field="*{remoteWork}"
+                                            type="number"
                                     >
                                 </dd>
 
                                 <dt class="col-sm-4">Minimum payout</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            type="number"
                                             class="form-control"
-                                            th:field="*{salaryMin}"
                                             min="0"
                                             step="1"
+                                            th:field="*{salaryMin}"
+                                            type="number"
                                     >
                                 </dd>
 
                                 <dt class="col-sm-4">Maximum payout</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            type="number"
                                             class="form-control"
-                                            th:field="*{salaryMax}"
                                             min="0"
                                             step="1"
+                                            th:field="*{salaryMax}"
+                                            type="number"
                                     >
                                 </dd>
 
                                 <dt class="col-sm-4">Benefits</dt>
                                 <dd class="col-sm-8">
                                     <textarea
-                                            type="text"
                                             class="form-control"
                                             rows="4"
                                             th:field="*{benefits}"
+                                            type="text"
                                     ></textarea>
                                 </dd>
 
                                 <dt class="col-sm-4">City</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            th:if="${offerDetailsDTO.cityId != null}"
-                                            type="text"
                                             class="form-control"
+                                            th:if="${offerDetailsDTO.cityId != null}"
                                             th:name="cityName"
                                             th:value="${offerDetailsDTO.cityId.cityName}"
+                                            type="text"
                                     >
                                     <input
-                                            th:if="${offerDetailsDTO.cityId == null}"
-                                            type="text"
                                             class="form-control"
-                                            th:name="cityName"
                                             th:field="*{cityName}"
+                                            th:if="${offerDetailsDTO.cityId == null}"
+                                            th:name="cityName"
+                                            type="text"
                                     >
                                 </dd>
                             </dl>
@@ -234,13 +234,13 @@
                         </form>
                         <form
                                 action="#"
-                                th:action="@{/offers_of_employer/delete/{offerId}(offerId=${offerDetailsDTO.offerId})}"
-                                th:method="DELETE"
                                 id="deleteOffer"
                                 onsubmit="return confirm('Do you really want to delete offer?');"
+                                th:action="@{/offers_of_employer/delete/{offerId}(offerId=${offerDetailsDTO.offerId})}"
+                                th:method="DELETE"
                         >
                             <button
-                                    form="deleteOffer" class="btn justify-content-center btn-danger m-2"
+                                    class="btn justify-content-center btn-danger m-2" form="deleteOffer"
                                     type="submit">
                                 Delete Offer
                             </button>
@@ -261,7 +261,7 @@
 
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <a class="btn btn-lg btn-primary btn-lg-square back-to-top" href="#"><i class="bi bi-arrow-up"></i></a>
 </div>
 
 <div th:replace="~{fragments :: js__}"></div>

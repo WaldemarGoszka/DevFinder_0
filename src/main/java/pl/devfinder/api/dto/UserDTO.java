@@ -23,6 +23,5 @@ public class UserDTO {
     @Size(max = 32, message = "Password too long, max 32 chars")
     private String password;
     private Boolean isEnabled;
-    @NotEmpty
     private String role;
 }

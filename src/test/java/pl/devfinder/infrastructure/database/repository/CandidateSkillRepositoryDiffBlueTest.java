@@ -1,8 +1,18 @@
 package pl.devfinder.infrastructure.database.repository;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import pl.devfinder.domain.Candidate;
+import pl.devfinder.domain.CandidateSkill;
+import pl.devfinder.infrastructure.database.entity.*;
+import pl.devfinder.infrastructure.database.repository.jpa.CandidateSkillJpaRepository;
+import pl.devfinder.infrastructure.database.repository.mapper.CandidateEntityMapper;
+import pl.devfinder.infrastructure.database.repository.mapper.CandidateSkillEntityMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,23 +23,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import pl.devfinder.domain.Candidate;
-import pl.devfinder.domain.CandidateSkill;
-import pl.devfinder.infrastructure.database.entity.CandidateEntity;
-import pl.devfinder.infrastructure.database.entity.CandidateSkillEntity;
-import pl.devfinder.infrastructure.database.entity.CityEntity;
-import pl.devfinder.infrastructure.database.entity.EmployerEntity;
-import pl.devfinder.infrastructure.database.entity.SkillEntity;
-import pl.devfinder.infrastructure.database.repository.jpa.CandidateSkillJpaRepository;
-import pl.devfinder.infrastructure.database.repository.mapper.CandidateEntityMapper;
-import pl.devfinder.infrastructure.database.repository.mapper.CandidateSkillEntityMapper;
+import static org.mockito.Mockito.*;
 
 @ContextConfiguration(classes = {CandidateSkillRepository.class})
 @ExtendWith(SpringExtension.class)
@@ -51,10 +45,10 @@ class CandidateSkillRepositoryDiffBlueTest {
      */
     @Test
     void testSaveAll() {
-        when(candidateSkillJpaRepository.saveAll(Mockito.<Iterable<CandidateSkillEntity>>any()))
+        when(candidateSkillJpaRepository.saveAll(Mockito.any()))
                 .thenReturn(new ArrayList<>());
         candidateSkillRepository.saveAll(new HashSet<>());
-        verify(candidateSkillJpaRepository).saveAll(Mockito.<Iterable<CandidateSkillEntity>>any());
+        verify(candidateSkillJpaRepository).saveAll(Mockito.any());
     }
 
     /**
@@ -62,7 +56,7 @@ class CandidateSkillRepositoryDiffBlueTest {
      */
     @Test
     void testSaveAll2() {
-        when(candidateSkillJpaRepository.saveAll(Mockito.<Iterable<CandidateSkillEntity>>any()))
+        when(candidateSkillJpaRepository.saveAll(Mockito.any()))
                 .thenReturn(new ArrayList<>());
 
         CityEntity cityId = new CityEntity();
@@ -127,13 +121,13 @@ class CandidateSkillRepositoryDiffBlueTest {
         candidateSkillEntity.setCandidateId(candidateId);
         candidateSkillEntity.setCandidateSkillId(1L);
         candidateSkillEntity.setSkillId(skillId);
-        when(candidateSkillEntityMapper.mapToEntity(Mockito.<CandidateSkill>any())).thenReturn(candidateSkillEntity);
+        when(candidateSkillEntityMapper.mapToEntity(Mockito.any())).thenReturn(candidateSkillEntity);
 
         HashSet<CandidateSkill> candidateSkills = new HashSet<>();
         candidateSkills.add(new CandidateSkill(1L, null, null));
         candidateSkillRepository.saveAll(candidateSkills);
-        verify(candidateSkillJpaRepository).saveAll(Mockito.<Iterable<CandidateSkillEntity>>any());
-        verify(candidateSkillEntityMapper).mapToEntity(Mockito.<CandidateSkill>any());
+        verify(candidateSkillJpaRepository).saveAll(Mockito.any());
+        verify(candidateSkillEntityMapper).mapToEntity(Mockito.any());
     }
 
     /**
@@ -141,7 +135,7 @@ class CandidateSkillRepositoryDiffBlueTest {
      */
     @Test
     void testDeleteAllByCandidate() {
-        doNothing().when(candidateSkillJpaRepository).deleteAllByCandidateId(Mockito.<CandidateEntity>any());
+        doNothing().when(candidateSkillJpaRepository).deleteAllByCandidateId(Mockito.any());
 
         CityEntity cityId = new CityEntity();
         cityId.setCandidateResidenceCities(new HashSet<>());
@@ -194,10 +188,10 @@ class CandidateSkillRepositoryDiffBlueTest {
         candidateEntity.setSalaryMin(BigDecimal.valueOf(1L));
         candidateEntity.setStatus("Status");
         candidateEntity.setYearsOfExperience(1);
-        when(candidateEntityMapper.mapToEntity(Mockito.<Candidate>any())).thenReturn(candidateEntity);
+        when(candidateEntityMapper.mapToEntity(Mockito.any())).thenReturn(candidateEntity);
         candidateSkillRepository.deleteAllByCandidate(null);
-        verify(candidateSkillJpaRepository).deleteAllByCandidateId(Mockito.<CandidateEntity>any());
-        verify(candidateEntityMapper).mapToEntity(Mockito.<Candidate>any());
+        verify(candidateSkillJpaRepository).deleteAllByCandidateId(Mockito.any());
+        verify(candidateEntityMapper).mapToEntity(Mockito.any());
     }
 }
 

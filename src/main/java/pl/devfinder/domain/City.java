@@ -10,8 +10,6 @@ import lombok.*;
 public class City {
     Long cityId;
     String cityName;
-//    Set<Employer> employerCities;
-//    Set<Offer> offerCities;
-//    Set<Candidate> candidateResidenceCities;
+
 
 }

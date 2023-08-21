@@ -25,8 +25,6 @@ import java.util.Optional;
 @RequestMapping(UserRegistrationRestController.BASE_PATH)
 public class UserRegistrationRestController {
     public static final String BASE_PATH = "/api/register";
-
-
     public static final String REGISTER_PAGE = "/register_page";
     public static final String SAVE = "/save";
     public static final String VERIFY_EMAIL = "/verify_email";
@@ -39,11 +37,11 @@ public class UserRegistrationRestController {
     private final Environment environment;
 
     @PostMapping(REGISTER_PAGE)
-    public ResponseEntity<User> registerUser(@Valid @RequestBody UserDTO userDTO, final HttpServletRequest request){
+    public ResponseEntity<User> registerUser(@Valid @RequestBody UserDTO userDTO, final HttpServletRequest request) {
         Optional<User> userOptional = userService.findByEmail(userDTO.getEmail());
-        if (userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             throw new UserAlreadyExistsException(
-                    "User with email "+userDTO.getEmail() + " already exists");
+                    "User with email " + userDTO.getEmail() + " already exists");
         }
         Boolean enableEmailVerification = environment.getProperty("devfinder-conf.enable-email-verification", Boolean.class);
         UserDTO userDtoOnCondition = userDTO.withIsEnabled(Boolean.FALSE.equals(enableEmailVerification));

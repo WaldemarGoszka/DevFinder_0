@@ -2,6 +2,12 @@ package pl.devfinder.infrastructure.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
+import io.restassured.RestAssured;
+import io.restassured.config.ObjectMapperConfig;
+import io.restassured.config.RestAssuredConfig;
+import io.restassured.http.ContentType;
+import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,23 +15,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import pl.devfinder.DevfinderApplication;
-import io.restassured.RestAssured;
-import io.restassured.config.ObjectMapperConfig;
-import io.restassured.config.RestAssuredConfig;
-import io.restassured.http.ContentType;
-import io.restassured.specification.RequestSpecification;
+import pl.devfinder.infrastructure.support.AuthenticationTestSupport;
+import pl.devfinder.infrastructure.support.ControllerTestSupport;
 
-import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 
-@ActiveProfiles("test")
 @Import(PersistenceContainerTestConfiguration.class)
 @SpringBootTest(
-    classes = DevfinderApplication.class,
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+        classes = DevfinderApplication.class,
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @Transactional
 public abstract class AbstractITWithSecurity implements
@@ -36,12 +36,12 @@ public abstract class AbstractITWithSecurity implements
 
     @LocalServerPort
     protected int port;
-
+    @Value("${server.servlet.context-path}")
+    protected String basePath;
+    @Autowired
+    protected ObjectMapper objectMapper;
     private String jSessionIdValue;
-    @Test
-    void contextLoaded() {
-        Assertions.assertTrue(true, "Context loaded");
-    }
+
     @BeforeAll
     static void beforeAll() {
         wireMockServer = new WireMockServer(
@@ -52,6 +52,15 @@ public abstract class AbstractITWithSecurity implements
         wireMockServer.start();
     }
 
+    @AfterAll
+    static void afterAll() {
+        wireMockServer.stop();
+    }
+
+    @Test
+    void contextLoaded() {
+        Assertions.assertTrue(true, "Context loaded");
+    }
 
     @BeforeEach
     void beforeEach() {
@@ -62,6 +71,7 @@ public abstract class AbstractITWithSecurity implements
                 .extract()
                 .cookie("JSESSIONID");
     }
+
     @AfterEach
     void afterEach() {
         logout()
@@ -70,21 +80,12 @@ public abstract class AbstractITWithSecurity implements
         jSessionIdValue = null;
         wireMockServer.resetAll();
     }
-    @AfterAll
-    static void afterAll() {
-        wireMockServer.stop();
-    }
 
-
-    @Value("${server.servlet.context-path}")
-    protected String basePath;
-
-    @Autowired
-    protected ObjectMapper objectMapper;
     @Override
     public ObjectMapper getObjectMapper() {
         return objectMapper;
     }
+
     public RequestSpecification requestSpecification() {
         return RestAssured
                 .given()
@@ -94,6 +95,7 @@ public abstract class AbstractITWithSecurity implements
                 .accept(ContentType.JSON)
                 .contentType(ContentType.JSON);
     }
+
     private RestAssuredConfig getConfig() {
         return RestAssuredConfig
                 .config()

@@ -11,6 +11,7 @@ import pl.devfinder.infrastructure.database.repository.mapper.UserEntityMapper;
 
 import java.util.List;
 import java.util.Optional;
+
 @Slf4j
 @Repository
 @AllArgsConstructor

@@ -1,22 +1,5 @@
 package pl.devfinder.infrastructure.database.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -24,13 +7,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import pl.devfinder.business.management.Keys;
 import pl.devfinder.domain.Candidate;
 import pl.devfinder.infrastructure.database.entity.CandidateEntity;
 import pl.devfinder.infrastructure.database.entity.CityEntity;
 import pl.devfinder.infrastructure.database.entity.EmployerEntity;
 import pl.devfinder.infrastructure.database.repository.jpa.CandidateJpaRepository;
 import pl.devfinder.infrastructure.database.repository.mapper.CandidateEntityMapper;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.HashSet;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ContextConfiguration(classes = {CandidateRepository.class})
 @ExtendWith(SpringExtension.class)
@@ -101,7 +94,7 @@ class CandidateRepositoryDiffBlueTest {
         candidateEntity.setSalaryMin(BigDecimal.valueOf(1L));
         candidateEntity.setStatus("Status");
         candidateEntity.setYearsOfExperience(1);
-        when(candidateJpaRepository.saveAndFlush(Mockito.<CandidateEntity>any())).thenReturn(candidateEntity);
+        when(candidateJpaRepository.saveAndFlush(Mockito.any())).thenReturn(candidateEntity);
 
         CityEntity cityId2 = new CityEntity();
         cityId2.setCandidateResidenceCities(new HashSet<>());
@@ -155,11 +148,11 @@ class CandidateRepositoryDiffBlueTest {
         candidateEntity2.setStatus("Status");
         candidateEntity2.setYearsOfExperience(1);
         when(candidateEntityMapper.mapFromEntity(Mockito.<CandidateEntity>any())).thenReturn(null);
-        when(candidateEntityMapper.mapToEntity(Mockito.<Candidate>any())).thenReturn(candidateEntity2);
+        when(candidateEntityMapper.mapToEntity(Mockito.any())).thenReturn(candidateEntity2);
         assertNull(candidateRepository.save(null));
-        verify(candidateJpaRepository).saveAndFlush(Mockito.<CandidateEntity>any());
+        verify(candidateJpaRepository).saveAndFlush(Mockito.any());
         verify(candidateEntityMapper).mapFromEntity(Mockito.<CandidateEntity>any());
-        verify(candidateEntityMapper).mapToEntity(Mockito.<Candidate>any());
+        verify(candidateEntityMapper).mapToEntity(Mockito.any());
     }
 
     /**
@@ -283,10 +276,10 @@ class CandidateRepositoryDiffBlueTest {
         candidateEntity.setStatus("Status");
         candidateEntity.setYearsOfExperience(1);
         Optional<CandidateEntity> ofResult = Optional.of(candidateEntity);
-        when(candidateJpaRepository.findByCandidateUuid(Mockito.<String>any())).thenReturn(ofResult);
+        when(candidateJpaRepository.findByCandidateUuid(Mockito.any())).thenReturn(ofResult);
         when(candidateEntityMapper.mapFromEntity(Mockito.<CandidateEntity>any())).thenReturn(null);
         assertFalse(candidateRepository.findByCandidateUuid("01234567-89AB-CDEF-FEDC-BA9876543210").isPresent());
-        verify(candidateJpaRepository).findByCandidateUuid(Mockito.<String>any());
+        verify(candidateJpaRepository).findByCandidateUuid(Mockito.any());
         verify(candidateEntityMapper).mapFromEntity(Mockito.<CandidateEntity>any());
     }
 
@@ -305,9 +298,9 @@ class CandidateRepositoryDiffBlueTest {
      */
     @Test
     void testCountByCityName() {
-        when(candidateJpaRepository.countByCityName(Mockito.<String>any())).thenReturn(3L);
+        when(candidateJpaRepository.countByCityName(Mockito.any())).thenReturn(3L);
         assertEquals(3L, candidateRepository.countByCityName("Oxford"));
-        verify(candidateJpaRepository).countByCityName(Mockito.<String>any());
+        verify(candidateJpaRepository).countByCityName(Mockito.any());
     }
 }
 

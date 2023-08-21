@@ -53,7 +53,7 @@ class EmployerDataControllerMockitoTest {
     @Mock
     private UserController userController;
     @Mock
-    private FileUploadService fileUploadService;
+    private FileService fileService;
     @Mock
     private Model model;
 
@@ -82,6 +82,7 @@ class EmployerDataControllerMockitoTest {
         verify(skillService).findAll();
         verify(cityService).findAll();
     }
+
     @Test
     public void getEmployerDetailsTest() {
         // given
@@ -96,7 +97,7 @@ class EmployerDataControllerMockitoTest {
         // when
         when(employerService.findById(employerId)).thenReturn(employer);
         when(employerDetailsMapper.map(employer)).thenReturn(employerDetailsDTO);
-        when(fileUploadService.getUserPhotoPath(employerDetailsDTO.getEmployerUuid(),
+        when(fileService.getUserPhotoPath(employerDetailsDTO.getEmployerUuid(),
                 employerDetailsDTO.getLogoFilename())).thenReturn("/user_data/uuid_logo.jpg");
 
         String response = employerDataController.getEmployerDetails(employerId, model, authentication);
@@ -106,7 +107,7 @@ class EmployerDataControllerMockitoTest {
 
         verify(employerService).findById(employerId);
         verify(employerDetailsMapper).map(employer);
-        verify(fileUploadService).getUserPhotoPath(employerDetailsDTO.getEmployerUuid(), employerDetailsDTO.getLogoFilename());
+        verify(fileService).getUserPhotoPath(employerDetailsDTO.getEmployerUuid(), employerDetailsDTO.getLogoFilename());
     }
 
 }

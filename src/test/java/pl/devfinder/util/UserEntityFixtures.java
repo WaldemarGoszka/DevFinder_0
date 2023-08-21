@@ -23,6 +23,7 @@ public class UserEntityFixtures {
                         .build())
                 .build();
     }
+
     public static UserEntity someUserEntityCandidate1() {
         return UserEntity.builder()
                 .userName("candidate1UserName")
@@ -36,6 +37,7 @@ public class UserEntityFixtures {
                         .build())
                 .build();
     }
+
     public static User someUserCandidate1() {
         return User.builder()
                 .userName("candidate1UserName")

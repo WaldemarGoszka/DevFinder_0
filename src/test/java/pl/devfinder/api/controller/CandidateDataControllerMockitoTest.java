@@ -61,7 +61,7 @@ class CandidateDataControllerMockitoTest {
     @Mock
     private CandidateRowMapper candidateRowMapper;
     @Mock
-    private FileUploadService fileUploadService;
+    private FileService fileService;
 
     @InjectMocks
     private CandidateDataController candidateDataController;
@@ -105,7 +105,7 @@ class CandidateDataControllerMockitoTest {
         // when
         when(candidateService.findById(candidateId)).thenReturn(candidate);
         when(candidateDetailsMapper.map(any(Candidate.class))).thenReturn(candidateDetailsDTO);
-        when(fileUploadService.getUserPhotoPath(candidateDetailsDTO.getCandidateUuid(),
+        when(fileService.getUserPhotoPath(candidateDetailsDTO.getCandidateUuid(),
                 candidateDetailsDTO.getPhotoFilename())).thenReturn("/user_data/uuid_photo.jpg");
 
 
@@ -116,8 +116,8 @@ class CandidateDataControllerMockitoTest {
 
         verify(candidateService).findById(candidateId);
         verify(candidateDetailsMapper).map(any(Candidate.class));
-        verify(fileUploadService).getUserPhotoPath(
-                candidateDetailsDTO.getCandidateUuid(),candidateDetailsDTO.getPhotoFilename());
+        verify(fileService).getUserPhotoPath(
+                candidateDetailsDTO.getCandidateUuid(), candidateDetailsDTO.getPhotoFilename());
     }
 
 }

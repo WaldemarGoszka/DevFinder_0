@@ -1,16 +1,5 @@
 package pl.devfinder.infrastructure.database.repository;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -22,6 +11,13 @@ import pl.devfinder.domain.City;
 import pl.devfinder.infrastructure.database.entity.CityEntity;
 import pl.devfinder.infrastructure.database.repository.jpa.CityJpaRepository;
 import pl.devfinder.infrastructure.database.repository.mapper.CityEntityMapper;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ContextConfiguration(classes = {CityRepository.class})
 @ExtendWith(SpringExtension.class)
@@ -57,11 +53,11 @@ class CityRepositoryDiffBlueTest {
         cityEntity.setEmployerCities(new HashSet<>());
         cityEntity.setOfferCities(new HashSet<>());
         Optional<CityEntity> ofResult = Optional.of(cityEntity);
-        when(cityJpaRepository.findByCityName(Mockito.<String>any())).thenReturn(ofResult);
-        when(cityEntityMapper.mapFromEntity(Mockito.<CityEntity>any())).thenReturn(null);
+        when(cityJpaRepository.findByCityName(Mockito.any())).thenReturn(ofResult);
+        when(cityEntityMapper.mapFromEntity(Mockito.any())).thenReturn(null);
         assertFalse(cityRepository.findByCityName("Oxford").isPresent());
-        verify(cityJpaRepository).findByCityName(Mockito.<String>any());
-        verify(cityEntityMapper).mapFromEntity(Mockito.<CityEntity>any());
+        verify(cityJpaRepository).findByCityName(Mockito.any());
+        verify(cityEntityMapper).mapFromEntity(Mockito.any());
     }
 
     /**
@@ -75,7 +71,7 @@ class CityRepositoryDiffBlueTest {
         cityEntity.setCityName("Oxford");
         cityEntity.setEmployerCities(new HashSet<>());
         cityEntity.setOfferCities(new HashSet<>());
-        when(cityJpaRepository.saveAndFlush(Mockito.<CityEntity>any())).thenReturn(cityEntity);
+        when(cityJpaRepository.saveAndFlush(Mockito.any())).thenReturn(cityEntity);
 
         CityEntity cityEntity2 = new CityEntity();
         cityEntity2.setCandidateResidenceCities(new HashSet<>());
@@ -83,12 +79,12 @@ class CityRepositoryDiffBlueTest {
         cityEntity2.setCityName("Oxford");
         cityEntity2.setEmployerCities(new HashSet<>());
         cityEntity2.setOfferCities(new HashSet<>());
-        when(cityEntityMapper.mapFromEntity(Mockito.<CityEntity>any())).thenReturn(null);
-        when(cityEntityMapper.mapToEntity(Mockito.<City>any())).thenReturn(cityEntity2);
+        when(cityEntityMapper.mapFromEntity(Mockito.any())).thenReturn(null);
+        when(cityEntityMapper.mapToEntity(Mockito.any())).thenReturn(cityEntity2);
         assertNull(cityRepository.saveAnfFlush(null));
-        verify(cityJpaRepository).saveAndFlush(Mockito.<CityEntity>any());
-        verify(cityEntityMapper).mapFromEntity(Mockito.<CityEntity>any());
-        verify(cityEntityMapper).mapToEntity(Mockito.<City>any());
+        verify(cityJpaRepository).saveAndFlush(Mockito.any());
+        verify(cityEntityMapper).mapFromEntity(Mockito.any());
+        verify(cityEntityMapper).mapToEntity(Mockito.any());
     }
 
     /**
@@ -96,9 +92,9 @@ class CityRepositoryDiffBlueTest {
      */
     @Test
     void testDeleteByCityName() {
-        doNothing().when(cityJpaRepository).deleteByCityName(Mockito.<String>any());
+        doNothing().when(cityJpaRepository).deleteByCityName(Mockito.any());
         cityRepository.deleteByCityName("Oxford");
-        verify(cityJpaRepository).deleteByCityName(Mockito.<String>any());
+        verify(cityJpaRepository).deleteByCityName(Mockito.any());
     }
 }
 

@@ -27,6 +27,7 @@ public class UserDetailsCustom implements UserDetails {
         this.isEnabled = user.getIsEnabled();
         this.authorities = List.of(new SimpleGrantedAuthority(user.getRole().getRole()));
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;

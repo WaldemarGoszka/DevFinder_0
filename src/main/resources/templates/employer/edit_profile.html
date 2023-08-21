@@ -4,7 +4,7 @@
 
 <head>
     <title>DevFinder - Employer - Edit Profile</title>
-    <link th:href="@{/img/favicon.ico}" rel="icon">
+    <link rel="icon" th:href="@{/img/favicon.ico}">
     <div th:replace="~{fragments :: head_style_}"></div>
 </head>
 
@@ -50,35 +50,35 @@
 
                         <!--                        LOGO  -->
                         <form action="#"
+                              id="cvFileForm"
                               th:action="@{/employer_portal/edit_profile/delete_logoFile}"
-                              th:method="DELETE"
-                              id="cvFileForm">
+                              th:method="DELETE">
                             <dl class="row mb-0" th:if="${logoFileLink != null}">
                                 <dt class="col-sm-4">Actual logo:</dt>
                                 <dd class="col-sm-8">
                                     [[${logoFileLink}]]
-                                    <button type="submit" form="cvFileForm" class="btn  btn-info m-2">Delete
+                                    <button class="btn  btn-info m-2" form="cvFileForm" type="submit">Delete
                                     </button>
                                 </dd>
                             </dl>
                         </form>
                         <form
+                                enctype="multipart/form-data"
+                                id="editForm"
                                 th:action="@{/employer_portal/update}"
                                 th:method="POST"
                                 th:object="${employerDetailsDTO}"
-                                enctype="multipart/form-data"
-                                id="editForm"
                         >
                             <dl class="row mb-0">
 
                                 <dt class="col-sm-4">Upload logo</dt>
                                 <dd class="col-sm-8">
                                     <div class="mb-3">
-                                        <input class="form-control bg-dark"
+                                        <input accept="image/png, image/jpeg"
+                                               class="form-control bg-dark"
+                                               id="photoFile"
                                                th:field="*{fileLogo}"
-                                               accept="image/png, image/jpeg"
-                                               type="file"
-                                               id="photoFile">
+                                               type="file">
                                     </div>
                                 </dd>
 
@@ -86,66 +86,66 @@
                                 <dt class="col-sm-4">Company Name</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            type="text"
                                             class="form-control"
                                             th:field="*{companyName}"
+                                            type="text"
                                     >
                                 </dd>
 
                                 <dt class="col-sm-4">Employer description</dt>
                                 <dd class="col-sm-8">
                                     <textarea
-                                            type="text"
                                             class="form-control"
                                             rows="4"
                                             th:field="*{description}"
+                                            type="text"
                                     ></textarea>
                                 </dd>
 
                                 <dt class="col-sm-4">Website</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            type="text"
                                             class="form-control"
                                             th:field="*{website}"
+                                            type="text"
                                     >
                                 </dd>
 
                                 <dt class="col-sm-4">Number Of Employees</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            type="number"
                                             class="form-control"
-                                            th:field="*{numberOfEmployees}"
                                             min="0"
                                             step="1"
+                                            th:field="*{numberOfEmployees}"
+                                            type="number"
                                     >
                                 </dd>
 
                                 <dt class="col-sm-4">Email Contact</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            type="text"
                                             class="form-control"
                                             th:field="*{emailContact}"
+                                            type="text"
                                     >
                                 </dd>
 
                                 <dt class="col-sm-4">City</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            th:if="${employerDetailsDTO.cityId != null}"
-                                            type="text"
                                             class="form-control"
+                                            th:if="${employerDetailsDTO.cityId != null}"
                                             th:name="cityName"
                                             th:value="${employerDetailsDTO.cityId.cityName}"
+                                            type="text"
                                     >
                                     <input
-                                            th:if="${employerDetailsDTO.cityId == null}"
-                                            type="text"
                                             class="form-control"
-                                            th:name="cityName"
                                             th:field="*{cityName}"
+                                            th:if="${employerDetailsDTO.cityId == null}"
+                                            th:name="cityName"
+                                            type="text"
                                     >
                                 </dd>
 
@@ -153,9 +153,9 @@
                                 <dt class="col-sm-4">Phone number</dt>
                                 <dd class="col-sm-8">
                                     <input
-                                            type="text"
                                             class="form-control"
                                             th:field="*{phoneNumber}"
+                                            type="text"
                                     >
                                 </dd>
                             </dl>
@@ -173,13 +173,13 @@
                         </form>
                         <form
                                 action="#"
-                                th:action="@{/employer_portal/delete_profile}"
-                                th:method="DELETE"
                                 id="deleteProfile"
                                 onsubmit="return confirm('Do you really want delete your profile? All your offer and employee will be deleted and all your employee will be change status to ACTIVE');"
+                                th:action="@{/employer_portal/delete_profile}"
+                                th:method="DELETE"
                         >
-                            <button th:unless="${param.new}"
-                                    form="deleteProfile" class="btn justify-content-center btn-danger m-2"
+                            <button class="btn justify-content-center btn-danger m-2"
+                                    form="deleteProfile" th:unless="${param.new}"
                                     type="submit">
                                 Delete Profile
                             </button>
@@ -199,7 +199,7 @@
 
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <a class="btn btn-lg btn-primary btn-lg-square back-to-top" href="#"><i class="bi bi-arrow-up"></i></a>
 </div>
 
 <div th:replace="~{fragments :: js_}"></div>

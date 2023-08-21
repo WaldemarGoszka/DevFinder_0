@@ -208,7 +208,7 @@ public interface Keys {
         }
     }
 
-    public enum LIST_OF_SKILLS {
+    enum LIST_OF_SKILLS {
         LIST_OF_SKILLS(
                 "Python",
                 "JavaScript",
@@ -261,7 +261,7 @@ public interface Keys {
 
         private final List<String> fields;
 
-        private LIST_OF_SKILLS(String... fields) {
+        LIST_OF_SKILLS(String... fields) {
             this.fields = Arrays.asList(fields);
         }
 

@@ -1,4 +1,5 @@
-ALTER TABLE employer ADD COLUMN amount_of_available_offers INTEGER DEFAULT 0;
+ALTER TABLE employer
+    ADD COLUMN amount_of_available_offers INTEGER DEFAULT 0;
 
 CREATE OR REPLACE FUNCTION increase_amount_of_available_offers_when_add_new()
     RETURNS TRIGGER AS
@@ -16,7 +17,8 @@ $$
     LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_increase_amount_of_available_offers_when_add_new
-    AFTER INSERT ON offer
+    AFTER INSERT
+    ON offer
     FOR EACH ROW
 EXECUTE FUNCTION increase_amount_of_available_offers_when_add_new();
 
@@ -35,7 +37,8 @@ $$
     LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_decrease_amount_of_available_offers_when_delete
-    AFTER DELETE ON offer
+    AFTER DELETE
+    ON offer
     FOR EACH ROW
 EXECUTE FUNCTION decrease_amount_of_available_offers_when_delete();
 
@@ -45,12 +48,10 @@ $$
 BEGIN
     UPDATE employer AS e
     SET amount_of_available_offers = COALESCE(sub.count_offers, 0)
-    FROM (
-             SELECT employer_id, COUNT(*) AS count_offers
-             FROM offer
-             WHERE status = 'ACTIVE'
-             GROUP BY employer_id
-         ) AS sub
+    FROM (SELECT employer_id, COUNT(*) AS count_offers
+          FROM offer
+          WHERE status = 'ACTIVE'
+          GROUP BY employer_id) AS sub
     WHERE e.employer_id = sub.employer_id;
 END;
 $$
@@ -74,7 +75,8 @@ $$
     LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_decrease_amount_of_available_offers_when_change_active_to_expired
-    AFTER UPDATE ON offer
+    AFTER UPDATE
+    ON offer
     FOR EACH ROW
 EXECUTE FUNCTION decrease_amount_of_available_offers_when_change_active_to_expired();
 
@@ -94,6 +96,7 @@ $$
     LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_increase_amount_of_available_offers_when_change_expired_to_active
-    AFTER UPDATE ON offer
+    AFTER UPDATE
+    ON offer
     FOR EACH ROW
 EXECUTE FUNCTION increase_amount_of_available_offers_when_change_expired_to_active();

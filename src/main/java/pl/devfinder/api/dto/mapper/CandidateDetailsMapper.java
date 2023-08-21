@@ -9,6 +9,7 @@ import pl.devfinder.domain.Candidate;
 
 public interface CandidateDetailsMapper {
     CandidateDetailsDTO map(final Candidate candidate);
+
     Candidate map(final CandidateDetailsDTO candidateDetailsDTO);
 
 }

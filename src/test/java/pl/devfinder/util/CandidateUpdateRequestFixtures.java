@@ -5,6 +5,7 @@ import pl.devfinder.domain.CandidateUpdateRequest;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 @UtilityClass
 public class CandidateUpdateRequestFixtures {
@@ -17,7 +18,7 @@ public class CandidateUpdateRequestFixtures {
                 .lastName("Kowalski")
                 .emailContact("jan@example.com")
                 .phoneNumber("123 456 789")
-                .createdAt(OffsetDateTime.now())
+                .createdAt(OffsetDateTime.of(2022, 1, 1, 1, 1, 1, 1, ZoneOffset.UTC))
                 .status("ACTIVE")
                 .education("")
                 .otherSkills("")

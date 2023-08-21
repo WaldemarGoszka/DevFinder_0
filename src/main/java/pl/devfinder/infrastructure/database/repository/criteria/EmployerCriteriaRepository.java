@@ -34,8 +34,15 @@ public class EmployerCriteriaRepository {
         this.employerEntityMapper = employerEntityMapper;
     }
 
+    private static long getEmployerCount(EmployerSearchCriteria employerSearchCriteria, TypedQuery<EmployerEntity> typedQuery) {
+        PageImpl<EmployerEntity> employerEntitiesToCountItems = new PageImpl<>(typedQuery.getResultList(),
+                PageRequest.of(0, Integer.MAX_VALUE,
+                        Sort.by(employerSearchCriteria.getSortDirection(), employerSearchCriteria.getSortBy())), 500);
+        return employerEntitiesToCountItems.getContent().size();
+    }
+
     public Page<Employer> findAllByCriteria(EmployerSearchCriteria employerSearchCriteria) {
-        log.info("Process find employer By Criteria: [{}]",employerSearchCriteria);
+        log.info("Process find employer By Criteria: [{}]", employerSearchCriteria);
         CriteriaQuery<EmployerEntity> criteriaQuery = criteriaBuilder.createQuery(EmployerEntity.class);
         Root<EmployerEntity> employerEntityRoot = criteriaQuery.from(EmployerEntity.class);
         Predicate predicate = getPredicate(employerSearchCriteria, employerEntityRoot, criteriaQuery);
@@ -55,13 +62,6 @@ public class EmployerCriteriaRepository {
         PageImpl<EmployerEntity> employerEntities = new PageImpl<>(typedQuery.getResultList(), pageable, employerCount);
 
         return employerEntities.map(employerEntityMapper::mapFromEntity);
-    }
-
-    private static long getEmployerCount(EmployerSearchCriteria employerSearchCriteria, TypedQuery<EmployerEntity> typedQuery) {
-        PageImpl<EmployerEntity> employerEntitiesToCountItems = new PageImpl<>(typedQuery.getResultList(),
-                PageRequest.of(0, Integer.MAX_VALUE,
-                        Sort.by(employerSearchCriteria.getSortDirection(), employerSearchCriteria.getSortBy())), 500);
-        return employerEntitiesToCountItems.getContent().size();
     }
 
     private Predicate getPredicate(EmployerSearchCriteria employerSearchCriteria,

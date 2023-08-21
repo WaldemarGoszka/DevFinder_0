@@ -34,8 +34,15 @@ public class OfferCriteriaRepository {
         this.offerEntityMapper = offerEntityMapper;
     }
 
+    private static long getOfferCount(OfferSearchCriteria offerSearchCriteria, TypedQuery<OfferEntity> typedQuery) {
+        PageImpl<OfferEntity> offerEntitiesToCheck = new PageImpl<>(typedQuery.getResultList(),
+                PageRequest.of(0, Integer.MAX_VALUE,
+                        Sort.by(offerSearchCriteria.getSortDirection(), offerSearchCriteria.getSortBy())), 500);
+        return offerEntitiesToCheck.getContent().size();
+    }
+
     public Page<Offer> findAllByCriteria(OfferSearchCriteria offerSearchCriteria) {
-        log.info("Process find offer By Criteria: [{}]",offerSearchCriteria);
+        log.info("Process find offer By Criteria: [{}]", offerSearchCriteria);
         CriteriaQuery<OfferEntity> criteriaQuery = criteriaBuilder.createQuery(OfferEntity.class);
         Root<OfferEntity> offerEntityRoot = criteriaQuery.from(OfferEntity.class);
         Predicate predicate = getPredicate(offerSearchCriteria, offerEntityRoot, criteriaQuery);
@@ -55,13 +62,6 @@ public class OfferCriteriaRepository {
         PageImpl<OfferEntity> offerEntities = new PageImpl<>(typedQuery.getResultList(), pageable, offerCount);
 
         return offerEntities.map(offerEntityMapper::mapFromEntity);
-    }
-
-    private static long getOfferCount(OfferSearchCriteria offerSearchCriteria, TypedQuery<OfferEntity> typedQuery) {
-        PageImpl<OfferEntity> offerEntitiesToCheck = new PageImpl<>(typedQuery.getResultList(),
-                PageRequest.of(0, Integer.MAX_VALUE,
-                        Sort.by(offerSearchCriteria.getSortDirection(), offerSearchCriteria.getSortBy())), 500);
-        return offerEntitiesToCheck.getContent().size();
     }
 
     private Predicate getPredicate(OfferSearchCriteria offerSearchCriteria,
@@ -85,10 +85,10 @@ public class OfferCriteriaRepository {
         if (Objects.nonNull(skills) && !skills.isEmpty()) {
             Predicate skillPredicates =
                     skills.stream()
-                    .filter(Objects::nonNull)
-                    .filter(value -> !value.isBlank())
-                    .filter(value -> Keys.LIST_OF_SKILLS.LIST_OF_SKILLS.getFields()
-                            .contains(value))
+                            .filter(Objects::nonNull)
+                            .filter(value -> !value.isBlank())
+                            .filter(value -> Keys.LIST_OF_SKILLS.LIST_OF_SKILLS.getFields()
+                                    .contains(value))
                             .map(value -> {
                                 Subquery<OfferSkillEntity> subquery = criteriaQuery.subquery(OfferSkillEntity.class);
                                 Root<OfferSkillEntity> offerSkillRoot = subquery.from(OfferSkillEntity.class);

@@ -13,9 +13,7 @@ import pl.devfinder.api.dto.CandidateDetailsDTO;
 import pl.devfinder.api.dto.CandidateUpdateRequestDTO;
 import pl.devfinder.api.dto.mapper.CandidateDetailsMapper;
 import pl.devfinder.api.dto.mapper.CandidateUpdateRequestMapper;
-import pl.devfinder.api.dto.mapper.SkillMapper;
 import pl.devfinder.business.CandidateService;
-import pl.devfinder.business.SkillService;
 import pl.devfinder.business.UserService;
 import pl.devfinder.domain.Candidate;
 import pl.devfinder.domain.CandidateUpdateRequest;
@@ -52,29 +50,7 @@ public class CandidateUserRestController {
         CandidateDetailsDTO candidateDetailsDTO = candidateDetailsMapper.map(candidate);
         return ResponseEntity.ok(candidateDetailsDTO);
     }
-//
-//
-//    @DeleteMapping(value = CANDIDATE_DELETE_CV_FILE)
-//    public String deleteCvFile(Model model, Authentication authentication) {
-//        User user = Utility.putUserDataToModel(authentication, userService, model)
-//                .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
-//        Candidate candidate = candidateService.findByCandidateUuid(user.getUserUuid())
-//                .orElseThrow(() -> new NotFoundException("Could not find candidate by uuid"));
-//
-//        candidateService.deleteCvFile(candidate);
-//        return "redirect:../edit_profile?delete_cv_file";
-//    }
-//
-//    @DeleteMapping(value = CANDIDATE_DELETE_PHOTO_FILE)
-//    public String deletePhotoFile(Model model, Authentication authentication) {
-//        User user = Utility.putUserDataToModel(authentication, userService, model)
-//                .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
-//        Candidate candidate = candidateService.findByCandidateUuid(user.getUserUuid())
-//                .orElseThrow(() -> new NotFoundException("Could not find candidate by uuid"));
-//
-//        candidateService.deletePhotoFile(candidate);
-//        return "redirect:../edit_profile?delete_photo_file";
-//    }
+
 
     @PostMapping(value = CANDIDATE_NEW_PROFILE)
     public ResponseEntity<CandidateDetailsDTO> createCandidateProfile(

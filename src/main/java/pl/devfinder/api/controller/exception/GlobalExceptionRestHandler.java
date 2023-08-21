@@ -32,7 +32,8 @@ public class GlobalExceptionRestHandler extends ResponseEntityExceptionHandler {
             NotFoundException.class, HttpStatus.NOT_FOUND,
             UserAlreadyExistsException.class, HttpStatus.BAD_REQUEST,
             ProfileAlreadyExistException.class, HttpStatus.BAD_REQUEST,
-            ProfileNotExistException.class, HttpStatus.NOT_FOUND
+            ProfileNotExistException.class, HttpStatus.NOT_FOUND,
+            JustJoinItApiNotRespondException.class, HttpStatus.NOT_FOUND
     );
 
     @Override

@@ -186,7 +186,9 @@ public class SecurityConfiguration {
     @Bean
     @ConditionalOnProperty(value = "spring.security.enabled", havingValue = "true", matchIfMissing = true)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf().disable()
+        return http
+                .csrf().disable()
+                .cors().disable()
                 .authorizeHttpRequests()
                 .requestMatchers(
                         "/",
@@ -213,35 +215,40 @@ public class SecurityConfiguration {
                         "/api/employer/**",
                         "/api/candidates",
                         "/api/candidate/**",
-                        "/api/register/**"
-                        )
+                        "/api/register/**",
+                        "/api/justjoinit_offers/**",
+                        "/api/justjoinit_offers_analysis/**",
+                        "/api/justjoinit_offers_analytics_particular_technology/**",
+                        "/swagger-ui/**"
+                )
                 .permitAll()
                 .requestMatchers(
                         "/candidate_portal/**",
                         "/api/candidate_portal/**"
-                        )
+                )
                 .hasAuthority(Keys.Role.CANDIDATE.getName())
                 .requestMatchers(
                         "/employer_portal/**",
                         "/api/employer_portal/**",
                         "/offers_of_employer/**",
                         "/api/offers_of_employer/**"
-                        )
+                )
                 .hasAuthority(Keys.Role.EMPLOYER.getName())
-                .anyRequest()
-                .authenticated()
                 .and()
                 .formLogin()
+                .permitAll()
                 .loginPage("/login")
                 .usernameParameter("email")
                 .defaultSuccessUrl("/")
                 .failureUrl("/login?error")
-                .permitAll().and()
+                .permitAll()
+                .and()
                 .logout()
                 .invalidateHttpSession(true)
-                .clearAuthentication(true)
+                .deleteCookies("JSESSIONID")
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/login?logout")
+                .permitAll()
                 .and()
                 .build();
     }

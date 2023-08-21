@@ -35,34 +35,34 @@
                             th:text="'Offer nr '+ ${offerDetailsDTO.offerId} + ' Id: '+ ${offerDetailsDTO.offerUuid} + ''"></h6>
                         <dl class="row mb-0">
                             <dt class="col-sm-4">Title</dt>
-                            <dd th:text="${offerDetailsDTO.title}" class="col-sm-8"></dd>
+                            <dd class="col-sm-8" th:text="${offerDetailsDTO.title}"></dd>
 
-                            <dt th:if="${offerDetailsDTO.description != null}" class="col-sm-4">Job description</dt>
-                            <dd th:if="${offerDetailsDTO.description != null}" th:text="${offerDetailsDTO.description}"
-                                class="col-sm-8"></dd>
+                            <dt class="col-sm-4" th:if="${offerDetailsDTO.description != null}">Job description</dt>
+                            <dd class="col-sm-8" th:if="${offerDetailsDTO.description != null}"
+                                th:text="${offerDetailsDTO.description}"></dd>
 
-                            <dt th:if="${offerDetailsDTO.experienceLevel != null}" class="col-sm-4">
+                            <dt class="col-sm-4" th:if="${offerDetailsDTO.experienceLevel != null}">
                                 Required level of experience
                             </dt>
-                            <dd th:if="${offerDetailsDTO.experienceLevel != null}"
-                                th:text="${offerDetailsDTO.experienceLevel}" class="col-sm-8"></dd>
+                            <dd class="col-sm-8"
+                                th:if="${offerDetailsDTO.experienceLevel != null}" th:text="${offerDetailsDTO.experienceLevel}"></dd>
 
-                            <dt th:if="${offerDetailsDTO.yearsOfExperience != null}" class="col-sm-4">Years of
+                            <dt class="col-sm-4" th:if="${offerDetailsDTO.yearsOfExperience != null}">Years of
                                 experience required
                             </dt>
-                            <dd th:if="${offerDetailsDTO.yearsOfExperience != null}"
-                                th:text="${offerDetailsDTO.yearsOfExperience}" class="col-sm-8"></dd>
+                            <dd class="col-sm-8"
+                                th:if="${offerDetailsDTO.yearsOfExperience != null}" th:text="${offerDetailsDTO.yearsOfExperience}"></dd>
 
-                            <dt th:if="${offerDetailsDTO.offerSkills != null}" class="col-sm-4">Tech Stack</dt>
+                            <dt class="col-sm-4" th:if="${offerDetailsDTO.offerSkills != null}">Tech Stack</dt>
                             <dd class="col-sm-8">
                                 <div th:each="skill : ${offerDetailsDTO.offerSkills}"
                                      th:text="${skill.skillId.skillName}">
                                 </div>
                             </dd>
 
-                            <dt th:if="${offerDetailsDTO.otherSkills != null}" class="col-sm-4">Other Skills</dt>
-                            <dd th:if="${offerDetailsDTO.otherSkills != null}" th:text="${offerDetailsDTO.otherSkills}"
-                                class="col-sm-8"></dd>
+                            <dt class="col-sm-4" th:if="${offerDetailsDTO.otherSkills != null}">Other Skills</dt>
+                            <dd class="col-sm-8" th:if="${offerDetailsDTO.otherSkills != null}"
+                                th:text="${offerDetailsDTO.otherSkills}"></dd>
 
                             <dt class="col-sm-4">Percentage of remote work time</dt>
                             <dd class="col-sm-8"><span th:switch="${offerDetailsDTO.remoteWork}">
@@ -71,79 +71,81 @@
                                 <span th:case="*">Partly Remote - [[${offerDetailsDTO.remoteWork}]] % of time</span>
                             </span></dd>
 
-                            <dt th:if="${offerDetailsDTO.salaryMin != null && offerDetailsDTO.salaryMax != null}"
-                                class="col-sm-4">Salary scale
+                            <dt class="col-sm-4"
+                                th:if="${offerDetailsDTO.salaryMin != null && offerDetailsDTO.salaryMax != null}">Salary scale
                             </dt>
-                            <dd th:if="${offerDetailsDTO.salaryMin != null && offerDetailsDTO.salaryMax != null}"
-                                th:text="${offerDetailsDTO.salaryMin} + ' - ' + ${offerDetailsDTO.salaryMax}"
-                                class="col-sm-8"></dd>
+                            <dd class="col-sm-8"
+                                th:if="${offerDetailsDTO.salaryMin != null && offerDetailsDTO.salaryMax != null}"
+                                th:text="${offerDetailsDTO.salaryMin} + ' - ' + ${offerDetailsDTO.salaryMax}"></dd>
 
-                            <dt th:if="${offerDetailsDTO.benefits != null}" class="col-sm-4">Benefits</dt>
-                            <dd th:if="${offerDetailsDTO.benefits != null}" th:text="${offerDetailsDTO.benefits}"
-                                class="col-sm-8"></dd>
+                            <dt class="col-sm-4" th:if="${offerDetailsDTO.benefits != null}">Benefits</dt>
+                            <dd class="col-sm-8" th:if="${offerDetailsDTO.benefits != null}"
+                                th:text="${offerDetailsDTO.benefits}"></dd>
 
-                            <dt th:if="${offerDetailsDTO.cityId.cityName != null}" class="col-sm-4">City</dt>
-                            <dd th:if="${offerDetailsDTO.cityId.cityName != null}"
-                                th:text="${offerDetailsDTO.cityId.cityName}" class="col-sm-8"></dd>
+                            <dt class="col-sm-4" th:if="${offerDetailsDTO.cityId.cityName != null}">City</dt>
+                            <dd class="col-sm-8"
+                                th:if="${offerDetailsDTO.cityId.cityName != null}" th:text="${offerDetailsDTO.cityId.cityName}"></dd>
 
-                            <dt th:if="${offerDetailsDTO.employerId.emailContact != null}" class="col-sm-4">Contact
+                            <dt class="col-sm-4" th:if="${offerDetailsDTO.employerId.emailContact != null}">Contact
                                 Email
                             </dt>
-                            <dd th:if="${offerDetailsDTO.employerId.emailContact != null}"
-                                th:text="${offerDetailsDTO.employerId.emailContact}" class="col-sm-8"></dd>
+                            <dd class="col-sm-8"
+                                th:if="${offerDetailsDTO.employerId.emailContact != null}" th:text="${offerDetailsDTO.employerId.emailContact}"></dd>
 
-                            <dt th:if="${offerDetailsDTO.employerId.phoneNumber != null}" class="col-sm-4">Phone
+                            <dt class="col-sm-4" th:if="${offerDetailsDTO.employerId.phoneNumber != null}">Phone
                                 Number
                             </dt>
-                            <dd th:if="${offerDetailsDTO.employerId.phoneNumber != null}"
-                                th:text="${offerDetailsDTO.employerId.phoneNumber}" class="col-sm-8"></dd>
+                            <dd class="col-sm-8"
+                                th:if="${offerDetailsDTO.employerId.phoneNumber != null}" th:text="${offerDetailsDTO.employerId.phoneNumber}"></dd>
 
                             <dt class="col-sm-4">Company</dt>
                             <dd class="col-sm-8">
                                 <dl class="row">
                                     <dt class="col-sm-4">Name</dt>
-                                    <dd th:text="${offerDetailsDTO.employerId.companyName}" class="col-sm-8"></dd>
-                                    <dt th:if="${offerDetailsDTO.employerId.getLogoFilename != null}" class="col-sm-4">Logo
+                                    <dd class="col-sm-8" th:text="${offerDetailsDTO.employerId.companyName}"></dd>
+                                    <dt class="col-sm-4" th:if="${offerDetailsDTO.employerId.getLogoFilename != null}">
+                                        Logo
                                     </dt>
-                                    <dd th:if="${offerDetailsDTO.employerId.getLogoFilename != null}"
-                                        th:text="${offerDetailsDTO.employerId.getLogoFilename}" class="col-sm-8"></dd>
-                                    <dt th:if="${offerDetailsDTO.employerId.website != null}" class="col-sm-4">Website
+                                    <dd class="col-sm-8"
+                                        th:if="${offerDetailsDTO.employerId.getLogoFilename != null}" th:text="${offerDetailsDTO.employerId.getLogoFilename}"></dd>
+                                    <dt class="col-sm-4" th:if="${offerDetailsDTO.employerId.website != null}">Website
                                     </dt>
-                                    <dd th:if="${offerDetailsDTO.employerId.website != null}"
-                                        th:text="${offerDetailsDTO.employerId.website}" class="col-sm-8"></dd>
-                                    <dt th:if="${offerDetailsDTO.employerId.numberOfEmployees != null}"
-                                        class="col-sm-4">Size
+                                    <dd class="col-sm-8"
+                                        th:if="${offerDetailsDTO.employerId.website != null}" th:text="${offerDetailsDTO.employerId.website}"></dd>
+                                    <dt class="col-sm-4"
+                                        th:if="${offerDetailsDTO.employerId.numberOfEmployees != null}">Size
                                     </dt>
-                                    <dd th:if="${offerDetailsDTO.employerId.numberOfEmployees != null}"
-                                        th:text="${offerDetailsDTO.employerId.numberOfEmployees} + ' employees'"
-                                        class="col-sm-8"></dd>
+                                    <dd class="col-sm-8"
+                                        th:if="${offerDetailsDTO.employerId.numberOfEmployees != null}"
+                                        th:text="${offerDetailsDTO.employerId.numberOfEmployees} + ' employees'"></dd>
                                     <dt class="col-sm-4">
-<!--                                        <a th:href="@{/employer_portal/{employerId}(employerId=${offerDetailsDTO.employerId.employerId})}">-->
-<!--                                            <button-->
-<!--                                                    class="btn btn-sm btn-primary" type="button">Employer Details-->
-<!--                                            </button>-->
-<!--                                        </a>-->
+                                        <!--                                        <a th:href="@{/employer_portal/{employerId}(employerId=${offerDetailsDTO.employerId.employerId})}">-->
+                                        <!--                                            <button-->
+                                        <!--                                                    class="btn btn-sm btn-primary" type="button">Employer Details-->
+                                        <!--                                            </button>-->
+                                        <!--                                        </a>-->
                                     </dt>
                                     <dd class="col-sm-8">
-<!--                                        <a th:href="@{/offers?employer={companyName}(companyName=${offerDetailsDTO.employerId.companyName})}">-->
-<!--                                            <button-->
-<!--                                                    class="btn btn-sm btn-primary" type="button">Job offers of this-->
-<!--                                                employer-->
-<!--                                            </button>-->
-<!--                                        </a>-->
+                                        <!--                                        <a th:href="@{/offers?employer={companyName}(companyName=${offerDetailsDTO.employerId.companyName})}">-->
+                                        <!--                                            <button-->
+                                        <!--                                                    class="btn btn-sm btn-primary" type="button">Job offers of this-->
+                                        <!--                                                employer-->
+                                        <!--                                            </button>-->
+                                        <!--                                        </a>-->
                                     </dd>
                                 </dl>
                             </dd>
                             <dt class="col-sm-4">Job Status</dt>
-                            <dd th:text="${offerDetailsDTO.status}" class="col-sm-8"></dd>
+                            <dd class="col-sm-8" th:text="${offerDetailsDTO.status}"></dd>
 
                             <dt class="col-sm-4">Created At</dt>
-                            <dd th:text="${#temporals.format(offerDetailsDTO.createdAt, 'dd-MM-yyyy')}"
-                                class="col-sm-8"></dd>
+                            <dd class="col-sm-8"
+                                th:text="${#temporals.format(offerDetailsDTO.createdAt, 'dd-MM-yyyy')}"></dd>
 
                         </dl>
                         <div class="d-flex justify-content-between gap-4">
-                            <a th:href="@{/offers_of_employer/edit/{offerId}(offerId=${offerDetailsDTO.offerId})}" class="btn  btn-info m-2">Edit Offer</a>
+                            <a class="btn  btn-info m-2"
+                               th:href="@{/offers_of_employer/edit/{offerId}(offerId=${offerDetailsDTO.offerId})}">Edit Offer</a>
 
                             <a class="btn  btn-info m-2" th:href="@{/offers_of_employer/offers}">Back To Offer List</a>
                         </div>
@@ -163,7 +165,7 @@
 
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <a class="btn btn-lg btn-primary btn-lg-square back-to-top" href="#"><i class="bi bi-arrow-up"></i></a>
 </div>
 
 <div th:replace="~{fragments :: js__}"></div>

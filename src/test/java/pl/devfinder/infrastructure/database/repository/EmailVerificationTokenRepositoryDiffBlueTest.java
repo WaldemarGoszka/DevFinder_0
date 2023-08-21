@@ -1,17 +1,5 @@
 package pl.devfinder.infrastructure.database.repository;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.HashSet;
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -26,6 +14,16 @@ import pl.devfinder.infrastructure.database.entity.RoleEntity;
 import pl.devfinder.infrastructure.database.entity.UserEntity;
 import pl.devfinder.infrastructure.database.repository.jpa.EmailVerificationTokenJpaRepository;
 import pl.devfinder.infrastructure.database.repository.mapper.EmailVerificationTokenMapper;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.HashSet;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.Mockito.*;
 
 @ContextConfiguration(classes = {EmailVerificationTokenRepository.class})
 @ExtendWith(SpringExtension.class)
@@ -113,11 +111,11 @@ class EmailVerificationTokenRepositoryDiffBlueTest {
         emailVerificationTokenEntity.setUser(user3);
         emailVerificationTokenEntity.setVerificationTokenId(1L);
         Optional<EmailVerificationTokenEntity> ofResult = Optional.of(emailVerificationTokenEntity);
-        when(emailVerificationTokenJpaRepository.findByToken(Mockito.<String>any())).thenReturn(ofResult);
-        when(emailVerificationTokenMapper.mapFromEntity(Mockito.<EmailVerificationTokenEntity>any())).thenReturn(null);
+        when(emailVerificationTokenJpaRepository.findByToken(Mockito.any())).thenReturn(ofResult);
+        when(emailVerificationTokenMapper.mapFromEntity(Mockito.any())).thenReturn(null);
         assertFalse(emailVerificationTokenRepository.findByToken("ABC123").isPresent());
-        verify(emailVerificationTokenJpaRepository).findByToken(Mockito.<String>any());
-        verify(emailVerificationTokenMapper).mapFromEntity(Mockito.<EmailVerificationTokenEntity>any());
+        verify(emailVerificationTokenJpaRepository).findByToken(Mockito.any());
+        verify(emailVerificationTokenMapper).mapFromEntity(Mockito.any());
     }
 
     /**
@@ -221,7 +219,7 @@ class EmailVerificationTokenRepositoryDiffBlueTest {
         emailVerificationTokenEntity.setToken("ABC123");
         emailVerificationTokenEntity.setUser(user3);
         emailVerificationTokenEntity.setVerificationTokenId(1L);
-        when(emailVerificationTokenJpaRepository.save(Mockito.<EmailVerificationTokenEntity>any()))
+        when(emailVerificationTokenJpaRepository.save(Mockito.any()))
                 .thenReturn(emailVerificationTokenEntity);
 
         EmailVerificationTokenEntity emailVerificationToken4 = new EmailVerificationTokenEntity();
@@ -320,11 +318,11 @@ class EmailVerificationTokenRepositoryDiffBlueTest {
         emailVerificationTokenEntity2.setToken("ABC123");
         emailVerificationTokenEntity2.setUser(user6);
         emailVerificationTokenEntity2.setVerificationTokenId(1L);
-        when(emailVerificationTokenMapper.mapToEntity(Mockito.<EmailVerificationToken>any()))
+        when(emailVerificationTokenMapper.mapToEntity(Mockito.any()))
                 .thenReturn(emailVerificationTokenEntity2);
         emailVerificationTokenRepository.save(null);
-        verify(emailVerificationTokenJpaRepository).save(Mockito.<EmailVerificationTokenEntity>any());
-        verify(emailVerificationTokenMapper).mapToEntity(Mockito.<EmailVerificationToken>any());
+        verify(emailVerificationTokenJpaRepository).save(Mockito.any());
+        verify(emailVerificationTokenMapper).mapToEntity(Mockito.any());
     }
 }
 

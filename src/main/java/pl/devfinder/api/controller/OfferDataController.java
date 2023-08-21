@@ -15,7 +15,6 @@ import pl.devfinder.api.dto.*;
 import pl.devfinder.api.dto.mapper.*;
 import pl.devfinder.business.*;
 import pl.devfinder.business.management.Keys;
-import pl.devfinder.business.management.Utility;
 import pl.devfinder.domain.Offer;
 import pl.devfinder.domain.User;
 import pl.devfinder.domain.search.OfferSearchCriteria;
@@ -24,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 @Slf4j
 @Controller
 @AllArgsConstructor
@@ -56,6 +56,7 @@ public class OfferDataController {
 
         return new ModelAndView("offers", offersListData);
     }
+
     @GetMapping(value = OFFER_DETAILS)
     public String getOfferDetails(@PathVariable Long offerId, Model model, Authentication authentication) {
         Optional<User> user = userController.putUserDataToModel(authentication, userService, model);

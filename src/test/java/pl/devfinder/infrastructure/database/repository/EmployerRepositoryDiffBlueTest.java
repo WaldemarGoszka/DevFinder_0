@@ -1,20 +1,5 @@
 package pl.devfinder.infrastructure.database.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -27,6 +12,17 @@ import pl.devfinder.infrastructure.database.entity.CityEntity;
 import pl.devfinder.infrastructure.database.entity.EmployerEntity;
 import pl.devfinder.infrastructure.database.repository.jpa.EmployerJpaRepository;
 import pl.devfinder.infrastructure.database.repository.mapper.EmployerEntityMapper;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ContextConfiguration(classes = {EmployerRepository.class})
 @ExtendWith(SpringExtension.class)
@@ -75,7 +71,7 @@ class EmployerRepositoryDiffBlueTest {
         employerEntity.setNumberOfEmployees(10);
         employerEntity.setPhoneNumber("6625550144");
         employerEntity.setWebsite("Website");
-        when(employerJpaRepository.save(Mockito.<EmployerEntity>any())).thenReturn(employerEntity);
+        when(employerJpaRepository.save(Mockito.any())).thenReturn(employerEntity);
 
         CityEntity cityId2 = new CityEntity();
         cityId2.setCandidateResidenceCities(new HashSet<>());
@@ -97,10 +93,10 @@ class EmployerRepositoryDiffBlueTest {
         employerEntity2.setNumberOfEmployees(10);
         employerEntity2.setPhoneNumber("6625550144");
         employerEntity2.setWebsite("Website");
-        when(employerEntityMapper.mapToEntity(Mockito.<Employer>any())).thenReturn(employerEntity2);
+        when(employerEntityMapper.mapToEntity(Mockito.any())).thenReturn(employerEntity2);
         employerRepository.save(null);
-        verify(employerJpaRepository).save(Mockito.<EmployerEntity>any());
-        verify(employerEntityMapper).mapToEntity(Mockito.<Employer>any());
+        verify(employerJpaRepository).save(Mockito.any());
+        verify(employerEntityMapper).mapToEntity(Mockito.any());
     }
 
     /**
@@ -130,10 +126,10 @@ class EmployerRepositoryDiffBlueTest {
         employerEntity.setWebsite("Website");
         Optional<EmployerEntity> ofResult = Optional.of(employerEntity);
         when(employerJpaRepository.findById(Mockito.<Long>any())).thenReturn(ofResult);
-        when(employerEntityMapper.mapFromEntity(Mockito.<EmployerEntity>any())).thenReturn(null);
+        when(employerEntityMapper.mapFromEntity(Mockito.any())).thenReturn(null);
         assertFalse(employerRepository.findById(1L).isPresent());
         verify(employerJpaRepository).findById(Mockito.<Long>any());
-        verify(employerEntityMapper).mapFromEntity(Mockito.<EmployerEntity>any());
+        verify(employerEntityMapper).mapFromEntity(Mockito.any());
     }
 
     /**
@@ -162,11 +158,11 @@ class EmployerRepositoryDiffBlueTest {
         employerEntity.setPhoneNumber("6625550144");
         employerEntity.setWebsite("Website");
         Optional<EmployerEntity> ofResult = Optional.of(employerEntity);
-        when(employerJpaRepository.findByEmployerUuid(Mockito.<String>any())).thenReturn(ofResult);
-        when(employerEntityMapper.mapFromEntity(Mockito.<EmployerEntity>any())).thenReturn(null);
+        when(employerJpaRepository.findByEmployerUuid(Mockito.any())).thenReturn(ofResult);
+        when(employerEntityMapper.mapFromEntity(Mockito.any())).thenReturn(null);
         assertFalse(employerRepository.findByEmployerUuid("01234567-89AB-CDEF-FEDC-BA9876543210").isPresent());
-        verify(employerJpaRepository).findByEmployerUuid(Mockito.<String>any());
-        verify(employerEntityMapper).mapFromEntity(Mockito.<EmployerEntity>any());
+        verify(employerJpaRepository).findByEmployerUuid(Mockito.any());
+        verify(employerEntityMapper).mapFromEntity(Mockito.any());
     }
 
     /**
@@ -174,9 +170,9 @@ class EmployerRepositoryDiffBlueTest {
      */
     @Test
     void testCountByCityName() {
-        when(employerJpaRepository.countByCityName(Mockito.<String>any())).thenReturn(3L);
+        when(employerJpaRepository.countByCityName(Mockito.any())).thenReturn(3L);
         assertEquals(3L, employerRepository.countByCityName("Oxford"));
-        verify(employerJpaRepository).countByCityName(Mockito.<String>any());
+        verify(employerJpaRepository).countByCityName(Mockito.any());
     }
 
     /**
@@ -195,7 +191,7 @@ class EmployerRepositoryDiffBlueTest {
     @Test
     void testDeleteEmployerFromAllCandidatesAndChangeStatus() {
         doNothing().when(employerJpaRepository)
-                .deleteEmployerFromAllCandidatesAndChangeStatus(Mockito.<EmployerEntity>any());
+                .deleteEmployerFromAllCandidatesAndChangeStatus(Mockito.any());
 
         CityEntity cityId = new CityEntity();
         cityId.setCandidateResidenceCities(new HashSet<>());
@@ -217,10 +213,10 @@ class EmployerRepositoryDiffBlueTest {
         employerEntity.setNumberOfEmployees(10);
         employerEntity.setPhoneNumber("6625550144");
         employerEntity.setWebsite("Website");
-        when(employerEntityMapper.mapToEntity(Mockito.<Employer>any())).thenReturn(employerEntity);
+        when(employerEntityMapper.mapToEntity(Mockito.any())).thenReturn(employerEntity);
         employerRepository.deleteEmployerFromAllCandidatesAndChangeStatus(null);
-        verify(employerJpaRepository).deleteEmployerFromAllCandidatesAndChangeStatus(Mockito.<EmployerEntity>any());
-        verify(employerEntityMapper).mapToEntity(Mockito.<Employer>any());
+        verify(employerJpaRepository).deleteEmployerFromAllCandidatesAndChangeStatus(Mockito.any());
+        verify(employerEntityMapper).mapToEntity(Mockito.any());
     }
 
     /**
@@ -229,7 +225,7 @@ class EmployerRepositoryDiffBlueTest {
     @Test
     void testAssignEmployerToCandidateAndChangeStatus() {
         doNothing().when(employerJpaRepository)
-                .assignEmployerToCandidateAndChangeStatus(Mockito.<EmployerEntity>any(), Mockito.<Long>any());
+                .assignEmployerToCandidateAndChangeStatus(Mockito.any(), Mockito.<Long>any());
 
         CityEntity cityId = new CityEntity();
         cityId.setCandidateResidenceCities(new HashSet<>());
@@ -251,11 +247,11 @@ class EmployerRepositoryDiffBlueTest {
         employerEntity.setNumberOfEmployees(10);
         employerEntity.setPhoneNumber("6625550144");
         employerEntity.setWebsite("Website");
-        when(employerEntityMapper.mapToEntity(Mockito.<Employer>any())).thenReturn(employerEntity);
+        when(employerEntityMapper.mapToEntity(Mockito.any())).thenReturn(employerEntity);
         employerRepository.assignEmployerToCandidateAndChangeStatus(null, 1L);
-        verify(employerJpaRepository).assignEmployerToCandidateAndChangeStatus(Mockito.<EmployerEntity>any(),
+        verify(employerJpaRepository).assignEmployerToCandidateAndChangeStatus(Mockito.any(),
                 Mockito.<Long>any());
-        verify(employerEntityMapper).mapToEntity(Mockito.<Employer>any());
+        verify(employerEntityMapper).mapToEntity(Mockito.any());
     }
 
     /**
@@ -294,11 +290,11 @@ class EmployerRepositoryDiffBlueTest {
         employerEntity.setPhoneNumber("6625550144");
         employerEntity.setWebsite("Website");
         Optional<EmployerEntity> ofResult = Optional.of(employerEntity);
-        when(employerJpaRepository.findByCompanyName(Mockito.<String>any())).thenReturn(ofResult);
-        when(employerEntityMapper.mapFromEntity(Mockito.<EmployerEntity>any())).thenReturn(null);
+        when(employerJpaRepository.findByCompanyName(Mockito.any())).thenReturn(ofResult);
+        when(employerEntityMapper.mapFromEntity(Mockito.any())).thenReturn(null);
         assertFalse(employerRepository.findByCompanyName("Employer Company Name").isPresent());
-        verify(employerJpaRepository).findByCompanyName(Mockito.<String>any());
-        verify(employerEntityMapper).mapFromEntity(Mockito.<EmployerEntity>any());
+        verify(employerJpaRepository).findByCompanyName(Mockito.any());
+        verify(employerEntityMapper).mapFromEntity(Mockito.any());
     }
 }
 

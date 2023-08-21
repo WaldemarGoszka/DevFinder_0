@@ -16,6 +16,7 @@ import pl.devfinder.infrastructure.database.repository.mapper.OfferEntityMapper;
 
 import java.util.List;
 import java.util.Optional;
+
 @Slf4j
 @Repository
 @AllArgsConstructor
@@ -57,8 +58,8 @@ public class OfferRepository implements OfferDAO {
     }
 
     @Override
-    public Optional<Offer>  findByOfferIdAndEmployerId(Long offerId, Employer employer) {
-        return offerJpaRepository.findByOfferIdAndEmployerId(offerId,employerEntityMapper
+    public Optional<Offer> findByOfferIdAndEmployerId(Long offerId, Employer employer) {
+        return offerJpaRepository.findByOfferIdAndEmployerId(offerId, employerEntityMapper
                 .mapToEntity(employer)).map(offerEntityMapper::mapFromEntity);
     }
 
@@ -79,7 +80,7 @@ public class OfferRepository implements OfferDAO {
 
     @Override
     public Offer save(Offer offer) {
-        log.info("Process save offer : [{}]",offer);
+        log.info("Process save offer : [{}]", offer);
         return offerEntityMapper.mapFromEntity(offerJpaRepository.saveAndFlush(offerEntityMapper.mapToEntity(offer)));
     }
 

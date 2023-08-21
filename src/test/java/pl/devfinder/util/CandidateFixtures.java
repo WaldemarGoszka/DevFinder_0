@@ -23,7 +23,7 @@ public class CandidateFixtures {
                 .lastName("Kowalski")
                 .emailContact("jan@example.com")
                 .phoneNumber("123 456 789")
-                .createdAt(OffsetDateTime.of(2020,1,1,1,1,1,1, ZoneOffset.UTC))
+                .createdAt(OffsetDateTime.of(2020, 1, 1, 1, 1, 1, 1, ZoneOffset.UTC))
                 .status("ACTIVE")
                 .education("")
                 .otherSkills("")

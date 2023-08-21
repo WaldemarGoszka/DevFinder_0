@@ -4,13 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import pl.devfinder.business.dao.CandidateDAO;
-import pl.devfinder.business.management.Keys;
 import pl.devfinder.domain.Candidate;
 import pl.devfinder.infrastructure.database.repository.jpa.CandidateJpaRepository;
 import pl.devfinder.infrastructure.database.repository.mapper.CandidateEntityMapper;
 
-import java.util.List;
 import java.util.Optional;
+
 @Slf4j
 @Repository
 @AllArgsConstructor
@@ -19,10 +18,9 @@ public class CandidateRepository implements CandidateDAO {
     private final CandidateEntityMapper candidateEntityMapper;
 
 
-
     @Override
     public Candidate save(Candidate candidate) {
-        log.info("Process save candidate : [{}]",candidate);
+        log.info("Process save candidate : [{}]", candidate);
         return candidateEntityMapper.mapFromEntity(candidateJpaRepository.saveAndFlush(candidateEntityMapper.mapToEntity(candidate)));
     }
 

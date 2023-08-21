@@ -29,7 +29,6 @@ public class OfferUpdateRequest {
     Employer employerId;
     City cityId;
     String cityName;
-//    Set<OfferSkills> offerSkills;
     Set<String> offerSkillsNames;
 
 }

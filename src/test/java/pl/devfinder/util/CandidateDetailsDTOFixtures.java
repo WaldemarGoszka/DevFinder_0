@@ -8,6 +8,7 @@ import pl.devfinder.domain.Skill;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Set;
 
 @UtilityClass
@@ -21,7 +22,7 @@ public class CandidateDetailsDTOFixtures {
                 .lastName("Kowalski")
                 .emailContact("jan@example.com")
                 .phoneNumber("123 456 789")
-                .createdAt(OffsetDateTime.now())
+                .createdAt(OffsetDateTime.of(2022, 1, 1, 1, 1, 1, 1, ZoneOffset.UTC))
                 .status("ACTIVE")
                 .education("")
                 .otherSkills("")

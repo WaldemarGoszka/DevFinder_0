@@ -27,7 +27,7 @@ public class EmployerService {
     private final EmployerCriteriaRepository employerCriteriaRepository;
     private final CityService cityService;
     private final OfferService offerService;
-    private final FileUploadService fileUploadService;
+    private final FileService fileService;
     private final OfferSkillService offerSkillService;
     private final DataService dataService;
 
@@ -96,7 +96,7 @@ public class EmployerService {
     private String processNewLogoFile(EmployerUpdateRequest employerUpdateRequest, User user) {
         if (Objects.nonNull(employerUpdateRequest.getFileLogo()) && !employerUpdateRequest.getFileLogo().isEmpty()) {
             log.info("Process upload new logo file : [{}]", employerUpdateRequest.getFileLogo().getOriginalFilename());
-            return fileUploadService.saveFileToDisc(user.getUserUuid(), employerUpdateRequest.getFileLogo());
+            return fileService.saveFileToDisc(user.getUserUuid(), employerUpdateRequest.getFileLogo());
         } else {
             return null;
         }
@@ -142,14 +142,14 @@ public class EmployerService {
         if (Objects.nonNull(employerUpdateRequest.getFileLogo()) && !employerUpdateRequest.getFileLogo().isEmpty()) {
             log.info("Process upload update photo file : [{}]", employerUpdateRequest.getFileLogo().getOriginalFilename());
             try {
-                if (fileUploadService.oldFileExist(employer.getEmployerUuid(), employer.getLogoFilename())) {
-                    fileUploadService.deleteFileFromDisc(employer.getEmployerUuid(), employer.getLogoFilename());
+                if (fileService.oldFileExist(employer.getEmployerUuid(), employer.getLogoFilename())) {
+                    fileService.deleteFileFromDisc(employer.getEmployerUuid(), employer.getLogoFilename());
                 }
             } catch (IOException e) {
                 log.error("Could not delete file: [{}]", employer.getLogoFilename());
                 throw new FileUploadToProfileException("Could not delete file: " + employer.getLogoFilename());
             }
-            return fileUploadService.saveFileToDisc(employer.getEmployerUuid(), employerUpdateRequest.getFileLogo());
+            return fileService.saveFileToDisc(employer.getEmployerUuid(), employerUpdateRequest.getFileLogo());
         } else {
             return employer.getLogoFilename();
         }
@@ -162,7 +162,7 @@ public class EmployerService {
         Employer employer = this.findById(employerId);
 
         if (Objects.nonNull(employer.getLogoFilename())) {
-            fileUploadService.deleteFileFromDisc(employer.getEmployerUuid(), employer.getLogoFilename());
+            fileService.deleteFileFromDisc(employer.getEmployerUuid(), employer.getLogoFilename());
         }
 
         List<Offer> offers = offerService.findAllByEmployer(employer);
@@ -183,7 +183,7 @@ public class EmployerService {
 
     public void deleteLogoFile(Employer employer) {
         log.info("Process delete logo file");
-        fileUploadService.deleteFileFromDisc(employer.getEmployerUuid(), employer.getLogoFilename());
+        fileService.deleteFileFromDisc(employer.getEmployerUuid(), employer.getLogoFilename());
         Employer updateEmployer = employer.withLogoFilename(null);
         employerDAO.save(updateEmployer);
     }

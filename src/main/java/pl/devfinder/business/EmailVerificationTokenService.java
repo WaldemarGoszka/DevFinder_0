@@ -11,6 +11,7 @@ import pl.devfinder.domain.User;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -21,11 +22,11 @@ public class EmailVerificationTokenService {
     public String validateToken(String token) {
         log.info("Process validate email verification token: [{}]", token);
         Optional<EmailVerificationToken> emailVerificationToken = emailVerificationTokenDAO.findByToken(token);
-        if (emailVerificationToken.isEmpty()){
+        if (emailVerificationToken.isEmpty()) {
             return Keys.TokenStatus.INVALID.getName();
         }
         User user = emailVerificationToken.get().getUser();
-        if (emailVerificationToken.get().getExpirationTime().isBefore(OffsetDateTime.now())){
+        if (emailVerificationToken.get().getExpirationTime().isBefore(OffsetDateTime.now())) {
             return Keys.TokenStatus.EXPIRED.getName();
         }
         userService.save(user.withIsEnabled(true));
@@ -33,7 +34,7 @@ public class EmailVerificationTokenService {
     }
 
     public void saveVerificationTokenForUser(User user, String token) {
-        log.info("Process save email verification token: [{}] , for user [{}]", token,user);
+        log.info("Process save email verification token: [{}] , for user [{}]", token, user);
         EmailVerificationToken emailVerificationToken = EmailVerificationToken.builder()
                 .token(token)
                 .user(user)

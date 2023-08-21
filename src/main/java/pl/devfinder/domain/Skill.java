@@ -10,7 +10,6 @@ import lombok.*;
 public class Skill {
     Long skillId;
     String skillName;
-//    Set<CandidateSkill> candidateSkills;
-//    Set<OfferSkills> offerSkills;
+
 
 }

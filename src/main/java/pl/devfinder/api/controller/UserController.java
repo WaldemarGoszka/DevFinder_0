@@ -9,10 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.devfinder.business.CandidateService;
 import pl.devfinder.business.EmployerService;
-import pl.devfinder.business.FileUploadService;
+import pl.devfinder.business.FileService;
 import pl.devfinder.business.UserService;
 import pl.devfinder.business.management.Keys;
-import pl.devfinder.business.management.Utility;
 import pl.devfinder.domain.Candidate;
 import pl.devfinder.domain.Employer;
 import pl.devfinder.domain.User;
@@ -30,15 +29,12 @@ public class UserController {
     public static final String SETTINGS = "/settings";
     public static final String CHANGE_PASSWORD = "/change-password";
     public static final String DELETE = "/delete";
-
     public static final String DEFAULT_PHOTO_PATH = "/img/user.jpg";
-
-
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final CandidateService candidateService;
     private final EmployerService employerService;
-    private final FileUploadService fileUploadService;
+    private final FileService fileService;
 
     @GetMapping(SETTINGS)
     public String getSettingsPage(Model model, Authentication authentication) {
@@ -58,7 +54,7 @@ public class UserController {
         return "redirect:/logout";
     }
 
-    @PatchMapping (CHANGE_PASSWORD)
+    @PatchMapping(CHANGE_PASSWORD)
     public String getChangePassword(@RequestParam("oldPassword") String oldPassword,
                                     @RequestParam("newPassword") String newPassword,
                                     @RequestParam("repeatNewPassword") String repeatPassword,
@@ -83,7 +79,7 @@ public class UserController {
             if (user.get().getRole().getRole().equals(Keys.Role.CANDIDATE.getName())) {
                 Optional<Candidate> candidate = candidateService.findByCandidateUuid(user.get().getUserUuid());
                 if (candidate.isPresent() && Objects.nonNull(candidate.get().getPhotoFilename())) {
-                    model.addAttribute("photoDir", fileUploadService.getUserPhotoPath(candidate.get().getCandidateUuid(), candidate.get().getPhotoFilename()));
+                    model.addAttribute("photoDir", fileService.getUserPhotoPath(candidate.get().getCandidateUuid(), candidate.get().getPhotoFilename()));
                 } else {
                     model.addAttribute("photoDir", UserController.DEFAULT_PHOTO_PATH);
                 }
@@ -91,13 +87,14 @@ public class UserController {
             if (user.get().getRole().getRole().equals(Keys.Role.EMPLOYER.getName())) {
                 Optional<Employer> employer = employerService.findByEmployerUuid(user.get().getUserUuid());
                 if (employer.isPresent() && Objects.nonNull(employer.get().getLogoFilename())) {
-                    model.addAttribute("photoDir", fileUploadService.getUserPhotoPath(employer.get().getEmployerUuid(), employer.get().getLogoFilename()));
+                    model.addAttribute("photoDir", fileService.getUserPhotoPath(employer.get().getEmployerUuid(), employer.get().getLogoFilename()));
                 } else {
                     model.addAttribute("photoDir", UserController.DEFAULT_PHOTO_PATH);
                 }
             }
         }
     }
+
     public Optional<User> putUserDataToModel(Authentication authentication, UserService userService, Model model) {
         if (authentication != null) {
             Optional<User> user = userService.findByEmail(authentication.getName());

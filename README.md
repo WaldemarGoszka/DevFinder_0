@@ -5,6 +5,10 @@ seeking new opportunities.
 
 ## Features
 
+### For All
+
+- You can browse job offers, list of employers and use job analysis from one of the largest portals justjoin.it
+
 ### For Employers
 
 - Create an account to represent your company on the platform.
@@ -19,6 +23,56 @@ seeking new opportunities.
 - Search for companies seeking candidates like you.
 - Mark your profile as "inactive" if not actively looking for new opportunities.
 - Explore job offers posted by employers.
+
+## Getting Started
+Clone repository
+
+```
+git clone https://github.com/WaldemarGoszka/DevFinder_0.git
+```
+
+##### Intellij
+Create PostgreSQL database
+```
+name: "devfinder", password: postgres
+```
+run in webbrowser:
+```
+http://localhost:8080/devfinder
+```
+#### Docker
+you have docker in your computer you can run application in container, run this commends in CMD:  
+first install postgres database:
+```
+docker pull postgres
+```
+second run application:
+```
+gradle build
+```
+```
+docker build -t devfinder/devfinder:1.0 .
+```
+```
+docker compose up -d
+```
+wait a moment and enter
+```
+http://localhost:8080/devfinder
+```
+### Data for testing
+You can use your login credentials to test this application or create your own account
+```
+employers:
+
+email: kontakt@abccorp.com password:test
+email: info@xyztech.com password:test
+
+candidates:
+
+email: jan.kowalski@example.com password:test
+email: anna.nowak@example.com password:test
+```
 
 ## Description
 
@@ -111,7 +165,7 @@ again must re-register .
 
 ### REST API
 
-Postman collection to test all endpoints below is in Postman ```Test Candidate Collection.postman_collection.json``` file
+Postman collection to test all endpoints below is in Postman ```Devfinder_Postman _export.json``` file
 
 #### GET Content available without registration
 
@@ -514,7 +568,6 @@ example response body
 }
 ```
 #### PUT Update Candidate Profile
-możemy metodę wykonywać ile razt chce się jest idempotentna
 ```
 PUT http://localhost:8080/devfinder/api/candidate_portal/update_profile
 ```
@@ -567,7 +620,6 @@ curl --location --request PUT 'http://localhost:8080/devfinder/api/candidate_por
 ```
 
 #### DELETE Delete Candidate Profile
-jest idempotentna za pierwszym razem dostaniemy 200 a za kolejnym 404 not found
 ```
 DELETE http://localhost:8080/devfinder/api/candidate_portal/delete_profile
 ```
@@ -603,10 +655,94 @@ http://localhost:8080/devfinder/login?email=john@example.com&password=test
 
 #### POST Create/Update candidate profile
 
+### API Consume from JustJoinIt.pl
+
+The api from justjoin.it is non-public. It contains about 12 thousand real developer jobs and the json file is about 12MB. I had to increase the buffer limit in the WebClient configuration. This data can be used to analyze the programmer job market, the number of offers is sufficient to get reliable data.
+Api does not publish the OpenApi contract so I had to manually create the classes needed to Map Json to Pojo classes. I used the Json To Pojo plugin in Intellij for this.
+
+The basic endpoints to the api justjoinIt :
+all offers
+```
+https://justjoin.it/api/offers
+```
+you can see deteils of particular offer, just add the "id" field from the above endpoint
+```
+{
+       ...
+        "id": "b-braun-cloud-engineer",
+       ...
+}
+```
+adn add into url like:
+```
+https://justjoin.it/api/offers/b-braun-cloud-engineer
+```
+#### Sharing consumed api
+Endpoints with the same data also publishes my application at :
+```
+http://localhost:8080/devfinder/api/justjoinit_offers
+```
+```
+http://localhost:8080/devfinder/api/justjoinit_offers/b-braun-cloud-engineer
+```
+The application analyzes the data extracting a range of useful data.
+#### Api Analysis results
+##### All offers analysis results
+
+Endpoint prepares analysis of all job offers:
+```
+http://localhost:8080/devfinder/api/justjoinit_offers_analysis
+```
+information located at this endpoint :
+```
+totalOffers
+skillsDistribution
+experienceLevelDistribution
+employmentTypeDistribution
+mainTechnologyDistribution
+salaryCurrencyDistribution
+avgSalaryInPLNCurrencyB2BContractAccordingToExperienceDistribution
+avgSalaryInPLNCurrencyPermanentContractAccordingToExperienceDistribution
+offersWithSalaryRangesExperienceDistribution
+availableTechnology
+```
+The data in the "skillsDistribution" column was filtered if a skill did not occur at least 10 times in the bids in question to reduce the size of the analyzed json.
+##### Particular technology analysis
+We can see that we have data like "availableTechnology" we can add the value of available technologies to the path to display an analysis of bids related to a specific main technology
+
+example for java main tachnology
+```
+http://localhost:8080/devfinder/api/justjoinit_offers_analytics_particular_technology/java
+```
+information located at this endpoint
+```
+totalOffers
+totalOffersInParticularTechnology
+experienceInParticularDistribution
+skillsInInParticularTechnologyDistribution
+offersWithSalaryRangesInParticularDistribution
+avgSalaryInPLNCurrencyB2BContractAccordingToExperienceInParticularTechnologyDistribution
+avgSalaryInPLNCurrencyPermanentContractAccordingToExperienceInParticularTechnologyDistribution
+availableTechnology
+```
+Interesting conclusions that can be drawn from the analysis that the 3 most common skills that appeared in all the bids were
+```
+"Java": 1487,
+"SQL": 1233,
+"English": 953
+```
+And the number of offers where the main technology was used :
+```
+"java": 1434,
+"javascript": 1230,
+"data": 1099,
+```
+Looks like java is the king :)
 #### Swagger-UI / Open Api
-
+The swagger-ui contract is available at
+```
 http://localhost:8080/devfinder/swagger-ui/index.html
-
+```
 
 ## Technologies Used
 
@@ -673,21 +809,25 @@ This is implemented for better search and filtering of results, because when you
 - Notification function
 
 
-## Getting Started
-Clone repositorium
 
-```git clone https://github.com/WaldemarGoszka/DevFinder_0.git```
-
-Run in Intellij
-create PostgreSQL database name: "devfinder"
-run in webbrowser:
-```http://localhost:8080/devfinder```
-
-### Bootstrap templates:
+### Material used
+For the project, I used:
 
 Favicon.ico:
+```
 https://freefavicon.com/freefavicons/business/iconinfo/business-man-avatar-vector-152-185058.html
-
+```
 Bootstrap template:
+```
 https://themewagon.com/themes/free-bootstrap-5-admin-dashboard-template-darkpan/
+```
+Api:
+```
+https://justjoin.it/
+```
+DiffBlue plugin for unit test
 
+### Unresolved issues
+- Only 60% test code coverage
+- In the docker container, adding photos not work correctly
+- When compiling via Intellij, in order for images to load smoothly, uncomment line 61 in the FileService class. Without this, the images will load after restarting the application

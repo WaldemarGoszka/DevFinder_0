@@ -39,11 +39,4 @@ public class CityService {
     }
 
 
-
-
-    //TODO jeśli nie będzie takiego miasta to dodaj miasto
-//    if(City == null){
-//        city = saveCity();
-//    }
-
 }

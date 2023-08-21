@@ -13,8 +13,9 @@ import java.util.Optional;
 @Repository
 @AllArgsConstructor
 public class CityRepository implements CityDAO {
-private final CityJpaRepository cityJpaRepository;
-private final CityEntityMapper cityEntityMapper;
+    private final CityJpaRepository cityJpaRepository;
+    private final CityEntityMapper cityEntityMapper;
+
     @Override
     public List<City> findAll() {
         return cityJpaRepository.findAll().stream().map(cityEntityMapper::mapFromEntity).toList();

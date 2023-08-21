@@ -2,13 +2,8 @@ package pl.devfinder.business.management;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.experimental.UtilityClass;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.ui.Model;
-import pl.devfinder.business.UserService;
-import pl.devfinder.domain.User;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @UtilityClass
@@ -29,19 +24,4 @@ public final class Utility {
 
     }
 
-    public static Optional<User> putUserDataToModel(Authentication authentication, UserService userService, Model model) {
-        if (authentication != null) {
-            Optional<User> user = userService.findByEmail(authentication.getName());
-            if (user.isEmpty()) {
-                return Optional.empty();
-            }
-            model.addAttribute("user", user.get());
-            return user;
-        }
-        return Optional.empty();
-    }
-
-    public static String getUserPhotoPath(String uuid, String fileName) {
-        return "/user_data/" + uuid.replaceAll("-", "_") + fileName;
-    }
 }

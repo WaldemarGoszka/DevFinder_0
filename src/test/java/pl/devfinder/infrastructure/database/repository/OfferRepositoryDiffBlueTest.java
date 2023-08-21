@@ -1,24 +1,5 @@
 package pl.devfinder.infrastructure.database.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Optional;
-
-import org.junit.jupiter.api.Disabled;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -37,6 +18,18 @@ import pl.devfinder.infrastructure.database.entity.OfferEntity;
 import pl.devfinder.infrastructure.database.repository.jpa.OfferJpaRepository;
 import pl.devfinder.infrastructure.database.repository.mapper.EmployerEntityMapper;
 import pl.devfinder.infrastructure.database.repository.mapper.OfferEntityMapper;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ContextConfiguration(classes = {OfferRepository.class})
 @ExtendWith(SpringExtension.class)
@@ -58,9 +51,9 @@ class OfferRepositoryDiffBlueTest {
      */
     @Test
     void testFindAllByState() {
-        when(offerJpaRepository.findAllByState(Mockito.<String>any())).thenReturn(new ArrayList<>());
+        when(offerJpaRepository.findAllByState(Mockito.any())).thenReturn(new ArrayList<>());
         assertTrue(offerRepository.findAllByState(Keys.OfferState.ACTIVE).isEmpty());
-        verify(offerJpaRepository).findAllByState(Mockito.<String>any());
+        verify(offerJpaRepository).findAllByState(Mockito.any());
     }
 
     /**
@@ -68,9 +61,9 @@ class OfferRepositoryDiffBlueTest {
      */
     @Test
     void testFindAllByState2() {
-        when(offerJpaRepository.findAllByState(Mockito.<String>any())).thenReturn(new ArrayList<>());
+        when(offerJpaRepository.findAllByState(Mockito.any())).thenReturn(new ArrayList<>());
         assertTrue(offerRepository.findAllByState(Keys.OfferState.EXPIRED).isEmpty());
-        verify(offerJpaRepository).findAllByState(Mockito.<String>any());
+        verify(offerJpaRepository).findAllByState(Mockito.any());
     }
 
     /**
@@ -78,39 +71,19 @@ class OfferRepositoryDiffBlueTest {
      */
     @Test
     void testFindAllByState3() {
-        when(offerJpaRepository.findAllByState(Mockito.<String>any(), Mockito.<Pageable>any()))
+        when(offerJpaRepository.findAllByState(Mockito.any(), Mockito.any()))
                 .thenReturn(new PageImpl<>(new ArrayList<>()));
         assertTrue(offerRepository.findAllByState(Keys.OfferState.ACTIVE, null).toList().isEmpty());
-        verify(offerJpaRepository).findAllByState(Mockito.<String>any(), Mockito.<Pageable>any());
+        verify(offerJpaRepository).findAllByState(Mockito.any(), Mockito.any());
     }
 
-    /**
-     * Method under test: {@link OfferRepository#findAllByState(Keys.OfferState, Pageable)}
-     */
-    @Test
-    @Disabled("TODO: Complete this test")
-    void testFindAllByState4() {
-        // TODO: Complete this test.
-        //   Reason: R013 No inputs found that don't throw a trivial exception.
-        //   Diffblue Cover tried to run the arrange/act section, but the method under
-        //   test threw
-        //   java.lang.NullPointerException: Cannot invoke "org.springframework.data.domain.Page.map(java.util.function.Function)" because the return value of "pl.devfinder.infrastructure.database.repository.jpa.OfferJpaRepository.findAllByState(String, org.springframework.data.domain.Pageable)" is null
-        //       at pl.devfinder.infrastructure.database.repository.OfferRepository.findAllByState(OfferRepository.java:37)
-        //   See https://diff.blue/R013 to resolve this issue.
 
-        when(offerJpaRepository.findAllByState(Mockito.<String>any(), Mockito.<Pageable>any())).thenReturn(null);
-        offerRepository.findAllByState(Keys.OfferState.ACTIVE, null);
-    }
-
-    /**
-     * Method under test: {@link OfferRepository#findAllByState(Keys.OfferState, Pageable)}
-     */
     @Test
     void testFindAllByState5() {
-        when(offerJpaRepository.findAllByState(Mockito.<String>any(), Mockito.<Pageable>any()))
+        when(offerJpaRepository.findAllByState(Mockito.any(), Mockito.any()))
                 .thenReturn(new PageImpl<>(new ArrayList<>()));
         assertTrue(offerRepository.findAllByState(Keys.OfferState.EXPIRED, null).toList().isEmpty());
-        verify(offerJpaRepository).findAllByState(Mockito.<String>any(), Mockito.<Pageable>any());
+        verify(offerJpaRepository).findAllByState(Mockito.any(), Mockito.any());
     }
 
     /**
@@ -118,10 +91,10 @@ class OfferRepositoryDiffBlueTest {
      */
     @Test
     void testGetNumberOfOffersByEmployerAndByState() {
-        when(offerJpaRepository.getNumberOfOffersByEmployerAndByState(Mockito.<Long>any(), Mockito.<String>any()))
+        when(offerJpaRepository.getNumberOfOffersByEmployerAndByState(Mockito.<Long>any(), Mockito.any()))
                 .thenReturn(1L);
         assertEquals(1L, offerRepository.getNumberOfOffersByEmployerAndByState(1L, Keys.OfferState.ACTIVE).longValue());
-        verify(offerJpaRepository).getNumberOfOffersByEmployerAndByState(Mockito.<Long>any(), Mockito.<String>any());
+        verify(offerJpaRepository).getNumberOfOffersByEmployerAndByState(Mockito.<Long>any(), Mockito.any());
     }
 
     /**
@@ -129,10 +102,10 @@ class OfferRepositoryDiffBlueTest {
      */
     @Test
     void testGetNumberOfOffersByEmployerAndByState2() {
-        when(offerJpaRepository.getNumberOfOffersByEmployerAndByState(Mockito.<Long>any(), Mockito.<String>any()))
+        when(offerJpaRepository.getNumberOfOffersByEmployerAndByState(Mockito.<Long>any(), Mockito.any()))
                 .thenReturn(1L);
         assertEquals(1L, offerRepository.getNumberOfOffersByEmployerAndByState(1L, Keys.OfferState.EXPIRED).longValue());
-        verify(offerJpaRepository).getNumberOfOffersByEmployerAndByState(Mockito.<Long>any(), Mockito.<String>any());
+        verify(offerJpaRepository).getNumberOfOffersByEmployerAndByState(Mockito.<Long>any(), Mockito.any());
     }
 
     /**
@@ -198,9 +171,9 @@ class OfferRepositoryDiffBlueTest {
      */
     @Test
     void testCountByCityName() {
-        when(offerJpaRepository.countByCityName(Mockito.<String>any())).thenReturn(3L);
+        when(offerJpaRepository.countByCityName(Mockito.any())).thenReturn(3L);
         assertEquals(3L, offerRepository.countByCityName("Oxford"));
-        verify(offerJpaRepository).countByCityName(Mockito.<String>any());
+        verify(offerJpaRepository).countByCityName(Mockito.any());
     }
 
     /**
@@ -254,7 +227,7 @@ class OfferRepositoryDiffBlueTest {
         offerEntity.setTitle("Dr");
         offerEntity.setYearsOfExperience(1);
         Optional<OfferEntity> ofResult = Optional.of(offerEntity);
-        when(offerJpaRepository.findByOfferIdAndEmployerId(Mockito.<Long>any(), Mockito.<EmployerEntity>any()))
+        when(offerJpaRepository.findByOfferIdAndEmployerId(Mockito.<Long>any(), Mockito.any()))
                 .thenReturn(ofResult);
         when(offerEntityMapper.mapFromEntity(Mockito.<OfferEntity>any())).thenReturn(null);
 
@@ -278,11 +251,11 @@ class OfferRepositoryDiffBlueTest {
         employerEntity.setNumberOfEmployees(10);
         employerEntity.setPhoneNumber("6625550144");
         employerEntity.setWebsite("Website");
-        when(employerEntityMapper.mapToEntity(Mockito.<Employer>any())).thenReturn(employerEntity);
+        when(employerEntityMapper.mapToEntity(Mockito.any())).thenReturn(employerEntity);
         assertFalse(offerRepository.findByOfferIdAndEmployerId(1L, null).isPresent());
-        verify(offerJpaRepository).findByOfferIdAndEmployerId(Mockito.<Long>any(), Mockito.<EmployerEntity>any());
+        verify(offerJpaRepository).findByOfferIdAndEmployerId(Mockito.<Long>any(), Mockito.any());
         verify(offerEntityMapper).mapFromEntity(Mockito.<OfferEntity>any());
-        verify(employerEntityMapper).mapToEntity(Mockito.<Employer>any());
+        verify(employerEntityMapper).mapToEntity(Mockito.any());
     }
 
     /**
@@ -290,7 +263,7 @@ class OfferRepositoryDiffBlueTest {
      */
     @Test
     void testDeleteAllByEmployerId() {
-        doNothing().when(offerJpaRepository).deleteAllByEmployerId(Mockito.<EmployerEntity>any());
+        doNothing().when(offerJpaRepository).deleteAllByEmployerId(Mockito.any());
 
         CityEntity cityId = new CityEntity();
         cityId.setCandidateResidenceCities(new HashSet<>());
@@ -312,10 +285,10 @@ class OfferRepositoryDiffBlueTest {
         employerEntity.setNumberOfEmployees(10);
         employerEntity.setPhoneNumber("6625550144");
         employerEntity.setWebsite("Website");
-        when(employerEntityMapper.mapToEntity(Mockito.<Employer>any())).thenReturn(employerEntity);
+        when(employerEntityMapper.mapToEntity(Mockito.any())).thenReturn(employerEntity);
         offerRepository.deleteAllByEmployerId(null);
-        verify(offerJpaRepository).deleteAllByEmployerId(Mockito.<EmployerEntity>any());
-        verify(employerEntityMapper).mapToEntity(Mockito.<Employer>any());
+        verify(offerJpaRepository).deleteAllByEmployerId(Mockito.any());
+        verify(employerEntityMapper).mapToEntity(Mockito.any());
     }
 
     /**
@@ -323,7 +296,7 @@ class OfferRepositoryDiffBlueTest {
      */
     @Test
     void testFindAllByEmployer() {
-        when(offerJpaRepository.findAllByEmployerId(Mockito.<EmployerEntity>any())).thenReturn(new ArrayList<>());
+        when(offerJpaRepository.findAllByEmployerId(Mockito.any())).thenReturn(new ArrayList<>());
 
         CityEntity cityId = new CityEntity();
         cityId.setCandidateResidenceCities(new HashSet<>());
@@ -345,10 +318,10 @@ class OfferRepositoryDiffBlueTest {
         employerEntity.setNumberOfEmployees(10);
         employerEntity.setPhoneNumber("6625550144");
         employerEntity.setWebsite("Website");
-        when(employerEntityMapper.mapToEntity(Mockito.<Employer>any())).thenReturn(employerEntity);
+        when(employerEntityMapper.mapToEntity(Mockito.any())).thenReturn(employerEntity);
         assertTrue(offerRepository.findAllByEmployer(null).isEmpty());
-        verify(offerJpaRepository).findAllByEmployerId(Mockito.<EmployerEntity>any());
-        verify(employerEntityMapper).mapToEntity(Mockito.<Employer>any());
+        verify(offerJpaRepository).findAllByEmployerId(Mockito.any());
+        verify(employerEntityMapper).mapToEntity(Mockito.any());
     }
 
     /**
@@ -411,7 +384,7 @@ class OfferRepositoryDiffBlueTest {
         offerEntity.setStatus("Status");
         offerEntity.setTitle("Dr");
         offerEntity.setYearsOfExperience(1);
-        when(offerJpaRepository.saveAndFlush(Mockito.<OfferEntity>any())).thenReturn(offerEntity);
+        when(offerJpaRepository.saveAndFlush(Mockito.any())).thenReturn(offerEntity);
 
         CityEntity cityId3 = new CityEntity();
         cityId3.setCandidateResidenceCities(new HashSet<>());
@@ -459,11 +432,11 @@ class OfferRepositoryDiffBlueTest {
         offerEntity2.setTitle("Dr");
         offerEntity2.setYearsOfExperience(1);
         when(offerEntityMapper.mapFromEntity(Mockito.<OfferEntity>any())).thenReturn(null);
-        when(offerEntityMapper.mapToEntity(Mockito.<Offer>any())).thenReturn(offerEntity2);
+        when(offerEntityMapper.mapToEntity(Mockito.any())).thenReturn(offerEntity2);
         assertNull(offerRepository.save(null));
-        verify(offerJpaRepository).saveAndFlush(Mockito.<OfferEntity>any());
+        verify(offerJpaRepository).saveAndFlush(Mockito.any());
         verify(offerEntityMapper).mapFromEntity(Mockito.<OfferEntity>any());
-        verify(offerEntityMapper).mapToEntity(Mockito.<Offer>any());
+        verify(offerEntityMapper).mapToEntity(Mockito.any());
     }
 }
 

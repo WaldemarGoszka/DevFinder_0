@@ -18,5 +18,4 @@ public class EmployerRowDTO {
     Integer numberOfEmployees;
     City cityId;
     Integer amountOfAvailableOffers;
-    //TODO https://stackoverflow.com/questions/45500779/mapstruct-add-a-new-calculated-field-to-the-dto
 }

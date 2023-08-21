@@ -8,18 +8,20 @@ import pl.devfinder.domain.Offer;
 import pl.devfinder.domain.OfferSkill;
 
 import java.util.Set;
+
 @Slf4j
 @Service
 @AllArgsConstructor
 public class OfferSkillService {
-    private final  OfferSkillDAO offerSkillDAO;
+    private final OfferSkillDAO offerSkillDAO;
+
     public void saveAll(Set<OfferSkill> offerSkills) {
-        log.info("Process save all offer skill: [{}]",offerSkills);
+        log.info("Process save all offer skill: [{}]", offerSkills);
         offerSkillDAO.saveAll(offerSkills);
     }
 
     public void deleteAllByOffer(Offer offer) {
-        log.info("Process delete all offer skill, offerId: [{}]",offer.getOfferId());
+        log.info("Process delete all offer skill, offerId: [{}]", offer.getOfferId());
         offerSkillDAO.deleteAllByOffer(offer);
     }
 

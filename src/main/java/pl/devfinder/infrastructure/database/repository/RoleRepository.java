@@ -14,6 +14,7 @@ import java.util.Optional;
 public class RoleRepository implements RoleDAO {
     RoleJpaRepository roleJpaRepository;
     RoleEntityMapper roleEntityMapper;
+
     @Override
     public Optional<Role> findByRole(String role) {
         return roleJpaRepository.findByRole(role)

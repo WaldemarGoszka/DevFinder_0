@@ -11,6 +11,7 @@ import pl.devfinder.domain.User;
 public class RegistrationCompleteEvent extends ApplicationEvent {
     private User user;
     private String confirmationUrl;
+
     public RegistrationCompleteEvent(User user, String confirmationUrl) {
         super(user);
         this.user = user;

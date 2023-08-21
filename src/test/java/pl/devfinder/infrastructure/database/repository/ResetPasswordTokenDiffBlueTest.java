@@ -1,16 +1,5 @@
 package pl.devfinder.infrastructure.database.repository;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.HashSet;
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -24,6 +13,17 @@ import pl.devfinder.infrastructure.database.entity.RoleEntity;
 import pl.devfinder.infrastructure.database.entity.UserEntity;
 import pl.devfinder.infrastructure.database.repository.jpa.ResetPasswordTokenJpaRepository;
 import pl.devfinder.infrastructure.database.repository.mapper.ResetPasswordTokenMapper;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.HashSet;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {ResetPasswordToken.class})
 @ExtendWith(SpringExtension.class)
@@ -101,11 +101,11 @@ class ResetPasswordTokenDiffBlueTest {
         resetPasswordTokenEntity2.setToken("ABC123");
         resetPasswordTokenEntity2.setUser(user3);
         Optional<ResetPasswordTokenEntity> ofResult = Optional.of(resetPasswordTokenEntity2);
-        when(resetPasswordTokenJpaRepository.findByToken(Mockito.<String>any())).thenReturn(ofResult);
-        when(resetPasswordTokenMapper.mapFromEntity(Mockito.<ResetPasswordTokenEntity>any())).thenReturn(null);
+        when(resetPasswordTokenJpaRepository.findByToken(Mockito.any())).thenReturn(ofResult);
+        when(resetPasswordTokenMapper.mapFromEntity(Mockito.any())).thenReturn(null);
         assertFalse(resetPasswordToken.findByToken("ABC123").isPresent());
-        verify(resetPasswordTokenJpaRepository).findByToken(Mockito.<String>any());
-        verify(resetPasswordTokenMapper).mapFromEntity(Mockito.<ResetPasswordTokenEntity>any());
+        verify(resetPasswordTokenJpaRepository).findByToken(Mockito.any());
+        verify(resetPasswordTokenMapper).mapFromEntity(Mockito.any());
     }
 
     /**
@@ -209,7 +209,7 @@ class ResetPasswordTokenDiffBlueTest {
         resetPasswordTokenEntity4.setPasswordResetTokenId(1L);
         resetPasswordTokenEntity4.setToken("ABC123");
         resetPasswordTokenEntity4.setUser(user3);
-        when(resetPasswordTokenJpaRepository.save(Mockito.<ResetPasswordTokenEntity>any()))
+        when(resetPasswordTokenJpaRepository.save(Mockito.any()))
                 .thenReturn(resetPasswordTokenEntity4);
 
         EmailVerificationTokenEntity emailVerificationToken4 = new EmailVerificationTokenEntity();
@@ -308,11 +308,11 @@ class ResetPasswordTokenDiffBlueTest {
         resetPasswordTokenEntity8.setPasswordResetTokenId(1L);
         resetPasswordTokenEntity8.setToken("ABC123");
         resetPasswordTokenEntity8.setUser(user6);
-        when(resetPasswordTokenMapper.mapToEntity(Mockito.<pl.devfinder.domain.ResetPasswordToken>any()))
+        when(resetPasswordTokenMapper.mapToEntity(Mockito.any()))
                 .thenReturn(resetPasswordTokenEntity8);
         resetPasswordToken.save(null);
-        verify(resetPasswordTokenJpaRepository).save(Mockito.<ResetPasswordTokenEntity>any());
-        verify(resetPasswordTokenMapper).mapToEntity(Mockito.<pl.devfinder.domain.ResetPasswordToken>any());
+        verify(resetPasswordTokenJpaRepository).save(Mockito.any());
+        verify(resetPasswordTokenMapper).mapToEntity(Mockito.any());
     }
 }
 

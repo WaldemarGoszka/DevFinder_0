@@ -26,7 +26,7 @@ public class CandidateService {
     private final SkillService skillService;
     private final CandidateSkillService candidateSkillService;
     private final EmployerService employerService;
-    private final FileUploadService fileUploadService;
+    private final FileService fileService;
     private final DataService dataService;
 
 
@@ -142,7 +142,7 @@ public class CandidateService {
     private String processNewPhotoFile(CandidateUpdateRequest candidateUpdateRequest, User user) {
         if (Objects.nonNull(candidateUpdateRequest.getFilePhoto()) && !candidateUpdateRequest.getFilePhoto().isEmpty()) {
             log.info("Process upload new photo file : [{}]", candidateUpdateRequest.getFilePhoto().getOriginalFilename());
-            return fileUploadService.saveFileToDisc(user.getUserUuid(), candidateUpdateRequest.getFilePhoto());
+            return fileService.saveFileToDisc(user.getUserUuid(), candidateUpdateRequest.getFilePhoto());
         } else {
             return null;
         }
@@ -152,7 +152,7 @@ public class CandidateService {
     private String processNewCvFile(CandidateUpdateRequest candidateUpdateRequest, User user) {
         if (Objects.nonNull(candidateUpdateRequest.getFileCv()) && !candidateUpdateRequest.getFileCv().isEmpty()) {
             log.info("Process upload new cv file : [{}]", candidateUpdateRequest.getFileCv().getOriginalFilename());
-            return fileUploadService.saveFileToDisc(user.getUserUuid(), candidateUpdateRequest.getFileCv());
+            return fileService.saveFileToDisc(user.getUserUuid(), candidateUpdateRequest.getFileCv());
         } else {
             return null;
         }
@@ -186,14 +186,14 @@ public class CandidateService {
         if (Objects.nonNull(candidateUpdateRequest.getFileCv()) && !candidateUpdateRequest.getFileCv().isEmpty()) {
             log.info("Process upload update cv file : [{}]", candidateUpdateRequest.getFileCv().getOriginalFilename());
             try {
-                if (fileUploadService.oldFileExist(candidate.getCandidateUuid(), candidate.getCvFilename())) {
-                    fileUploadService.deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getCvFilename());
+                if (fileService.oldFileExist(candidate.getCandidateUuid(), candidate.getCvFilename())) {
+                    fileService.deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getCvFilename());
                 }
             } catch (IOException e) {
                 log.error("Could not delete file: [{}]", candidate.getCvFilename());
                 throw new FileUploadToProfileException("Could not delete file: " + candidate.getCvFilename());
             }
-            return fileUploadService.saveFileToDisc(candidate.getCandidateUuid(), candidateUpdateRequest.getFileCv());
+            return fileService.saveFileToDisc(candidate.getCandidateUuid(), candidateUpdateRequest.getFileCv());
         } else {
             return candidate.getCvFilename();
         }
@@ -203,14 +203,14 @@ public class CandidateService {
         if (Objects.nonNull(candidateUpdateRequest.getFilePhoto()) && !candidateUpdateRequest.getFilePhoto().isEmpty()) {
             log.info("Process upload update photo file : [{}]", candidateUpdateRequest.getFilePhoto().getOriginalFilename());
             try {
-                if (fileUploadService.oldFileExist(candidate.getCandidateUuid(), candidate.getPhotoFilename())) {
-                    fileUploadService.deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getPhotoFilename());
+                if (fileService.oldFileExist(candidate.getCandidateUuid(), candidate.getPhotoFilename())) {
+                    fileService.deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getPhotoFilename());
                 }
             } catch (IOException e) {
                 log.error("Could not delete file: [{}]", candidate.getPhotoFilename());
                 throw new FileUploadToProfileException("Could not delete file: " + candidate.getPhotoFilename());
             }
-            return fileUploadService.saveFileToDisc(candidate.getCandidateUuid(), candidateUpdateRequest.getFilePhoto());
+            return fileService.saveFileToDisc(candidate.getCandidateUuid(), candidateUpdateRequest.getFilePhoto());
         } else {
             return candidate.getPhotoFilename();
         }
@@ -225,10 +225,10 @@ public class CandidateService {
         candidateSkillService.deleteAllByCandidate(candidate);
 
         if (Objects.nonNull(candidate.getCvFilename())) {
-            fileUploadService.deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getCvFilename());
+            fileService.deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getCvFilename());
         }
         if (Objects.nonNull(candidate.getPhotoFilename())) {
-            fileUploadService.deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getPhotoFilename());
+            fileService.deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getPhotoFilename());
         }
 
         candidateDAO.deleteById(candidateId);
@@ -246,14 +246,14 @@ public class CandidateService {
 
     public void deleteCvFile(Candidate candidate) {
         log.info("Process delete cv file");
-        fileUploadService.deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getCvFilename());
+        fileService.deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getCvFilename());
         Candidate updateCandidate = candidate.withCvFilename(null);
         candidateDAO.save(updateCandidate);
     }
 
     public void deletePhotoFile(Candidate candidate) {
         log.info("Process delete photo file");
-        fileUploadService.deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getPhotoFilename());
+        fileService.deleteFileFromDisc(candidate.getCandidateUuid(), candidate.getPhotoFilename());
         Candidate updateCandidate = candidate.withPhotoFilename(null);
         candidateDAO.save(updateCandidate);
     }

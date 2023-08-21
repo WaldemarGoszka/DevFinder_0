@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org/"
-      xmlns="http://www.w3.org/1999/html"
+<html lang="en" xmlns="http://www.w3.org/1999/html"
+      xmlns:th="https://www.thymeleaf.org/"
 >
 
 <head>
@@ -44,52 +44,52 @@
                                 <div class="accordion-item bg-transparent">
 
                                     <h2 class="accordion-header" id="headingTwo">
-                                        <button class="accordion-button collapsed" type="button"
-                                                data-bs-toggle="collapse" data-bs-target="#collapseTwo"
-                                                aria-expanded="false" aria-controls="collapseTwo">
+                                        <button aria-controls="collapseTwo" aria-expanded="false"
+                                                class="accordion-button collapsed" data-bs-target="#collapseTwo"
+                                                data-bs-toggle="collapse" type="button">
                                             <i class="fa fa-filter me-2"></i> Filters
                                         </button>
                                     </h2>
-                                    <div id="collapseTwo" class="accordion-collapse collapse"
-                                         aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                    <div aria-labelledby="headingTwo" class="accordion-collapse collapse"
+                                         data-bs-parent="#accordionExample" id="collapseTwo">
                                         <div class="accordion-body">
                                             <div class="mb-4">
                                                 <h6 class="mb-3">Offer State</h6>
                                                 <div class="btn-group mb3" role="group">
-                                                    <input type="checkbox" class="btn-check" id="statusActive"
-                                                           th:value="${statusEnumActive}"
-                                                           th:name="status"
+                                                    <input autocomplete="on" class="btn-check" id="statusActive"
                                                            th:checked="${statusChecked.contains(statusEnumActive)}"
-                                                           autocomplete="on">
-                                                    <label class="btn btn-outline-light" for="statusActive">[[${statusEnumActive}]]</label>
-                                                    <input type="checkbox" class="btn-check" id="statusExpired"
-                                                           th:value="${statusEnumExpired}"
                                                            th:name="status"
+                                                           th:value="${statusEnumActive}"
+                                                           type="checkbox">
+                                                    <label class="btn btn-outline-light" for="statusActive">[[${statusEnumActive}]]</label>
+                                                    <input autocomplete="on" class="btn-check" id="statusExpired"
                                                            th:checked="${statusChecked.contains(statusEnumExpired)}"
-                                                           autocomplete="on">
+                                                           th:name="status"
+                                                           th:value="${statusEnumExpired}"
+                                                           type="checkbox">
                                                     <label class="btn btn-outline-light" for="statusExpired">[[${statusEnumExpired}]]</label>
                                                 </div>
                                             </div>
                                             <div class="mb-4">
                                                 <h6 class="mb-3">Experience Level</h6>
                                                 <div class="btn-group mb3" role="group">
-                                                    <input type="checkbox" class="btn-check" id="expJunior"
-                                                           th:value="${expLevelEnumJunior}"
-                                                           th:name="experienceLevels"
+                                                    <input autocomplete="on" class="btn-check" id="expJunior"
                                                            th:checked="${experienceLevelChecked.contains(expLevelEnumJunior)}"
-                                                           autocomplete="on">
+                                                           th:name="experienceLevels"
+                                                           th:value="${expLevelEnumJunior}"
+                                                           type="checkbox">
                                                     <label class="btn btn-outline-light" for="expJunior">Junior</label>
-                                                    <input type="checkbox" class="btn-check" id="expMid"
-                                                           th:value="${expLevelEnumMid}"
-                                                           th:name="experienceLevels"
+                                                    <input autocomplete="on" class="btn-check" id="expMid"
                                                            th:checked="${experienceLevelChecked.contains(expLevelEnumMid)}"
-                                                           autocomplete="on">
-                                                    <label class="btn btn-outline-light" for="expMid">Mid</label>
-                                                    <input type="checkbox" class="btn-check" id="expSenior"
-                                                           th:value="${expLevelEnumSenior}"
                                                            th:name="experienceLevels"
+                                                           th:value="${expLevelEnumMid}"
+                                                           type="checkbox">
+                                                    <label class="btn btn-outline-light" for="expMid">Mid</label>
+                                                    <input autocomplete="on" class="btn-check" id="expSenior"
                                                            th:checked="${experienceLevelChecked.contains(expLevelEnumSenior)}"
-                                                           autocomplete="on">
+                                                           th:name="experienceLevels"
+                                                           th:value="${expLevelEnumSenior}"
+                                                           type="checkbox">
                                                     <label class="btn btn-outline-light" for="expSenior">Senior</label>
                                                 </div>
                                             </div>
@@ -97,47 +97,47 @@
                                                 <h6 class="mb-3">Tech Stack (you can choose many)</h6>
                                                 <div class="m-n2">
                                                 <span th:each="skill : ${allSkillsDTOs}">
-                                                    <input type="checkbox"
-                                                           th:value="${skill.skillName}"
+                                                    <input autocomplete="on"
+                                                           class="btn-check"
+                                                           th:checked="${skillChecked.contains(skill.skillName)}"
                                                            th:id="${skill.skillId}"
                                                            th:name="skills"
-                                                           th:checked="${skillChecked.contains(skill.skillName)}"
-                                                           class="btn-check"
-                                                           autocomplete="on">
-                                                    <label type="checkbox"
-                                                           class="btn btn-outline-light m-2"
+                                                           th:value="${skill.skillName}"
+                                                           type="checkbox">
+                                                    <label class="btn btn-outline-light m-2"
                                                            th:for="${skill.skillId}"
                                                            th:text="${skill.skillName}"
+                                                           type="checkbox"
                                                     ></label>
                                                 </span>
                                                 </div>
                                             </div>
                                             <div class="mb-4">
                                                 <h6 class="mb-3">City</h6>
-                                                <select th:field="*{city}" class="form-select select2 mb-3">
+                                                <select class="form-select select2 mb-3" th:field="*{city}">
                                                     <option th:selected="${cityChecked == null}"
                                                             th:value="${null}"
                                                     >All City's
                                                     </option>
                                                     <option th:each="city : ${allCityDTOs}"
-                                                            th:value="${city.cityName}"
-                                                            th:text="${city.cityName}"
                                                             th:selected="${cityChecked == city}"
+                                                            th:text="${city.cityName}"
+                                                            th:value="${city.cityName}"
                                                     >
                                                     </option>
                                                 </select>
                                             </div>
                                             <div class="mb-4">
                                                 <h6 class="mb-3">Employer</h6>
-                                                <select th:field="*{employer}" class="form-select select2 mb-3">
+                                                <select class="form-select select2 mb-3" th:field="*{employer}">
                                                     <option selected
                                                             th:value="${null}"
                                                     >All Employers
                                                     </option>
                                                     <option th:each="employer : ${allEmployerDTOs}"
-                                                            th:value="${employer.companyName}"
-                                                            th:text="${employer.companyName}"
                                                             th:selected="${employerChecked == employer}"
+                                                            th:text="${employer.companyName}"
+                                                            th:value="${employer.companyName}"
                                                     >
                                                     </option>
                                                 </select>
@@ -145,25 +145,25 @@
                                             <div class="mb-4">
                                                 <h6 class="mb-3">Remote Work</h6>
                                                 <div class="btn-group" role="group">
-                                                    <input type="checkbox" class="btn-check" id="remoteWorkFull"
-                                                           th:value="${remoteEnumFull}"
-                                                           th:name="remoteWork"
+                                                    <input autocomplete="on" class="btn-check" id="remoteWorkFull"
                                                            th:checked="${remoteChecked.contains(remoteEnumFull)}"
-                                                           autocomplete="on">
+                                                           th:name="remoteWork"
+                                                           th:value="${remoteEnumFull}"
+                                                           type="checkbox">
                                                     <label class="btn btn-outline-light" for="remoteWorkFull">Full
                                                         Time</label>
-                                                    <input type="checkbox" class="btn-check" id="remoteWorkPartly"
-                                                           th:value="${remoteEnumPartly}"
-                                                           th:name="remoteWork"
+                                                    <input autocomplete="on" class="btn-check" id="remoteWorkPartly"
                                                            th:checked="${remoteChecked.contains(remoteEnumPartly)}"
-                                                           autocomplete="on">
+                                                           th:name="remoteWork"
+                                                           th:value="${remoteEnumPartly}"
+                                                           type="checkbox">
                                                     <label class="btn btn-outline-light" for="remoteWorkPartly">Partly
                                                         Remote</label>
-                                                    <input type="checkbox" class="btn-check" id="remoteWorkOffice"
-                                                           th:value="${remoteEnumOffice}"
-                                                           th:name="remoteWork"
+                                                    <input autocomplete="on" class="btn-check" id="remoteWorkOffice"
                                                            th:checked="${remoteChecked.contains(remoteEnumOffice)}"
-                                                           autocomplete="on">
+                                                           th:name="remoteWork"
+                                                           th:value="${remoteEnumOffice}"
+                                                           type="checkbox">
                                                     <label class="btn btn-outline-light"
                                                            for="remoteWorkOffice">Office</label>
                                                 </div>
@@ -171,27 +171,27 @@
                                             <div class="col-sm-12 col-xl-6 mb-4">
                                                 <h6 class="mb-3">Salary</h6>
                                                 <div class="btn-group" role="group">
-                                                    <input type="checkbox" class="btn-check" id="salaryWith"
-                                                           th:value="${salaryEnumWith}"
-                                                           th:name="salary"
+                                                    <input autocomplete="on" class="btn-check" id="salaryWith"
                                                            th:checked="${salaryChecked.contains(salaryEnumWith)}"
-                                                           autocomplete="on">
+                                                           th:name="salary"
+                                                           th:value="${salaryEnumWith}"
+                                                           type="checkbox">
                                                     <label class="btn btn-outline-light" for="salaryWith">With
                                                         salary</label>
-                                                    <input type="checkbox" class="btn-check" id="salaryUndisclosed"
-                                                           th:value="${salaryEnumUndisclosed}"
-                                                           th:name="salary"
+                                                    <input autocomplete="on" class="btn-check" id="salaryUndisclosed"
                                                            th:checked="${salaryChecked.contains(salaryEnumUndisclosed)}"
-                                                           autocomplete="on">
+                                                           th:name="salary"
+                                                           th:value="${salaryEnumUndisclosed}"
+                                                           type="checkbox">
                                                     <label class="btn btn-outline-light" for="salaryUndisclosed">Undisclosed
                                                         salary</label>
                                                 </div>
                                             </div>
                                             <div class="col-sm-12 col-xl-6 mb-3">
                                                 <div class="form-floating mb-3">
-                                                    <input type="number" class="form-control" id="minAmount"
+                                                    <input class="form-control" id="minAmount" placeholder="0"
                                                            th:field="*{salaryMin}"
-                                                           placeholder="0">
+                                                           type="number">
                                                     <label for="minAmount">Min amount</label>
                                                 </div>
                                             </div>
@@ -200,8 +200,8 @@
                                                         th:onclick="'setPageNumber(' + 1 + ')'"
                                                         type="submit">Search
                                                 </button>
-                                                <a th:href="@{/offers}"
-                                                   class="btn btn-block btn-info w-50 m-2" type="button">Reset
+                                                <a class="btn btn-block btn-info w-50 m-2"
+                                                   th:href="@{/offers}" type="button">Reset
                                                     Filters</a>
                                             </div>
                                         </div>
@@ -210,7 +210,7 @@
                             </div>
                         </div>
                     </div>
-<!--                    END FILTERS-->
+                    <!--                    END FILTERS-->
 
                     <!--            TABLE-->
                     <div class="col-sm-12 col-xl-12">
@@ -218,82 +218,84 @@
 
                             <!--                            START PAGE SIZE BAR-->
                             <div class="btn-toolbar justify-content-between mb-3">
-                                <input type="hidden" th:name="pageSize"
-                                       th:value="${offerSearchCriteria.pageSize}"/>
+                                <input th:name="pageSize" th:value="${offerSearchCriteria.pageSize}"
+                                       type="hidden"/>
                                 <div><h6 class="mb-4">Job offers (found: [[${totalItems}]])</h6></div>
                                 <span class="btn-group" role="group">
-                                    <button th:onclick="'setPageSize(5)'"
-                                            type="submit"
-                                            th:class="${offerSearchCriteria.pageSize == 5}
+                                    <button th:class="${offerSearchCriteria.pageSize == 5}
                                             ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-outline-primary'"
+                                            th:onclick="'setPageSize(5)'"
+                                            type="submit"
                                     >5</button>
-                                    <button th:onclick="'setPageSize(10)'"
-                                            type="submit"
-                                            th:class="${offerSearchCriteria.pageSize == 10}
+                                    <button th:class="${offerSearchCriteria.pageSize == 10}
                                             ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-outline-primary'"
+                                            th:onclick="'setPageSize(10)'"
+                                            type="submit"
                                     >10</button>
-                                    <button th:onclick="'setPageSize(50)'"
-                                            type="submit"
-                                            th:class="${offerSearchCriteria.pageSize == 50}
+                                    <button th:class="${offerSearchCriteria.pageSize == 50}
                                             ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-outline-primary'"
+                                            th:onclick="'setPageSize(50)'"
+                                            type="submit"
                                     >50</button>
                                 </span>
                             </div>
                             <!--                            END PAGE SIZE BAR-->
                             <!--                        START PAGINATION BAR-->
-                            <div th:if="${totalPages > 1}" class="btn-toolbar justify-content-between" role="toolbar">
-                                <input type="hidden" th:name="pageNumber" th:value="${offerSearchCriteria.pageNumber}"/>
-                                <a th:if="${offerSearchCriteria.pageNumber > 1}" onclick="decreasePageNumber()">
+                            <div class="btn-toolbar justify-content-between" role="toolbar" th:if="${totalPages > 1}">
+                                <input th:name="pageNumber" th:value="${offerSearchCriteria.pageNumber}" type="hidden"/>
+                                <a onclick="decreasePageNumber()" th:if="${offerSearchCriteria.pageNumber > 1}">
                                     <button class="btn btn-outline-primary ml-3" type="submit">Previous</button>
                                 </a>
-                                <button th:unless="${offerSearchCriteria.pageNumber > 1}"
-                                        class="btn btn-outline-link ml-3" type="button">
+                                <button class="btn btn-outline-link ml-3"
+                                        th:unless="${offerSearchCriteria.pageNumber > 1}" type="button">
                                     Previous
                                 </button>
                                 <div class="btn-group me-2" role="group">
                                     <span th:each="page: ${#numbers.sequence(1, totalPages)}">
                                         <a th:if="${offerSearchCriteria.pageNumber != page}">
                                             <button th:class="${offerSearchCriteria.pageNumber != page} ? 'btn btn-secondary' : ''"
-                                                    type="submit"
                                                     th:onclick="'setPageNumber(' + ${page} + ')'"
+                                                    type="submit"
                                             >[[${page}]]</button></a>
                                             <span th:if="${offerSearchCriteria.pageNumber == page}"><button
                                                     class="btn btn-primary" type="button">[[${page}]]</button></span>
                                     </span>
                                 </div>
-                                <a th:if="${offerSearchCriteria.pageNumber < totalPages}"
-                                   onclick="increasePageNumber()">
+                                <a onclick="increasePageNumber()"
+                                   th:if="${offerSearchCriteria.pageNumber < totalPages}">
                                     <button class="btn btn-outline-primary ml-3" type="submit">Next</button>
                                 </a>
-                                <button th:unless="${offerSearchCriteria.pageNumber < totalPages}"
-                                        class="btn btn-outline-link ml-3"
+                                <button class="btn btn-outline-link ml-3"
+                                        th:unless="${offerSearchCriteria.pageNumber < totalPages}"
                                         type="button">Next
                                 </button>
                             </div>
                             <!--                        END PAGINATION BAR-->
 
-                            <div class="mt-4">Click on a column head to sort. Click again to change the sorting direction</div>
+                            <div class="mt-4">Click on a column head to sort. Click again to change the sorting
+                                direction
+                            </div>
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <thead>
-                                    <input type="hidden" name="sortBy" th:value="${offerSearchCriteria.sortBy}"/>
-                                    <input type="hidden" name="sortDirection"
-                                           th:value="${offerSearchCriteria.sortDirection}"/>
+                                    <input name="sortBy" th:value="${offerSearchCriteria.sortBy}" type="hidden"/>
+                                    <input name="sortDirection" th:value="${offerSearchCriteria.sortDirection}"
+                                           type="hidden"/>
                                     <tr>
                                         <th scope="col"><a href="#" onclick="setSortParams('title')">
                                             <div><i
-                                                    th:if="${sortBy == 'title'}"
                                                     th:class="${offerSearchCriteria.sortDirection.name() == 'ASC'}
-                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"></i>
+                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"
+                                                    th:if="${sortBy == 'title'}"></i>
                                             </div>
                                             Title</a>
 
                                         </th>
                                         <th scope="col"><a href="#" onclick="setSortParams('experienceLevel')">
                                             <div><i
-                                                    th:if="${sortBy == 'experienceLevel'}"
                                                     th:class="${offerSearchCriteria.sortDirection.name() == 'ASC'}
-                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"></i>
+                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"
+                                                    th:if="${sortBy == 'experienceLevel'}"></i>
                                             </div>
                                             Exp.
                                             Level</a>
@@ -301,41 +303,41 @@
                                         <th scope="col">Tech Stack</th>
                                         <th scope="col"><a href="#" onclick="setSortParams('employerId.companyName')">
                                             <div><i
-                                                    th:if="${sortBy == 'employerId.companyName'}"
                                                     th:class="${offerSearchCriteria.sortDirection.name() == 'ASC'}
-                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"></i>
+                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"
+                                                    th:if="${sortBy == 'employerId.companyName'}"></i>
                                             </div>
                                             Employer</a>
                                         </th>
                                         <th scope="col"><a href="#" onclick="setSortParams('cityId.cityName')">
                                             <div><i
-                                                    th:if="${sortBy == 'cityId.cityName'}"
                                                     th:class="${offerSearchCriteria.sortDirection.name() == 'ASC'}
-                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"></i>
+                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"
+                                                    th:if="${sortBy == 'cityId.cityName'}"></i>
                                             </div>
                                             City</a>
                                         </th>
                                         <th scope="col"><a href="#" onclick="setSortParams('remoteWork')">
                                             <div><i
-                                                    th:if="${sortBy == 'remoteWork'}"
                                                     th:class="${offerSearchCriteria.sortDirection.name() == 'ASC'}
-                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"></i>
+                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"
+                                                    th:if="${sortBy == 'remoteWork'}"></i>
                                             </div>
                                             Remote</a>
                                         </th>
                                         <th scope="col"><a href="#" onclick="setSortParams('salaryMin')">
                                             <div><i
-                                                    th:if="${sortBy == 'salaryMin'}"
                                                     th:class="${offerSearchCriteria.sortDirection.name() == 'ASC'}
-                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"></i>
+                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"
+                                                    th:if="${sortBy == 'salaryMin'}"></i>
                                             </div>
                                             Salary</a>
                                         </th>
                                         <th scope="col"><a href="#" onclick="setSortParams('createdAt')">
                                             <div><i
-                                                    th:if="${sortBy == 'createdAt'}"
                                                     th:class="${offerSearchCriteria.sortDirection.name() == 'ASC'}
-                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"></i>
+                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"
+                                                    th:if="${sortBy == 'createdAt'}"></i>
                                             </div>
                                             Days Since Created</a>
                                         </th>
@@ -343,8 +345,8 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="offer : ${allOffersDTOs}"
-                                        th:class="${offer.status != 'ACTIVE'} ? 'text-dark' : ''">
+                                    <tr th:class="${offer.status != 'ACTIVE'} ? 'text-dark' : ''"
+                                        th:each="offer : ${allOffersDTOs}">
                                         <td th:text="${offer.getTitle()}"></td>
                                         <td th:text="${offer.getExperienceLevel()}"></td>
                                         <td>
@@ -383,7 +385,7 @@
 
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <a class="btn btn-lg btn-primary btn-lg-square back-to-top" href="#"><i class="bi bi-arrow-up"></i></a>
 </div>
 <div th:replace="~{fragments :: js}"></div>
 <script th:inline="javascript">

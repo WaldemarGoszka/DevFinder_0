@@ -15,26 +15,26 @@ public class SpringDocConfiguration {
     @Bean
     public GroupedOpenApi groupedOpenApi() {
         return GroupedOpenApi.builder()
-            .group("default")
-            .pathsToMatch("/**")
-            .packagesToScan(DevfinderApplication.class.getPackageName())
-            .build();
+                .group("default")
+                .pathsToMatch("/**")
+                .packagesToScan(DevfinderApplication.class.getPackageName())
+                .build();
     }
 
     @Bean
     public OpenAPI springDocOpenApi() {
         return new OpenAPI()
-            .components(new Components())
-            .info(new Info()
-                .title("Devfinder application")
-                .contact(contact())
-                .version("1.0"));
+                .components(new Components())
+                .info(new Info()
+                        .title("Devfinder application")
+                        .contact(contact())
+                        .version("1.0"));
     }
 
     private Contact contact() {
         return new Contact()
-            .name("Devfinder")
-            .url("https://devfinder.pl")
-            .email("devfinder.service@gmail.com");
+                .name("Devfinder")
+                .url("https://devfinder.com")
+                .email("devfinder.service@gmail.com");
     }
 }

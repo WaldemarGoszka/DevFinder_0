@@ -32,7 +32,6 @@ class UserRepositorySpringBootTest {
     private UserJpaRepository userJpaRepository;
     private UserEntityMapper userEntityMapper;
 
-//    @InjectMocks
     private UserRepository userRepository;
 
     @Test
@@ -47,9 +46,9 @@ class UserRepositorySpringBootTest {
         Optional<User> result = userRepository.findByEmail(email);
 
         // then
-        assertEquals(userJpaRepository.findByEmail(email),Optional.of(userEntity));
+        assertEquals(userJpaRepository.findByEmail(email), Optional.of(userEntity));
         assertTrue(result.isPresent());
-        assertEquals(result.get().getEmail(),user.getEmail());
+        assertEquals(result.get().getEmail(), user.getEmail());
     }
 
     @Test
@@ -63,13 +62,9 @@ class UserRepositorySpringBootTest {
         User user = UserFixtures.someUserCandidate1().withId(userId);
         Optional<User> result = userRepository.findById(userId);
 
-        assertEquals(userJpaRepository.findById(userId),Optional.of(userEntity));
+        assertEquals(userJpaRepository.findById(userId), Optional.of(userEntity));
         assertTrue(result.isPresent());
         assertEquals(userId, result.get().getId());
     }
-
-
-
-
 
 }

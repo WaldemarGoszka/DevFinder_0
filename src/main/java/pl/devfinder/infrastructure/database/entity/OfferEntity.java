@@ -1,7 +1,6 @@
 package pl.devfinder.infrastructure.database.entity;
 
 
-
 import jakarta.persistence.*;
 import lombok.*;
 

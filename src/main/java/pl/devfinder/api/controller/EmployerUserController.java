@@ -14,7 +14,6 @@ import pl.devfinder.api.dto.*;
 import pl.devfinder.api.dto.mapper.*;
 import pl.devfinder.business.*;
 import pl.devfinder.business.management.Keys;
-import pl.devfinder.business.management.Utility;
 import pl.devfinder.domain.Employer;
 import pl.devfinder.domain.EmployerUpdateRequest;
 import pl.devfinder.domain.User;
@@ -51,13 +50,19 @@ public class EmployerUserController {
     private final CityService cityService;
     private final CityMapper cityMapper;
     private final SkillMapper skillMapper;
+    private final UserController userController;
+    private final FileService fileService;
+
+    private static void setFilterToGetEmployedCandidateInThatCompany(CandidateSearchCriteria candidateSearchCriteria, Employer employer) {
+        candidateSearchCriteria.setEmployer(employer.getCompanyName());
+    }
 
     @GetMapping(value = EMPLOYER_EMPLOYEES)
     public ModelAndView getEmployeesList(
             CandidateSearchCriteria candidateSearchCriteria,
             Model model,
             Authentication authentication) {
-        User user = Utility.putUserDataToModel(authentication, userService, model)
+        User user = userController.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Optional<Employer> employerOptional = employerService.findByEmployerUuid(user.getUserUuid());
         if (employerOptional.isEmpty()) {
@@ -73,15 +78,11 @@ public class EmployerUserController {
         return new ModelAndView("employer/employees", employeeListData);
     }
 
-    private static void setFilterToGetEmployedCandidateInThatCompany(CandidateSearchCriteria candidateSearchCriteria, Employer employer) {
-        candidateSearchCriteria.setEmployer(employer.getCompanyName());
-    }
-
     @PutMapping(value = EMPLOYER_HIRE_CANDIDATE)
     public String hireCandidate(@PathVariable String candidateId,
                                 Model model,
                                 Authentication authentication) {
-        User user = Utility.putUserDataToModel(authentication, userService, model)
+        User user = userController.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Employer employer = employerService.findByEmployerUuid(user.getUserUuid())
                 .orElseThrow(() -> new NotFoundException("Could not find employer by uuid"));
@@ -94,7 +95,7 @@ public class EmployerUserController {
     public String fireCandidate(@PathVariable String candidateId,
                                 Model model,
                                 Authentication authentication) {
-        User user = Utility.putUserDataToModel(authentication, userService, model)
+        User user = userController.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Employer employer = employerService.findByEmployerUuid(user.getUserUuid())
                 .orElseThrow(() -> new NotFoundException("Could not find employer by uuid"));
@@ -104,12 +105,9 @@ public class EmployerUserController {
 
     @GetMapping(value = EMPLOYER_PROFILE)
     public String getEmployerProfile(Model model, Authentication authentication) {
-//        User user = Utility.putUserDataToModel(authentication, userService, model)
-//                .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
-
         if (authentication != null) {
             User user = userService.findByEmail(authentication.getName())
-                    .orElseThrow(() -> new NotFoundException("Could not find user by email"+ authentication.getName()));
+                    .orElseThrow(() -> new NotFoundException("Could not find user by email" + authentication.getName()));
             model.addAttribute("user", user);
             Optional<Employer> employer = employerService.findByEmployerUuid(user.getUserUuid());
             setEmployerLogoToModel(model, employer);
@@ -126,7 +124,7 @@ public class EmployerUserController {
 
     @GetMapping(value = EMPLOYER_EDIT_PROFILE)
     public String getEmployerEditProfile(Model model, Authentication authentication) {
-        User user = Utility.putUserDataToModel(authentication, userService, model)
+        User user = userController.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Optional<Employer> employer = employerService.findByEmployerUuid(user.getUserUuid());
         setEmployerLogoToModel(model, employer);
@@ -151,7 +149,7 @@ public class EmployerUserController {
     public String updateEmployerProfile(@Valid @ModelAttribute EmployerUpdateRequestDTO employerUpdateRequestDTO,
                                         Model model,
                                         Authentication authentication) {
-        User user = Utility.putUserDataToModel(authentication, userService, model)
+        User user = userController.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Optional<Employer> employer = employerService.findByEmployerUuid(user.getUserUuid());
 
@@ -169,7 +167,7 @@ public class EmployerUserController {
 
     @DeleteMapping(value = EMPLOYER_DELETE_PROFILE)
     public String deleteEmployerProfile(Model model, Authentication authentication) {
-        User user = Utility.putUserDataToModel(authentication, userService, model)
+        User user = userController.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Employer employer = employerService.findByEmployerUuid(user.getUserUuid())
                 .orElseThrow(() -> new NotFoundException("Could not find employer by uuid"));
@@ -181,7 +179,7 @@ public class EmployerUserController {
 
     @DeleteMapping(value = EMPLOYER_DELETE_LOGO_FILE)
     public String deleteLogoFile(Model model, Authentication authentication) {
-        User user = Utility.putUserDataToModel(authentication, userService, model)
+        User user = userController.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Employer employer = employerService.findByEmployerUuid(user.getUserUuid())
                 .orElseThrow(() -> new NotFoundException("Could not find employer by uuid"));
@@ -193,7 +191,7 @@ public class EmployerUserController {
 
     private void setEmployerLogoToModel(Model model, Optional<Employer> employer) {
         if (employer.isPresent() && Objects.nonNull(employer.get().getLogoFilename())) {
-            String logoPath = Utility.getUserPhotoPath(employer.get().getEmployerUuid(), employer.get().getLogoFilename());
+            String logoPath = fileService.getUserPhotoPath(employer.get().getEmployerUuid(), employer.get().getLogoFilename());
             model.addAttribute("photoDir", logoPath);
         } else {
             model.addAttribute("photoDir", UserController.DEFAULT_PHOTO_PATH);

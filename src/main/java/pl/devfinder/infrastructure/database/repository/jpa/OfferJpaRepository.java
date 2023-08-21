@@ -14,7 +14,6 @@ import java.util.Optional;
 
 @Repository
 public interface OfferJpaRepository extends JpaRepository<OfferEntity, Long> {
-//TODO zamienić Count(*) na Count(offer) i sprawdzić różnice w zapytaniach
     @Query("""
             SELECT COUNT(*) FROM OfferEntity offer WHERE offer.employerId.employerId = :employerId AND offer.status LIKE :state
             """)
@@ -29,9 +28,10 @@ public interface OfferJpaRepository extends JpaRepository<OfferEntity, Long> {
             SELECT offer FROM OfferEntity offer WHERE offer.status LIKE :state
             """)
     Page<OfferEntity> findAllByState(String state, Pageable pageable);
+
     @Query("""
-    SELECT COUNT(o) FROM OfferEntity o JOIN o.cityId c WHERE c.cityName = :cityName
-    """)
+            SELECT COUNT(o) FROM OfferEntity o JOIN o.cityId c WHERE c.cityName = :cityName
+            """)
     long countByCityName(String cityName);
 
     Optional<OfferEntity> findByOfferIdAndEmployerId(Long offerId, EmployerEntity employerEntity);

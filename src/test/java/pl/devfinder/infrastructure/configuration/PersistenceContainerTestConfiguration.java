@@ -1,6 +1,7 @@
 package pl.devfinder.infrastructure.configuration;
 
 import com.zaxxer.hikari.HikariDataSource;
+import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -21,8 +22,8 @@ public class PersistenceContainerTestConfiguration {
     @Qualifier(POSTGRESQL)
     PostgreSQLContainer<?> postgresqlContainer() {
         PostgreSQLContainer<?> postgresqlContainer = new PostgreSQLContainer<>(POSTGRESQL_CONTAINER)
-            .withUsername(USERNAME)
-            .withPassword(PASSWORD);
+                .withUsername(USERNAME)
+                .withPassword(PASSWORD);
         postgresqlContainer.start();
         return postgresqlContainer;
     }
@@ -30,11 +31,19 @@ public class PersistenceContainerTestConfiguration {
     @Bean
     DataSource dataSource(final PostgreSQLContainer<?> container) {
         return DataSourceBuilder.create()
-            .type(HikariDataSource.class)
-            .driverClassName(container.getDriverClassName())
-            .url(container.getJdbcUrl())
-            .username(container.getUsername())
-            .password(container.getPassword())
-            .build();
+                .type(HikariDataSource.class)
+                .driverClassName(container.getDriverClassName())
+                .url(container.getJdbcUrl())
+                .username(container.getUsername())
+                .password(container.getPassword())
+                .build();
+    }
+
+    @Bean(initMethod = "migrate")
+    public Flyway flyway(@Qualifier("dataSource") DataSource dataSource) {
+        return Flyway.configure()
+                .dataSource(dataSource)
+                .locations("classpath:db/migration") // Lokalizacja migracji
+                .load();
     }
 }

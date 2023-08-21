@@ -24,7 +24,7 @@ public class OfferDetailsDTOFixtures {
                 .salaryMax(BigDecimal.valueOf(2000))
                 .benefits("offer1 benefits")
                 .experienceLevel("JUNIOR")
-                .createdAt(OffsetDateTime.of(2022,1,1,1,1,1,1, ZoneOffset.UTC))
+                .createdAt(OffsetDateTime.of(2022, 1, 1, 1, 1, 1, 1, ZoneOffset.UTC))
                 .status("ACTIVE")
                 .employerId(Employer.builder().build())
                 .cityId(City.builder().build())

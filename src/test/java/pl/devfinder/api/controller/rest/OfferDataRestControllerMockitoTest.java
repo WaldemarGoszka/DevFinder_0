@@ -37,6 +37,7 @@ class OfferDataRestControllerMockitoTest {
     private OfferRowMapper offerRowMapper;
     @InjectMocks
     private OfferDataRestController offerDataRestController;
+
     @Test
     void getOffersList() {
         // given
@@ -64,6 +65,7 @@ class OfferDataRestControllerMockitoTest {
         assertNotNull(actualOffersDTO);
         assertEquals(expectedOffersDTO, actualOffersDTO);
     }
+
     @Test
     void getOfferDetails() {
         // given

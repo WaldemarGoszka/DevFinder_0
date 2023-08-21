@@ -13,18 +13,15 @@ import org.springframework.web.servlet.ModelAndView;
 import pl.devfinder.api.dto.OfferDetailsDTO;
 import pl.devfinder.api.dto.mapper.*;
 import pl.devfinder.business.*;
-import pl.devfinder.domain.Employer;
 import pl.devfinder.domain.Offer;
 import pl.devfinder.domain.User;
 import pl.devfinder.domain.search.OfferSearchCriteria;
-import pl.devfinder.util.EmployerFixtures;
 import pl.devfinder.util.OfferDetailsDTOFixtures;
 import pl.devfinder.util.OfferFixtures;
 import pl.devfinder.util.UserFixtures;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -60,6 +57,7 @@ class OfferDataControllerMockitoTest {
     private Model model;
     @InjectMocks
     private OfferDataController offerDataController;
+
     @Test
     public void getOffersListTest() {
         // given

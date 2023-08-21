@@ -10,8 +10,8 @@ import java.time.OffsetDateTime;
 @EqualsAndHashCode(of = "verificationTokenId")
 @ToString(of = {"verificationTokenId", "token", "expirationTime"})
 public class EmailVerificationToken {
-     Long verificationTokenId;
-     String token;
-     OffsetDateTime expirationTime;
-     User user;
+    Long verificationTokenId;
+    String token;
+    OffsetDateTime expirationTime;
+    User user;
 }

@@ -21,43 +21,6 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
     private final JavaMailSender javaMailSender;
     private User user;
 
-
-
-    @Override
-    public void onApplicationEvent(RegistrationCompleteEvent registrationCompleteEvent) {
-        user = registrationCompleteEvent.getUser();
-        String token = Utility.generateUUID();
-        emailVerificationTokenService.saveVerificationTokenForUser(user, token);
-        String url = registrationCompleteEvent.getConfirmationUrl()+"/register/verify_email?token="+token;
-        try {
-            sendVerificationEmail(url);
-        } catch (MessagingException | UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public void sendVerificationEmail(String url) throws MessagingException, UnsupportedEncodingException {
-        String subject = "Email Verification";
-        String senderName = "Users Verification Service";
-        String mailContent = "<p> Hi, "+ user.getUserName()+ ", </p>"+
-                "<p>Thank you for registering with us. "+"" +
-                "Please, follow the link below to complete your registration.</p>"+
-                "<a href=\"" +url+ "\">Verify your email to activate your account</a>"+
-                "<p> Thank you <br> DevFinder";
-        emailMessage(subject, senderName, mailContent, javaMailSender, user);
-    }
-
-
-    public void sendPasswordResetVerificationEmail(String url, User user) throws MessagingException, UnsupportedEncodingException {
-        String subject = "Password Reset Request Verification";
-        String senderName = "Users Verification Service";
-        String mailContent = "<p> Hi, "+ user.getUserName()+ ", </p>"+
-                "<p><b>You recently requested to reset your password,</b>"+"" +
-                "Please, follow the link below to complete the action.</p>"+
-                "<a href=\"" +url+ "\">Reset password</a>"+
-                "<p> DevFinder";
-        emailMessage(subject, senderName, mailContent, javaMailSender, user);
-    }
-
     private static void emailMessage(String subject, String senderName,
                                      String mailContent, JavaMailSender mailSender, User user)
             throws MessagingException, UnsupportedEncodingException {
@@ -70,6 +33,40 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
         mailSender.send(message);
     }
 
+    @Override
+    public void onApplicationEvent(RegistrationCompleteEvent registrationCompleteEvent) {
+        user = registrationCompleteEvent.getUser();
+        String token = Utility.generateUUID();
+        emailVerificationTokenService.saveVerificationTokenForUser(user, token);
+        String url = registrationCompleteEvent.getConfirmationUrl() + "/register/verify_email?token=" + token;
+        try {
+            sendVerificationEmail(url);
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void sendVerificationEmail(String url) throws MessagingException, UnsupportedEncodingException {
+        String subject = "Email Verification";
+        String senderName = "Users Verification Service";
+        String mailContent = "<p> Hi, " + user.getUserName() + ", </p>" +
+                "<p>Thank you for registering with us. " +
+                "Please, follow the link below to complete your registration.</p>" +
+                "<a href=\"" + url + "\">Verify your email to activate your account</a>" +
+                "<p> Thank you <br> DevFinder";
+        emailMessage(subject, senderName, mailContent, javaMailSender, user);
+    }
+
+    public void sendPasswordResetVerificationEmail(String url, User user) throws MessagingException, UnsupportedEncodingException {
+        String subject = "Password Reset Request Verification";
+        String senderName = "Users Verification Service";
+        String mailContent = "<p> Hi, " + user.getUserName() + ", </p>" +
+                "<p><b>You recently requested to reset your password,</b>" +
+                "Please, follow the link below to complete the action.</p>" +
+                "<a href=\"" + url + "\">Reset password</a>" +
+                "<p> DevFinder";
+        emailMessage(subject, senderName, mailContent, javaMailSender, user);
+    }
 
 
 }

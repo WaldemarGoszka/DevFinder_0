@@ -18,24 +18,18 @@ import java.util.stream.Collectors;
 public interface CandidateEntityMapper {
 
     @Mapping(source = "candidateSkills", target = "candidateSkills", qualifiedByName = "mapCandidateSkills")
-//    @Mapping(target = "residenceCityId.employerCities", ignore = true)
-//    @Mapping(target = "residenceCityId.offerCities", ignore = true)
-//    @Mapping(target = "residenceCityId.candidateDesiredJobCities", ignore = true)
-//    @Mapping(target = "residenceCityId.candidateResidenceCities", ignore = true)
     @Mapping(target = "employerId.cityId", ignore = true)
     Candidate mapFromEntity(CandidateEntity candidateEntity);
 
     @Named("mapCandidateSkills")
     default Set<CandidateSkill> mapCandidateSkills(Set<CandidateSkillEntity> entities) {
-        if(Objects.isNull(entities)){
+        if (Objects.isNull(entities)) {
             return new HashSet<>();
         }
         return entities.stream().map(this::mapFromEntity).collect(Collectors.toSet());
     }
 
     @Mapping(target = "candidateId", ignore = true)
-//    @Mapping(target = "skillId.candidateSkills", ignore = true)
-//    @Mapping(target = "skillId.offerSkills", ignore = true)
     CandidateSkill mapFromEntity(CandidateSkillEntity entity);
 
     CandidateEntity mapToEntity(Candidate candidate);

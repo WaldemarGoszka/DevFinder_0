@@ -11,6 +11,7 @@ import pl.devfinder.infrastructure.database.repository.mapper.EmployerEntityMapp
 
 import java.util.List;
 import java.util.Optional;
+
 @Slf4j
 @Repository
 @AllArgsConstructor
@@ -27,7 +28,7 @@ public class EmployerRepository implements EmployerDAO {
 
     @Override
     public void save(Employer employer) {
-        log.info("Process save employer : [{}]",employer);
+        log.info("Process save employer : [{}]", employer);
         EmployerEntity employerEntity = employerEntityMapper.mapToEntity(employer);
         employerJpaRepository.save(employerEntity);
     }
@@ -59,7 +60,7 @@ public class EmployerRepository implements EmployerDAO {
 
     @Override
     public void assignEmployerToCandidateAndChangeStatus(Employer employer, Long candidateId) {
-        employerJpaRepository.assignEmployerToCandidateAndChangeStatus(employerEntityMapper.mapToEntity(employer),candidateId);
+        employerJpaRepository.assignEmployerToCandidateAndChangeStatus(employerEntityMapper.mapToEntity(employer), candidateId);
     }
 
     @Override

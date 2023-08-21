@@ -14,6 +14,7 @@ import pl.devfinder.domain.exception.NotFoundException;
 import java.time.OffsetDateTime;
 import java.util.Calendar;
 import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -25,11 +26,11 @@ public class ResetPasswordTokenService {
     public String validatePasswordResetToken(String token) {
         log.info("Process validate reset password token: [{}]", token);
         Optional<ResetPasswordToken> resetPasswordToken = resetPasswordTokenDAO.findByToken(token);
-        if (resetPasswordToken.isEmpty()){
+        if (resetPasswordToken.isEmpty()) {
             return Keys.TokenStatus.INVALID.getName();
         }
         Calendar calendar = Calendar.getInstance();
-        if (resetPasswordToken.get().getExpirationTime().isBefore(OffsetDateTime.now())){
+        if (resetPasswordToken.get().getExpirationTime().isBefore(OffsetDateTime.now())) {
             return Keys.TokenStatus.EXPIRED.getName();
         }
         return Keys.TokenStatus.VALID.getName();
@@ -48,6 +49,7 @@ public class ResetPasswordTokenService {
         User userWithNewPassword = user.withPassword(Utility.encodePassword(newPassword));
         userService.save(userWithNewPassword);
     }
+
     public void createPasswordResetTokenForUser(User user, String token) {
         log.info("Process create reset password token for user: [{}]", user);
         ResetPasswordToken resetToken = ResetPasswordToken.builder()

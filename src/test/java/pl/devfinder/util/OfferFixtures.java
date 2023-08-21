@@ -27,7 +27,7 @@ public class OfferFixtures {
                 .yearsOfExperience(1)
                 .salaryMin(BigDecimal.valueOf(1000))
                 .salaryMax(BigDecimal.valueOf(2000))
-                .createdAt(OffsetDateTime.of(2022,1,1,1,1,1,1, ZoneOffset.UTC))
+                .createdAt(OffsetDateTime.of(2022, 1, 1, 1, 1, 1, 1, ZoneOffset.UTC))
                 .benefits("offer1 benefits")
                 .status("ACTIVE")
                 .employerId(Employer.builder().build())

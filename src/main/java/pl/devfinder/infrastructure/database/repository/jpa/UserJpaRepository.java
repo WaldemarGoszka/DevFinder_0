@@ -9,7 +9,9 @@ import java.util.Optional;
 
 public interface UserJpaRepository extends JpaRepository<UserEntity, Long> {
     UserEntity findByUserName(String userName);
+
     Optional<UserEntity> findByEmail(String email);
+
     @Modifying
     @Query(value = "UPDATE UserEntity u set u.userName =:userName, u.email =:email where u.id =:id")
     void update(String userName, String email, Long id);

@@ -12,7 +12,7 @@ import java.time.OffsetDateTime;
 @EqualsAndHashCode(of = "verificationTokenId")
 @ToString(of = {"verificationTokenId", "token"})
 @Entity
-@Table(name  = "email_verification_token")
+@Table(name = "email_verification_token")
 public class EmailVerificationTokenEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

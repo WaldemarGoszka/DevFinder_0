@@ -12,10 +12,11 @@ import pl.devfinder.business.management.Keys;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 public class UserRegistrationControllerMockitoTest {
-@Mock
-Environment environment;
+    @Mock
+    Environment environment;
 
     @InjectMocks
     private UserRegistrationController userRegistrationController;
@@ -35,6 +36,7 @@ Environment environment;
         verify(model).addAttribute(eq("candidateEnum"), eq(Keys.Role.CANDIDATE.getName()));
         verify(model).addAttribute(eq("employerEnum"), eq(Keys.Role.EMPLOYER.getName()));
     }
+
     @Test
     public void testForgotPasswordForm() {
         // When
@@ -43,12 +45,13 @@ Environment environment;
         // Then
         assertEquals("forgot_password_form", viewName);
     }
+
     @Test
     public void testPasswordResetForm() {
         Model model = mock(Model.class);
 
         // When
-        String viewName = userRegistrationController.passwordResetForm("",model);
+        String viewName = userRegistrationController.passwordResetForm("", model);
 
         // Then
         assertEquals("password_reset_form", viewName);

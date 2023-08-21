@@ -34,8 +34,15 @@ public class CandidateCriteriaRepository {
         this.candidateEntityMapper = candidateEntityMapper;
     }
 
+    private static long getCandidateCount(CandidateSearchCriteria candidateSearchCriteria, TypedQuery<CandidateEntity> typedQuery) {
+        PageImpl<CandidateEntity> candidateEntitiesToCountItems = new PageImpl<>(typedQuery.getResultList(),
+                PageRequest.of(0, Integer.MAX_VALUE,
+                        Sort.by(candidateSearchCriteria.getSortDirection(), candidateSearchCriteria.getSortBy())), 500);
+        return candidateEntitiesToCountItems.getContent().size();
+    }
+
     public Page<Candidate> findAllByCriteria(CandidateSearchCriteria candidateSearchCriteria) {
-        log.info("Process Find Candidate By Criteria: [{}]",candidateSearchCriteria);
+        log.info("Process Find Candidate By Criteria: [{}]", candidateSearchCriteria);
         CriteriaQuery<CandidateEntity> criteriaQuery = criteriaBuilder.createQuery(CandidateEntity.class);
         Root<CandidateEntity> candidateEntityRoot = criteriaQuery.from(CandidateEntity.class);
         Predicate predicate = getPredicate(candidateSearchCriteria, candidateEntityRoot, criteriaQuery);
@@ -54,13 +61,6 @@ public class CandidateCriteriaRepository {
         PageImpl<CandidateEntity> candidateEntities = new PageImpl<>(typedQuery.getResultList(), pageable, candidateCount);
 
         return candidateEntities.map(candidateEntityMapper::mapFromEntity);
-    }
-
-    private static long getCandidateCount(CandidateSearchCriteria candidateSearchCriteria, TypedQuery<CandidateEntity> typedQuery) {
-        PageImpl<CandidateEntity> candidateEntitiesToCountItems = new PageImpl<>(typedQuery.getResultList(),
-                PageRequest.of(0, Integer.MAX_VALUE,
-                        Sort.by(candidateSearchCriteria.getSortDirection(), candidateSearchCriteria.getSortBy())), 500);
-        return candidateEntitiesToCountItems.getContent().size();
     }
 
     private Predicate getPredicate(CandidateSearchCriteria candidateSearchCriteria,
@@ -84,10 +84,10 @@ public class CandidateCriteriaRepository {
         if (Objects.nonNull(skills) && !skills.isEmpty()) {
             Predicate skillPredicates =
                     skills.stream()
-                    .filter(Objects::nonNull)
-                    .filter(value -> !value.isBlank())
-                    .filter(value -> Keys.LIST_OF_SKILLS.LIST_OF_SKILLS.getFields()
-                            .contains(value))
+                            .filter(Objects::nonNull)
+                            .filter(value -> !value.isBlank())
+                            .filter(value -> Keys.LIST_OF_SKILLS.LIST_OF_SKILLS.getFields()
+                                    .contains(value))
                             .map(value -> {
                                 Subquery<CandidateSkillEntity> subquery = criteriaQuery.subquery(CandidateSkillEntity.class);
                                 Root<CandidateSkillEntity> candidateSkillRoot = subquery.from(CandidateSkillEntity.class);
@@ -155,9 +155,9 @@ public class CandidateCriteriaRepository {
                     .filter(value -> !value.isBlank())
                     .map(value -> {
                         if (Keys.CandidateFilterBy.YES.getName().equals(value)) {
-                            return criteriaBuilder.equal(candidateRoot.get(Keys.CandidateFilterBy.openToRemoteJob.getName()),true);
+                            return criteriaBuilder.equal(candidateRoot.get(Keys.CandidateFilterBy.openToRemoteJob.getName()), true);
                         } else if (Keys.CandidateFilterBy.NO.getName().equals(value)) {
-                            return criteriaBuilder.equal(candidateRoot.get(Keys.CandidateFilterBy.openToRemoteJob.getName()),false);
+                            return criteriaBuilder.equal(candidateRoot.get(Keys.CandidateFilterBy.openToRemoteJob.getName()), false);
                         } else {
                             return null;
                         }

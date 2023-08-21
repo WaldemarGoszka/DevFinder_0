@@ -21,7 +21,6 @@ import pl.devfinder.api.dto.mapper.EmployerRowMapper;
 import pl.devfinder.api.dto.mapper.SkillMapper;
 import pl.devfinder.business.*;
 import pl.devfinder.business.management.Keys;
-import pl.devfinder.business.management.Utility;
 import pl.devfinder.domain.Employer;
 import pl.devfinder.domain.User;
 import pl.devfinder.domain.search.EmployerSearchCriteria;
@@ -44,7 +43,7 @@ public class EmployerDataController {
     private final EmployerRowMapper employerRowMapper;
     private final EmployerDetailsMapper employerDetailsMapper;
     private final UserController userController;
-    private final FileUploadService fileUploadService;
+    private final FileService fileService;
 
 
     @GetMapping(value = EMPLOYERS_LIST)
@@ -56,7 +55,7 @@ public class EmployerDataController {
 
         Map<String, ?> employerListData = prepareEmployerListData(employerSearchCriteria);
 
-        return new ModelAndView("employers",employerListData);
+        return new ModelAndView("employers", employerListData);
     }
 
     @GetMapping(value = EMPLOYER_DETAILS)
@@ -69,7 +68,7 @@ public class EmployerDataController {
         String logoFilename = employerDetailsDTO.getLogoFilename();
         if (Objects.nonNull(logoFilename)) {
             String employerUuid = employerDetailsDTO.getEmployerUuid();
-            String photoPath = fileUploadService.getUserPhotoPath(employerUuid, logoFilename);
+            String photoPath = fileService.getUserPhotoPath(employerUuid, logoFilename);
             model.addAttribute("photoProfileDir", photoPath);
         } else {
             model.addAttribute("photoProfileDir", UserController.DEFAULT_PHOTO_PATH);

@@ -23,7 +23,7 @@ public class EmployerFixtures {
                 .website("www.www.www")
                 .numberOfEmployees(100)
                 .amountOfAvailableOffers(1)
-                .createdAt(OffsetDateTime.of(2022,1,1,1,1,1,1, ZoneOffset.UTC))
+                .createdAt(OffsetDateTime.of(2022, 1, 1, 1, 1, 1, 1, ZoneOffset.UTC))
                 .cityId(City.builder()
                         .cityName("Warszawa")
                         .build())

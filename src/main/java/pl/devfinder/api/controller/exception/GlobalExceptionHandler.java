@@ -24,6 +24,7 @@ public class GlobalExceptionHandler {
         modelView.addObject("errorMessage", message);
         return modelView;
     }
+
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ModelAndView handleNoResourceFound(NotFoundException ex) {
@@ -33,6 +34,7 @@ public class GlobalExceptionHandler {
         modelView.addObject("errorMessage", message);
         return modelView;
     }
+
     @ExceptionHandler(FileUploadToProfileException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ModelAndView handleFileUploadException(FileUploadToProfileException ex) {
@@ -42,6 +44,7 @@ public class GlobalExceptionHandler {
         modelView.addObject("errorMessage", message);
         return modelView;
     }
+
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ModelAndView handleBindException(BindException ex) {

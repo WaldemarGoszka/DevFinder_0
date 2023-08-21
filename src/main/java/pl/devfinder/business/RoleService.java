@@ -10,6 +10,7 @@ import pl.devfinder.domain.exception.NotFoundException;
 @AllArgsConstructor
 public class RoleService {
     RoleDAO roleDAO;
+
     public Role findByRole(String role) {
         return roleDAO.findByRole(role)
                 .orElseThrow(() -> new NotFoundException("Could not find role: [%s]".formatted(role)));

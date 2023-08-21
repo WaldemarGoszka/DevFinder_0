@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import pl.devfinder.business.UserService;
-import pl.devfinder.business.management.Utility;
 import pl.devfinder.domain.User;
 
 import java.util.Optional;
@@ -15,19 +14,17 @@ import java.util.Optional;
 @AllArgsConstructor
 public class IndexController {
 
-    static final String INDEX = "/";
     public static final String ERROR_403 = "/403";
     public static final String ERROR_404 = "/404";
     public static final String LOGIN_PAGE = "/login";
-
-
+    static final String INDEX = "/";
     private final UserService userService;
     private final UserController userController;
 
 
     @GetMapping(INDEX)
     public String homePage(Model model, Authentication authentication) {
-        Optional<User> user = Utility.putUserDataToModel(authentication, userService, model);
+        Optional<User> user = userController.putUserDataToModel(authentication, userService, model);
         userController.setUserPhotoToModel(model, user);
         return "index";
     }
@@ -43,7 +40,7 @@ public class IndexController {
     }
 
     @GetMapping(LOGIN_PAGE)
-    public String getLoginPage(){
+    public String getLoginPage() {
         return "login";
     }
 

@@ -9,6 +9,7 @@ import pl.devfinder.domain.City;
 
 import java.math.BigDecimal;
 import java.util.Set;
+
 @Data
 @Builder
 @NoArgsConstructor

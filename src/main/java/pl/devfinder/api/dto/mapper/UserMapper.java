@@ -13,13 +13,13 @@ public abstract class UserMapper {
     RoleService roleService;
 
     public User mapFromDTO(UserDTO userDTO) {
-        if ( userDTO == null ) {
+        if (userDTO == null) {
             return null;
         }
 
         User.UserBuilder user = User.builder();
         user.userName(userDTO.getUserName());
-        user.email( userDTO.getEmail() );
+        user.email(userDTO.getEmail());
         user.password(Utility.encodePassword(userDTO.getPassword()));
         user.isEnabled(userDTO.getIsEnabled());
         user.userUuid(Utility.generateUUID());
@@ -27,7 +27,8 @@ public abstract class UserMapper {
         return user.build();
 
     }
-    public UserDTO mapToDTO(User user){
+
+    public UserDTO mapToDTO(User user) {
         return UserDTO.builder()
                 .email(user.getEmail())
                 .password(user.getPassword())

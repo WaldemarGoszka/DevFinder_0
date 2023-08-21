@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org/"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:th="https://www.thymeleaf.org/">
 
 <head>
     <meta charset="utf-8">
@@ -11,8 +11,8 @@
     <link href="img/favicon.ico" rel="icon">
 
     <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@500;700&display=swap"
           rel="stylesheet">
 
@@ -34,9 +34,9 @@
 <body>
 <div class="container-fluid position-relative d-flex p-0">
     <!-- Spinner Start -->
-    <div id="spinner"
-         class="show bg-dark position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+    <div class="show bg-dark position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center"
+         id="spinner">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
             <span class="sr-only">Loading...</span>
         </div>
     </div>
@@ -46,14 +46,18 @@
     <!-- Sidebar Start -->
     <div class="sidebar pe-4 pb-3">
         <nav class="navbar bg-secondary navbar-dark">
-            <a th:href="@{/}" class="navbar-brand mx-4 mb-3">
+            <a class="navbar-brand mx-4 mb-3" th:href="@{/}">
                 <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>DevFinder</h3>
             </a>
             <div class="navbar-nav w-100">
-                <a th:href="@{/employer_portal/candidates}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Find a candidate</a>
-                <a th:href="@{/employer_portal/post_job}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Post a job</a>
-                <a th:href="@{/employer_portal/my_posted_offers}" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>My Posted Offers</a>
-                <a th:href="@{/employer_portal/employee}" class="nav-item nav-link"><i class="fa-regular fa-address-card me-2"></i>My Employee</a>
+                <a class="nav-item nav-link" th:href="@{/employer_portal/candidates}"><i class="fa fa-th me-2"></i>Find
+                    a candidate</a>
+                <a class="nav-item nav-link" th:href="@{/employer_portal/post_job}"><i class="fa fa-th me-2"></i>Post a
+                    job</a>
+                <a class="nav-item nav-link" th:href="@{/employer_portal/my_posted_offers}"><i
+                        class="fa fa-chart-bar me-2"></i>My Posted Offers</a>
+                <a class="nav-item nav-link" th:href="@{/employer_portal/employee}"><i
+                        class="fa-regular fa-address-card me-2"></i>My Employee</a>
             </div>
         </nav>
     </div>
@@ -64,10 +68,10 @@
     <div class="content">
         <!-- Navbar Start -->
         <nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
-            <a th:href="@{/}" class="navbar-brand d-flex d-lg-none me-4">
+            <a class="navbar-brand d-flex d-lg-none me-4" th:href="@{/}">
                 <h2 class="text-primary mb-0"><i class="fa fa-user-edit"></i></h2>
             </a>
-            <a href="#" class="sidebar-toggler flex-shrink-0">
+            <a class="sidebar-toggler flex-shrink-0" href="#">
                 <i class="fa fa-bars"></i>
             </a>
             <!--                <form class="d-none d-md-flex ms-4">-->
@@ -141,9 +145,9 @@
                 <!--                    </div>-->
 
                 <!--  USER NAV MENU - IF IS AUTHENTICATED  -->
-                <div sec:authorize="${isAuthenticated()}" class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                        <img class="rounded-circle me-lg-2" src="img/user.jpg" alt="user_picture"
+                <div class="nav-item dropdown" sec:authorize="${isAuthenticated()}">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">
+                        <img alt="user_picture" class="rounded-circle me-lg-2" src="img/user.jpg"
                              style="width: 40px; height: 40px;">
 
                         <!--                            Hi <span sec:authentication="name"></span></div>-->
@@ -151,15 +155,15 @@
                         <!--                        <span class="d-none d-lg-inline-flex">John Doe</span>-->
                     </a>
                     <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
-                        <a th:href="@{/user/my_profile}" class="dropdown-item">Company Profile</a>
-                        <a th:href="@{/user/settings}" class="dropdown-item">Account Settings</a>
-                        <a th:href="@{/logout}" class="dropdown-item">Log Out</a>
+                        <a class="dropdown-item" th:href="@{/user/my_profile}">Company Profile</a>
+                        <a class="dropdown-item" th:href="@{/user/settings}">Account Settings</a>
+                        <a class="dropdown-item" th:href="@{/logout}">Log Out</a>
                     </div>
                 </div>
                 <!--  USER NAV MENU - IF IS NOT AUTHENTICATED  -->
-                <a sec:authorize="${!isAuthenticated()}" th:href="@{/login}" class="nav-item nav-link"><i
+                <a class="nav-item nav-link" sec:authorize="${!isAuthenticated()}" th:href="@{/login}"><i
                         class="fa fa-laptop me-2"></i></span>Login</a>
-                <a sec:authorize="${!isAuthenticated()}" th:href="@{/register/register_page}" class="nav-item nav-link"><i
+                <a class="nav-item nav-link" sec:authorize="${!isAuthenticated()}" th:href="@{/register/register_page}"><i
                         class="fa fa-laptop me-2"></i>Register</a>
             </div>
         </nav>
@@ -198,7 +202,7 @@
 
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <a class="btn btn-lg btn-primary btn-lg-square back-to-top" href="#"><i class="bi bi-arrow-up"></i></a>
 </div>
 
 <!-- JavaScript Libraries -->

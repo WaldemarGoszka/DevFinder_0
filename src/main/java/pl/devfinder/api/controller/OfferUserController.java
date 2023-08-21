@@ -14,7 +14,6 @@ import pl.devfinder.api.dto.*;
 import pl.devfinder.api.dto.mapper.*;
 import pl.devfinder.business.*;
 import pl.devfinder.business.management.Keys;
-import pl.devfinder.business.management.Utility;
 import pl.devfinder.domain.Employer;
 import pl.devfinder.domain.Offer;
 import pl.devfinder.domain.OfferUpdateRequest;
@@ -49,20 +48,25 @@ public class OfferUserController {
     private final OfferDetailsMapper offerDetailsMapper;
     private final OfferRowMapper offerRowMapper;
     private final OfferUpdateRequestMapper offerUpdateRequestMapper;
+    private final UserController userController;
+    private final FileService fileService;
+
+    private static void setDefaultStatusToNewOffer(OfferUpdateRequestDTO offerUpdateRequestDTO) {
+        offerUpdateRequestDTO.setStatus(Keys.OfferState.ACTIVE.getName());
+    }
 
     @GetMapping(value = OFFERS_LIST)
     public ModelAndView getOffersListToEmployer(
             @ModelAttribute OfferSearchCriteria offerSearchCriteria,
             Model model,
             Authentication authentication) {
-        User user = Utility.putUserDataToModel(authentication, userService, model)
+        User user = userController.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Optional<Employer> employerOptional = employerService.findByEmployerUuid(user.getUserUuid());
         setEmployerLogoToModel(model, employerOptional);
         Employer employer = employerOptional.orElseThrow(() -> new NotFoundException("Could not find employer by uuid"));
 
         offerSearchCriteria.setEmployer(employer.getCompanyName());
-        //offerSearchCriteria.setStatus(new ArrayList<>());
 
         Map<String, ?> offersListData = prepareOffersListData(offerSearchCriteria);
 
@@ -71,7 +75,7 @@ public class OfferUserController {
 
     @GetMapping(value = OFFER_DETAILS)
     public String getOfferDetailsToEmployer(@PathVariable Long offerId, Model model, Authentication authentication) {
-        User user = Utility.putUserDataToModel(authentication, userService, model)
+        User user = userController.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Optional<Employer> employerOptional = employerService.findByEmployerUuid(user.getUserUuid());
         setEmployerLogoToModel(model, employerOptional);
@@ -87,7 +91,7 @@ public class OfferUserController {
 
     @GetMapping(value = OFFER_EDIT_FORM)
     public String getOfferEditForm(@PathVariable Long offerId, Model model, Authentication authentication) {
-        User user = Utility.putUserDataToModel(authentication, userService, model)
+        User user = userController.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Optional<Employer> employerOptional = employerService.findByEmployerUuid(user.getUserUuid());
         setEmployerLogoToModel(model, employerOptional);
@@ -101,14 +105,13 @@ public class OfferUserController {
 
     @GetMapping(value = OFFER_NEW_FORM)
     public String getOfferNewForm(Model model, Authentication authentication) {
-        User user = Utility.putUserDataToModel(authentication, userService, model)
+        User user = userController.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Optional<Employer> employerOptional = employerService.findByEmployerUuid(user.getUserUuid());
         if (employerOptional.isEmpty()) {
             return "redirect:../employer_portal/edit_profile?first_create_profile";
         }
         setEmployerLogoToModel(model, employerOptional);
-//        Employer employer = employerOptional.orElseThrow(() -> new NotFoundException("Could not find employer by uuid"));
 
         OfferDetailsDTO offerDetailsDTO = new OfferDetailsDTO();
         prepareModelToEditOrNewOffer(model, offerDetailsDTO);
@@ -116,12 +119,11 @@ public class OfferUserController {
         return "employer/new_offer";
     }
 
-
     @PutMapping(value = OFFER_UPDATE)
     public String updateOfferRequest(@Valid @ModelAttribute OfferUpdateRequestDTO offerUpdateRequestDTO,
                                      Model model,
                                      Authentication authentication) {
-        User user = Utility.putUserDataToModel(authentication, userService, model)
+        User user = userController.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Optional<Employer> employerOptional = employerService.findByEmployerUuid(user.getUserUuid());
         setEmployerLogoToModel(model, employerOptional);
@@ -139,7 +141,7 @@ public class OfferUserController {
     public String createNewOfferRequest(@Valid @ModelAttribute OfferUpdateRequestDTO offerUpdateRequestDTO,
                                         Model model,
                                         Authentication authentication) {
-        User user = Utility.putUserDataToModel(authentication, userService, model)
+        User user = userController.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Optional<Employer> employerOptional = employerService.findByEmployerUuid(user.getUserUuid());
         setEmployerLogoToModel(model, employerOptional);
@@ -154,7 +156,7 @@ public class OfferUserController {
 
     @DeleteMapping(value = OFFER_DELETE)
     public String deleteCandidateProfile(@PathVariable Long offerId, Model model, Authentication authentication) {
-        User user = Utility.putUserDataToModel(authentication, userService, model)
+        User user = userController.putUserDataToModel(authentication, userService, model)
                 .orElseThrow(() -> new NotFoundException("Could not find user or authentication failed"));
         Optional<Employer> employerOptional = employerService.findByEmployerUuid(user.getUserUuid());
         setEmployerLogoToModel(model, employerOptional);
@@ -167,10 +169,9 @@ public class OfferUserController {
         return "redirect:../offers?delete";
     }
 
-
     private void setEmployerLogoToModel(Model model, Optional<Employer> employer) {
         if (employer.isPresent() && Objects.nonNull(employer.get().getLogoFilename())) {
-            String logoPath = Utility.getUserPhotoPath(employer.get().getEmployerUuid(),employer.get().getLogoFilename());
+            String logoPath = fileService.getUserPhotoPath(employer.get().getEmployerUuid(), employer.get().getLogoFilename());
             model.addAttribute("photoDir", logoPath);
         } else {
             model.addAttribute("photoDir", UserController.DEFAULT_PHOTO_PATH);
@@ -239,9 +240,5 @@ public class OfferUserController {
                 .equals(Sort.Direction.ASC) ? Sort.Direction.DESC : Sort.Direction.ASC);
 
         return model;
-    }
-
-    private static void setDefaultStatusToNewOffer(OfferUpdateRequestDTO offerUpdateRequestDTO) {
-        offerUpdateRequestDTO.setStatus(Keys.OfferState.ACTIVE.getName());
     }
 }

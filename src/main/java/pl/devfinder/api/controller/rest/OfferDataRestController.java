@@ -23,7 +23,6 @@ import java.util.List;
 
 public class OfferDataRestController {
     public static final String BASE_PATH = "/api";
-
     public static final String OFFERS_LIST = "/offers";
     public static final String OFFER_DETAILS = "/offer/{offerId}";
 

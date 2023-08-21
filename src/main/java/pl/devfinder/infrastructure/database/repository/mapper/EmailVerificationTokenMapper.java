@@ -10,7 +10,7 @@ import pl.devfinder.infrastructure.database.entity.EmailVerificationTokenEntity;
 public interface EmailVerificationTokenMapper {
 
     EmailVerificationTokenEntity mapToEntity(EmailVerificationToken emailVerificationToken);
-//    @Mapping(target = "user", ignore = true)
+
     @Mapping(source = "user.roleId", target = "user.role")
     @Mapping(target = "user.role.userId", ignore = true)
     @Mapping(target = "user.emailVerificationToken.user", ignore = true)

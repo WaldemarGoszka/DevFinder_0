@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org/"
-      xmlns="http://www.w3.org/1999/html"
+<html lang="en" xmlns="http://www.w3.org/1999/html"
+      xmlns:th="https://www.thymeleaf.org/"
 >
 
 <head>
@@ -43,45 +43,46 @@
                             <div class="accordion" id="accordionExample">
                                 <div class="accordion-item bg-transparent">
                                     <h2 class="accordion-header" id="headingTwo">
-                                        <button class="accordion-button collapsed" type="button"
-                                                data-bs-toggle="collapse" data-bs-target="#collapseTwo"
-                                                aria-expanded="false" aria-controls="collapseTwo">
+                                        <button aria-controls="collapseTwo" aria-expanded="false"
+                                                class="accordion-button collapsed" data-bs-target="#collapseTwo"
+                                                data-bs-toggle="collapse" type="button">
                                             <i class="fa fa-filter me-2"></i> Filters
                                         </button>
                                     </h2>
-                                    <div id="collapseTwo" class="accordion-collapse collapse"
-                                         aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                    <div aria-labelledby="headingTwo" class="accordion-collapse collapse"
+                                         data-bs-parent="#accordionExample" id="collapseTwo">
                                         <div class="accordion-body">
                                             <div class="mb-4">
-                                                <h6 class="mb-3">Tech Stack required in Active Employers Offers (you can check that the employer works in a given technology)</h6>
+                                                <h6 class="mb-3">Tech Stack required in Active Employers Offers (you can
+                                                    check that the employer works in a given technology)</h6>
                                                 <div class="m-n2">
                                                     <span th:each="skill : ${allSkillsDTOs}">
-                                                        <input type="radio"
-                                                               th:value="${skill.skillName}"
+                                                        <input autocomplete="on"
+                                                               class="btn-check"
+                                                               th:checked="${skillChecked.contains(skill.skillName)}"
                                                                th:id="${skill.skillId}"
                                                                th:name="skillsInOffers"
-                                                               th:checked="${skillChecked.contains(skill.skillName)}"
-                                                               class="btn-check"
-                                                               autocomplete="on">
-                                                        <label type="radio"
-                                                               class="btn btn-outline-light m-2"
+                                                               th:value="${skill.skillName}"
+                                                               type="radio">
+                                                        <label class="btn btn-outline-light m-2"
                                                                th:for="${skill.skillId}"
                                                                th:text="${skill.skillName}"
+                                                               type="radio"
                                                         ></label>
                                                     </span>
                                                 </div>
                                             </div>
                                             <div class="mb-4">
                                                 <h6 class="mb-3">City</h6>
-                                                <select th:field="*{city}" class="form-select select2 mb-3">
+                                                <select class="form-select select2 mb-3" th:field="*{city}">
                                                     <option th:selected="${cityChecked == null}"
                                                             th:value="${null}"
                                                     >All City's
                                                     </option>
                                                     <option th:each="city : ${allCityDTOs}"
-                                                            th:value="${city.cityName}"
-                                                            th:text="${city.cityName}"
                                                             th:selected="${cityChecked == city}"
+                                                            th:text="${city.cityName}"
+                                                            th:value="${city.cityName}"
                                                     >
                                                     </option>
                                                 </select>
@@ -89,18 +90,18 @@
                                             <div class="col-sm-12 col-xl-6 mb-4">
                                                 <h6 class="mb-3">With or without active offers </h6>
                                                 <div class="btn-group" role="group">
-                                                    <input type="checkbox" class="btn-check" id="hasJobOffers"
-                                                           th:value="${hasJobOffersEnum}"
-                                                           th:name="jobOffersStatus"
+                                                    <input autocomplete="on" class="btn-check" id="hasJobOffers"
                                                            th:checked="${offersChecked.contains(hasJobOffersEnum)}"
-                                                           autocomplete="on">
+                                                           th:name="jobOffersStatus"
+                                                           th:value="${hasJobOffersEnum}"
+                                                           type="checkbox">
                                                     <label class="btn btn-outline-light" for="hasJobOffers">With
                                                     </label>
-                                                    <input type="checkbox" class="btn-check" id="hasNoJobOffer"
-                                                           th:value="${hasNoJobOffersEnum}"
-                                                           th:name="jobOffersStatus"
+                                                    <input autocomplete="on" class="btn-check" id="hasNoJobOffer"
                                                            th:checked="${offersChecked.contains(hasNoJobOffersEnum)}"
-                                                           autocomplete="on">
+                                                           th:name="jobOffersStatus"
+                                                           th:value="${hasNoJobOffersEnum}"
+                                                           type="checkbox">
                                                     <label class="btn btn-outline-light" for="hasNoJobOffer">Without
                                                     </label>
                                                 </div>
@@ -110,8 +111,8 @@
                                                         th:onclick="'setPageNumber(' + 1 + ')'"
                                                         type="submit">Search
                                                 </button>
-                                                <a th:href="@{/employers}"
-                                                   class="btn btn-block btn-info w-50 m-2" type="button">Reset
+                                                <a class="btn btn-block btn-info w-50 m-2"
+                                                   th:href="@{/employers}" type="button">Reset
                                                     Filters</a>
                                             </div>
                                         </div>
@@ -125,97 +126,99 @@
                         <div class="bg-secondary rounded h-100 p-4">
                             <!--                            START PAGE SIZE BAR-->
                             <div class="btn-toolbar justify-content-between mb-3">
-                                <input type="hidden" th:name="pageSize"
-                                       th:value="${employerSearchCriteria.pageSize}"/>
+                                <input th:name="pageSize" th:value="${employerSearchCriteria.pageSize}"
+                                       type="hidden"/>
                                 <div><h6 class="mb-4">Employers (found: [[${totalItems}]])</h6></div>
                                 <span class="btn-group" role="group">
-                                    <button th:onclick="'setPageSize(5)'"
-                                            type="submit"
-                                            th:class="${employerSearchCriteria.pageSize == 5}
+                                    <button th:class="${employerSearchCriteria.pageSize == 5}
                                             ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-outline-primary'"
+                                            th:onclick="'setPageSize(5)'"
+                                            type="submit"
                                     >5</button>
-                                    <button th:onclick="'setPageSize(10)'"
-                                            type="submit"
-                                            th:class="${employerSearchCriteria.pageSize == 10}
+                                    <button th:class="${employerSearchCriteria.pageSize == 10}
                                             ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-outline-primary'"
+                                            th:onclick="'setPageSize(10)'"
+                                            type="submit"
                                     >10</button>
-                                    <button th:onclick="'setPageSize(50)'"
-                                            type="submit"
-                                            th:class="${employerSearchCriteria.pageSize == 50}
+                                    <button th:class="${employerSearchCriteria.pageSize == 50}
                                             ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-outline-primary'"
+                                            th:onclick="'setPageSize(50)'"
+                                            type="submit"
                                     >50</button>
                                 </span>
                             </div>
                             <!--                            END PAGE SIZE BAR-->
                             <!--                        START PAGINATION BAR-->
-                            <div th:if="${totalPages > 1}" class="btn-toolbar justify-content-between" role="toolbar">
-                                <input type="hidden" th:name="pageNumber"
-                                       th:value="${employerSearchCriteria.pageNumber}"/>
-                                <a th:if="${employerSearchCriteria.pageNumber > 1}" onclick="decreasePageNumber()">
+                            <div class="btn-toolbar justify-content-between" role="toolbar" th:if="${totalPages > 1}">
+                                <input th:name="pageNumber" th:value="${employerSearchCriteria.pageNumber}"
+                                       type="hidden"/>
+                                <a onclick="decreasePageNumber()" th:if="${employerSearchCriteria.pageNumber > 1}">
                                     <button class="btn btn-outline-primary ml-3" type="submit">Previous</button>
                                 </a>
-                                <button th:unless="${employerSearchCriteria.pageNumber > 1}"
-                                        class="btn btn-outline-link ml-3" type="button">
+                                <button class="btn btn-outline-link ml-3"
+                                        th:unless="${employerSearchCriteria.pageNumber > 1}" type="button">
                                     Previous
                                 </button>
                                 <div class="btn-group me-2 " role="group">
                                     <span th:each="page: ${#numbers.sequence(1, totalPages)}">
                                         <a th:if="${employerSearchCriteria.pageNumber != page}">
                                             <button th:class="${employerSearchCriteria.pageNumber != page} ? 'btn btn-secondary' : ''"
-                                                    type="submit"
                                                     th:onclick="'setPageNumber(' + ${page} + ')'"
+                                                    type="submit"
                                             >[[${page}]]</button></a>
                                             <span th:if="${employerSearchCriteria.pageNumber == page}"><button
                                                     class="btn btn-primary" type="button">[[${page}]]</button></span>
                                     </span>
                                 </div>
-                                <a th:if="${employerSearchCriteria.pageNumber < totalPages}"
-                                   onclick="increasePageNumber()">
+                                <a onclick="increasePageNumber()"
+                                   th:if="${employerSearchCriteria.pageNumber < totalPages}">
                                     <button class="btn btn-outline-primary ml-3" type="submit">Next</button>
                                 </a>
-                                <button th:unless="${employerSearchCriteria.pageNumber < totalPages}"
-                                        class="btn btn-outline-link ml-3"
+                                <button class="btn btn-outline-link ml-3"
+                                        th:unless="${employerSearchCriteria.pageNumber < totalPages}"
                                         type="button">Next
                                 </button>
                             </div>
                             <!--                        END PAGINATION BAR-->
-                            <div class="mt-4">Click on a column head to sort. Click again to change the sorting direction</div>
+                            <div class="mt-4">Click on a column head to sort. Click again to change the sorting
+                                direction
+                            </div>
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <thead>
-                                    <input type="hidden" name="sortBy" th:value="${employerSearchCriteria.sortBy}"/>
-                                    <input type="hidden" name="sortDirection"
-                                           th:value="${employerSearchCriteria.sortDirection}"/>
+                                    <input name="sortBy" th:value="${employerSearchCriteria.sortBy}" type="hidden"/>
+                                    <input name="sortDirection" th:value="${employerSearchCriteria.sortDirection}"
+                                           type="hidden"/>
                                     <tr>
                                         <th scope="col"><a href="#" onclick="setSortParams('companyName')">
                                             <div><i
-                                                    th:if="${sortBy == 'companyName'}"
                                                     th:class="${employerSearchCriteria.sortDirection.name() == 'ASC'}
-                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"></i>
+                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"
+                                                    th:if="${sortBy == 'companyName'}"></i>
                                             </div>
                                             CompanyName</a>
                                         </th>
                                         <th scope="col"><a href="#" onclick="setSortParams('numberOfEmployees')">
                                             <div><i
-                                                    th:if="${sortBy == 'numberOfEmployees'}"
                                                     th:class="${employerSearchCriteria.sortDirection.name() == 'ASC'}
-                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"></i>
+                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"
+                                                    th:if="${sortBy == 'numberOfEmployees'}"></i>
                                             </div>
                                             Number of Employees</a>
                                         </th>
                                         <th scope="col"><a href="#" onclick="setSortParams('cityId.cityName')">
                                             <div><i
-                                                    th:if="${sortBy == 'cityId.cityName'}"
                                                     th:class="${employerSearchCriteria.sortDirection.name() == 'ASC'}
-                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"></i>
+                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"
+                                                    th:if="${sortBy == 'cityId.cityName'}"></i>
                                             </div>
                                             City</a>
                                         </th>
                                         <th scope="col"><a href="#" onclick="setSortParams('amountOfAvailableOffers')">
                                             <div><i
-                                                    th:if="${sortBy == 'amountOfAvailableOffers'}"
                                                     th:class="${employerSearchCriteria.sortDirection.name() == 'ASC'}
-                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"></i>
+                                                ? 'fas fa-sort-amount-up-alt text-white' : 'fas fa-sort-amount-down-alt text-white'"
+                                                    th:if="${sortBy == 'amountOfAvailableOffers'}"></i>
                                             </div>
                                             Amount Of Job Offers</a>
                                         </th>
@@ -255,7 +258,7 @@
 
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <a class="btn btn-lg btn-primary btn-lg-square back-to-top" href="#"><i class="bi bi-arrow-up"></i></a>
 </div>
 
 <div th:replace="~{fragments :: js}"></div>

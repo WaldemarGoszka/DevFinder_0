@@ -16,8 +16,8 @@ public interface EmployerJpaRepository extends JpaRepository<EmployerEntity, Lon
     Optional<EmployerEntity> findByEmployerUuid(String uuid);
 
     @Query("""
-    SELECT COUNT(o) FROM EmployerEntity o JOIN o.cityId c WHERE c.cityName = :cityName
-    """)
+            SELECT COUNT(o) FROM EmployerEntity o JOIN o.cityId c WHERE c.cityName = :cityName
+            """)
     long countByCityName(String cityName);
 
     @Modifying
@@ -31,6 +31,7 @@ public interface EmployerJpaRepository extends JpaRepository<EmployerEntity, Lon
             UPDATE CandidateEntity c SET c.employerId = :employer, c.status = 'EMPLOYED' WHERE c.candidateId = :candidateId
             """)
     void assignEmployerToCandidateAndChangeStatus(EmployerEntity employer, Long candidateId);
+
     @Modifying
     @Query("""
             UPDATE CandidateEntity c SET c.employerId = null, c.status = 'ACTIVE' WHERE c.candidateId = :candidateId

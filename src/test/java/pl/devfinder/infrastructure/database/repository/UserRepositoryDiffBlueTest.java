@@ -1,20 +1,5 @@
 package pl.devfinder.infrastructure.database.repository;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -29,6 +14,17 @@ import pl.devfinder.infrastructure.database.entity.RoleEntity;
 import pl.devfinder.infrastructure.database.entity.UserEntity;
 import pl.devfinder.infrastructure.database.repository.jpa.UserJpaRepository;
 import pl.devfinder.infrastructure.database.repository.mapper.UserEntityMapper;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ContextConfiguration(classes = {UserRepository.class})
 @ExtendWith(SpringExtension.class)
@@ -137,10 +133,10 @@ class UserRepositoryDiffBlueTest {
         userEntity.setUserName("janedoe");
         userEntity.setUserUuid("01234567-89AB-CDEF-FEDC-BA9876543210");
         Optional<UserEntity> ofResult = Optional.of(userEntity);
-        when(userJpaRepository.findByEmail(Mockito.<String>any())).thenReturn(ofResult);
+        when(userJpaRepository.findByEmail(Mockito.any())).thenReturn(ofResult);
         when(userEntityMapper.mapFromEntity(Mockito.<UserEntity>any())).thenReturn(null);
         assertFalse(userRepository.findByEmail("jane.doe@example.org").isPresent());
-        verify(userJpaRepository).findByEmail(Mockito.<String>any());
+        verify(userJpaRepository).findByEmail(Mockito.any());
         verify(userEntityMapper).mapFromEntity(Mockito.<UserEntity>any());
     }
 
@@ -384,7 +380,7 @@ class UserRepositoryDiffBlueTest {
         userEntity.setRoleId(roleId3);
         userEntity.setUserName("janedoe");
         userEntity.setUserUuid("01234567-89AB-CDEF-FEDC-BA9876543210");
-        when(userJpaRepository.saveAndFlush(Mockito.<UserEntity>any())).thenReturn(userEntity);
+        when(userJpaRepository.saveAndFlush(Mockito.any())).thenReturn(userEntity);
 
         UserEntity user7 = new UserEntity();
         user7.setEmail("jane.doe@example.org");
@@ -522,7 +518,7 @@ class UserRepositoryDiffBlueTest {
         when(userEntityMapper.mapFromEntity(Mockito.<UserEntity>any())).thenReturn(null);
         when(userEntityMapper.mapToEntity(Mockito.<User>any())).thenReturn(userEntity2);
         assertNull(userRepository.save(null));
-        verify(userJpaRepository).saveAndFlush(Mockito.<UserEntity>any());
+        verify(userJpaRepository).saveAndFlush(Mockito.any());
         verify(userEntityMapper).mapFromEntity(Mockito.<UserEntity>any());
         verify(userEntityMapper).mapToEntity(Mockito.<User>any());
     }
@@ -665,10 +661,10 @@ class UserRepositoryDiffBlueTest {
         userEntity.setRoleId(roleId3);
         userEntity.setUserName("janedoe");
         userEntity.setUserUuid("01234567-89AB-CDEF-FEDC-BA9876543210");
-        when(userJpaRepository.findByUserName(Mockito.<String>any())).thenReturn(userEntity);
+        when(userJpaRepository.findByUserName(Mockito.any())).thenReturn(userEntity);
         when(userEntityMapper.mapFromEntity(Mockito.<UserEntity>any())).thenReturn(null);
         assertFalse(userRepository.findByUserName("janedoe").isPresent());
-        verify(userJpaRepository).findByUserName(Mockito.<String>any());
+        verify(userJpaRepository).findByUserName(Mockito.any());
         verify(userEntityMapper).mapFromEntity(Mockito.<UserEntity>any());
     }
 
@@ -687,9 +683,9 @@ class UserRepositoryDiffBlueTest {
      */
     @Test
     void testUpdate() {
-        doNothing().when(userJpaRepository).update(Mockito.<String>any(), Mockito.<String>any(), Mockito.<Long>any());
+        doNothing().when(userJpaRepository).update(Mockito.any(), Mockito.any(), Mockito.<Long>any());
         userRepository.update("janedoe", "jane.doe@example.org", 1L);
-        verify(userJpaRepository).update(Mockito.<String>any(), Mockito.<String>any(), Mockito.<Long>any());
+        verify(userJpaRepository).update(Mockito.any(), Mockito.any(), Mockito.<Long>any());
     }
 
     /**

@@ -1,7 +1,6 @@
 package pl.devfinder.api.dto;
 
 import lombok.*;
-import org.hibernate.annotations.Where;
 import org.springframework.web.multipart.MultipartFile;
 import pl.devfinder.domain.City;
 
