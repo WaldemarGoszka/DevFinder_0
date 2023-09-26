@@ -3,6 +3,14 @@
 Welcome to the Recruitment Platform! This is a web application designed to connect employers with skilled programmers
 seeking new opportunities.
 
+Gif:
+
+![](Devfinder_gif_presentation.gif)
+
+Youtube presentation:
+
+https://www.youtube.com/watch?v=suafDLAgQT8
+
 ## Features
 
 ### For All
